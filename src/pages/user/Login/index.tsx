@@ -20,14 +20,13 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false)
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({})
+  const [state, setState] = useState('')
   const { initialState, setInitialState } = useModel('@@initialState')
 
   const intl = useIntl()
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.()
-    console.log(userInfo)
     if (userInfo) {
       await setInitialState((s) => ({
         ...s,
@@ -46,14 +45,13 @@ const Login: React.FC = () => {
         setToken(token)
         await fetchUserInfo()
         /** 此方法会跳转到 redirect 参数所在的位置 */
-        console.log(history)
         if (!history) return
         const { query } = history.location
         const { redirect } = query as { redirect: string }
         history.push(redirect || '/')
         return
       }
-      setUserLoginState({ status: status === 'OK' ? 'success' : 'error' })
+      setState(status)
     } catch (error) {
       console.log(error)
       // 如果失败去设置用户错误信息
@@ -61,7 +59,6 @@ const Login: React.FC = () => {
     }
     setSubmitting(false)
   }
-  const { status } = userLoginState
 
   return (
     <div className={styles.container}>
@@ -99,7 +96,7 @@ const Login: React.FC = () => {
               await handleSubmit(values as API.LoginParams)
             }}
           >
-            {status === 'error' && (
+            {state === 'NOT_OK' && (
               <LoginMessage
                 content={intl.formatMessage({
                   id: 'pages.login.accountLogin.errorMessage',

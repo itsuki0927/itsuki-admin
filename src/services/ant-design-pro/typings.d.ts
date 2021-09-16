@@ -13,10 +13,10 @@ declare namespace API {
     createAt?: Date
   }
 
-  type LoginResult = {
-    status?: string
-    type?: string
-    currentAuthority?: string
+  type LoginResponse = {
+    status: string
+    token: string
+    expiration: string
   }
 
   type PageParams = {
