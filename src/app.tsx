@@ -5,7 +5,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import type { RunTimeLayoutConfig } from 'umi'
 import { history, Link } from 'umi'
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api'
+import { currentAdmin as queryCurrentAdmin } from './services/ant-design-pro/admin'
 import requestConfig from './utils/request'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -21,12 +21,13 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>
-  currentUser?: API.CurrentUser
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>
+  currentUser?: API.CurrentAdmin
+  fetchUserInfo?: () => Promise<API.CurrentAdmin | undefined>
 }> {
   const fetchUserInfo = async () => {
     try {
-      const data = await queryCurrentUser()
+      const data = await queryCurrentAdmin()
+      console.log('fetchUserInfo:', data)
       return data
     } catch (error) {
       history.push(loginPath)
@@ -60,7 +61,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history
       // 如果没有登录，重定向到 login
-      console.log('initialState:', initialState?.currentUser)
+      console.log('onPageChange:', initialState?.currentUser)
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath)
       }

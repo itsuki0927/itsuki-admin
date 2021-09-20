@@ -19,7 +19,7 @@ const responseInterceptors = (response: Response) =>
     .clone()
     .json()
     .then((data) => {
-      console.log(data)
+      console.log('data:', data)
       // 请求成功直接返回 data
       if (data.status === 200) {
         console.group('---response---')

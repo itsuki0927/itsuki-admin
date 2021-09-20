@@ -2,16 +2,16 @@
 /* eslint-disable */
 
 declare namespace API {
-  type CurrentUser = {
-    id?: string
-    username?: string
-    password?: string
-    nickname?: string
-    avatar?: string
-    role?: string
-    description?: string
-    createAt?: Date
+  type Admin = {
+    id: number
+    username: string
+    nickname: string
+    avatar: string
+    role: string
+    description: string
+    createAt: Date
   }
+  type CurrentAdmin = Admin
 
   type LoginResponse = {
     status: string

@@ -1,10 +1,10 @@
-import { login } from '@/services/ant-design-pro/api'
+import { login } from '@/services/ant-design-pro/admin'
 import { setToken } from '@/utils/auth'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import ProForm, { ProFormText } from '@ant-design/pro-form'
 import { Alert, message } from 'antd'
 import React, { useState } from 'react'
-import { history, Link, useIntl, useModel } from 'umi'
+import { history, Link, useModel } from 'umi'
 import styles from './index.less'
 
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
@@ -23,10 +23,9 @@ const Login: React.FC = () => {
   const [state, setState] = useState('')
   const { initialState, setInitialState } = useModel('@@initialState')
 
-  const intl = useIntl()
-
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.()
+    console.log('userInfo:', userInfo)
     if (userInfo) {
       await setInitialState((s) => ({
         ...s,
@@ -53,7 +52,7 @@ const Login: React.FC = () => {
       }
       setState(status)
     } catch (error) {
-      console.log(error)
+      console.log('error:', error)
       // 如果失败去设置用户错误信息
       message.error('登陆失败, 请重试! ')
     }
@@ -80,10 +79,7 @@ const Login: React.FC = () => {
             }}
             submitter={{
               searchConfig: {
-                submitText: intl.formatMessage({
-                  id: 'pages.login.submit',
-                  defaultMessage: '登录',
-                }),
+                submitText: '登录',
               },
               render: (_, dom) => dom.pop(),
               submitButtonProps: {
@@ -96,14 +92,7 @@ const Login: React.FC = () => {
               await handleSubmit(values as API.LoginParams)
             }}
           >
-            {state === 'NOT_OK' && (
-              <LoginMessage
-                content={intl.formatMessage({
-                  id: 'pages.login.accountLogin.errorMessage',
-                  defaultMessage: '账户或密码错误(admin/ant.design)',
-                })}
-              />
-            )}
+            {state === 'NOT_OK' && <LoginMessage content={'账户或密码错误(admin/ant.design)'} />}
             <ProFormText
               name='username'
               fieldProps={{
