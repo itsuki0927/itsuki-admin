@@ -43,6 +43,19 @@
     ],
   },
   {
+    name: 'article',
+    path: '/article',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/article/create',
+        name: 'create',
+        icon: 'smile',
+        component: './article/create',
+      },
+    ],
+  },
+  {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',

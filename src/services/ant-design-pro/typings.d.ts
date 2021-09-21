@@ -88,4 +88,16 @@ declare namespace API {
     description?: string
     type?: NoticeIconItemType
   }
+
+  type Article = {
+    id?: number
+    title?: string
+    description?: string
+    content?: string
+    author?: string
+    cover?: string
+    status?: number
+    createAt?: Date
+    updateAt?: Date
+  }
 }

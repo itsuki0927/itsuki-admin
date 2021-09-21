@@ -41,7 +41,7 @@ const errorHandler = (error: { response: Response; data: any; request: any; mess
     description: `错误地址: ${error.response.url}`,
   })
   // 然后把data数据返回
-  return error.response.json()
+  return Promise.reject(error.response.json())
 }
 
 const request: RequestConfig = {
