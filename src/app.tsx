@@ -1,4 +1,3 @@
-import Footer from '@/components/Footer'
 import RightContent from '@/components/RightContent'
 import { BookOutlined, LinkOutlined } from '@ant-design/icons'
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
@@ -57,7 +56,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.nickname,
     },
-    footerRender: () => <Footer />,
+    // footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history
       // 如果没有登录，重定向到 login

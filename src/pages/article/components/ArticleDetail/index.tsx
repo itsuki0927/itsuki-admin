@@ -1,15 +1,28 @@
+import { articleOrigins } from '@/constants/article/origin'
+import { ArticleOpen, articleOpens } from '@/constants/article/public'
+import { publishStates } from '@/constants/publish'
+import { LinkOutlined, ReloadOutlined } from '@ant-design/icons'
+import ProCard from '@ant-design/pro-card'
 import ProForm, {
   ProFormDependency,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
-  ProFormUploadButton,
+  ProFormUploadDragger,
 } from '@ant-design/pro-form'
+import { FooterToolbar, PageContainer } from '@ant-design/pro-layout'
+import { Button, Divider, Space } from 'antd'
 
-import { LinkOutlined, ReloadOutlined } from '@ant-design/icons'
-import { PageContainer, FooterToolbar } from '@ant-design/pro-layout'
-import ProCard from '@ant-design/pro-card'
-import { Button, Divider } from 'antd'
+const buildOptions = (data: any[]) =>
+  data.map((item) => ({
+    value: item.id,
+    label: (
+      <Space>
+        {item.icon}
+        {item.name}
+      </Space>
+    ),
+  }))
 
 type ArticleDetailProps = {
   onFinish: (values: any) => Promise<boolean>
@@ -47,6 +60,7 @@ const ArticleDetail = ({ onFinish }: ArticleDetailProps) => {
             />
             <ProFormSelect
               rules={[{ required: true, message: '请输入文章关键字' }]}
+              transform={(value) => ({ keywords: value.join('、') })}
               name='keywords'
               label='关键字'
               mode='tags'
@@ -68,65 +82,47 @@ const ArticleDetail = ({ onFinish }: ArticleDetailProps) => {
               </Button>
             </ProCard>
             <ProCard title='文章封面' headerBordered style={{ margin: '16px 0' }}>
-              <ProFormUploadButton
+              <ProFormUploadDragger
                 name='cover'
                 style={{ width: '100%' }}
                 max={1}
-                fieldProps={{
-                  name: 'file',
-                  listType: 'picture-card',
-                  style: {
-                    width: '100%',
-                  },
-                }}
+                fieldProps={{ name: 'file' }}
               />
               <ProFormText
                 placeholder='可以直接输入地址'
-                fieldProps={{
-                  prefix: <LinkOutlined />,
-                }}
+                name='coverUrl'
+                fieldProps={{ prefix: <LinkOutlined /> }}
               />
             </ProCard>
             <ProCard title='发布选项' headerBordered>
               <ProFormSelect
                 rules={[{ required: true, message: '请选择发布状态' }]}
-                options={[
-                  { label: '草稿', value: 0 },
-                  { label: '发布', value: 1 },
-                  { label: '回收站', value: 2 },
-                ]}
+                options={buildOptions(publishStates)}
                 labelAlign='left'
                 label='发布状态'
-                name='publishType'
+                name='publish'
               />
               <ProFormSelect
                 rules={[{ required: true, message: '请选择文章来源' }]}
-                options={[
-                  { label: '原创', value: 0 },
-                  { label: '装载', value: 1 },
-                  { label: '混合', value: 2 },
-                ]}
+                options={buildOptions(articleOrigins)}
                 labelAlign='left'
                 label='文章来源'
-                name='resourceType'
+                name='origin'
               />
               <ProFormSelect
                 rules={[{ required: true, message: '请选择公开类型' }]}
-                options={[
-                  { label: '公开', value: 0 },
-                  { label: '私密', value: 1 },
-                  { label: '需密码', value: 2 },
-                ]}
+                options={buildOptions(articleOpens)}
                 labelAlign='left'
                 label='公开类型'
-                name='publicType'
+                name='open'
               />
-              <ProFormDependency name={['publicType']}>
-                {({ publicType }) => (
+              <ProFormDependency name={['open']}>
+                {({ open }) => (
                   <ProFormText.Password
+                    name='password'
                     labelAlign='left'
                     label='文章密码'
-                    disabled={publicType !== 2}
+                    disabled={open !== ArticleOpen.Password}
                   />
                 )}
               </ProFormDependency>
