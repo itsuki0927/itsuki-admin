@@ -1,21 +1,21 @@
-import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { Settings as LayoutSettings } from '@ant-design/pro-layout'
 
 const Settings: LayoutSettings & {
-  pwa?: boolean;
-  logo?: string;
+  pwa?: boolean
+  logo?: string
 } = {
-  navTheme: 'light',
-  // 拂晓蓝
-  primaryColor: '#1890ff',
-  layout: 'mix',
-  contentWidth: 'Fluid',
-  fixedHeader: false,
-  fixSiderbar: true,
-  colorWeak: false,
-  title: 'Ant Design Pro',
+  title: 'Blog Admin',
   pwa: false,
   logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
-};
+  navTheme: 'light',
+  primaryColor: '#1890ff',
+  layout: 'side',
+  contentWidth: 'Fluid',
+  splitMenus: false,
+  fixedHeader: true,
+  fixSiderbar: true,
+  footerRender: false,
+}
 
-export default Settings;
+export default Settings
