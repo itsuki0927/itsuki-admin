@@ -35,13 +35,16 @@ const errorHandler = (error: { response: Response; data: any; request: any; mess
   console.group('---errorHandler---')
   console.dir(error)
   console.groupEnd()
-  // 异常处理
-  notification.error({
-    message: `请求错误 ${error.response.status}: ${error.data.message}`,
-    description: `错误地址: ${error.response.url}`,
-  })
+  if (error.response) {
+    // 异常处理
+    notification.error({
+      message: `请求错误 ${error.response.status}: ${error.data.message}`,
+      description: `错误地址: ${error.response.url}`,
+    })
+  }
+  const message = (error?.response && error.response.json()) || error.message
   // 然后把data数据返回
-  return Promise.reject(error.response.json())
+  return Promise.reject(message)
 }
 
 const request: RequestConfig = {

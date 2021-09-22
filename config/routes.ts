@@ -9,7 +9,7 @@
           {
             name: 'login',
             path: '/user/login',
-            component: './user/Login',
+            component: './Admin/Login',
           },
         ],
       },
@@ -51,9 +51,15 @@
         path: '/article/create',
         name: 'create',
         icon: 'smile',
-        component: './article/create',
+        component: './Article/create',
       },
     ],
+  },
+  {
+    name: 'tag',
+    path: '/tag',
+    icon: 'crown',
+    component: './Tag/list',
   },
   {
     name: 'list.table-list',

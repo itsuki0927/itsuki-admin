@@ -100,4 +100,16 @@ declare namespace API {
     createAt?: Date
     updateAt?: Date
   }
+
+  type Tag = {
+    id?: number
+    name?: string
+    description?: string
+    path?: string
+    count?: number
+    sort?: number
+    createAt?: Date
+    updateAt?: Date
+    expand?: string
+  }
 }

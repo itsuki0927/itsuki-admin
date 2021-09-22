@@ -1,0 +1,143 @@
+import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
+import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
+import { PageContainer } from '@ant-design/pro-layout'
+import type { ActionType, ProColumns } from '@ant-design/pro-table'
+import ProTable from '@ant-design/pro-table'
+import { Button, message, Modal, Table } from 'antd'
+import { useRef, useState } from 'react'
+import TagModal from './TagModal'
+
+const TagList = () => {
+  const [visible, setVisible] = useState(false)
+  const [temp, setTemp] = useState<API.Tag | undefined>()
+  const actionRef = useRef<ActionType>()
+
+  const handleRemove = (entity: API.Tag) => () => {
+    Modal.confirm({
+      title: `确定删除标签 '${entity.name}'嘛?`,
+      content: '删除后不可恢复',
+      onOk() {
+        removeTag(entity.id!).then(() => {
+          actionRef.current?.reload()
+          message.success('删除成功')
+        })
+      },
+    })
+  }
+
+  const handleCreate = () => {
+    setVisible(true)
+    setTemp(undefined)
+  }
+
+  const handleUpdate =
+    ({ expand, ...rest }: API.Tag) =>
+    () => {
+      setVisible(true)
+      if (expand) {
+        // eslint-disable-next-line no-param-reassign
+        expand = JSON.parse(expand)
+      }
+      setTemp({ ...rest, expand })
+    }
+
+  const handleFinish = (values: API.Tag) => {
+    return new Promise<string>((resolve) => {
+      if (values.expand) {
+        // eslint-disable-next-line no-param-reassign
+        values.expand = JSON.stringify(values.expand)
+      }
+      // 有ID 表示更新
+      if (values?.id) {
+        return updateTag(values).then(() => resolve('更新成功'))
+      }
+      return createTag(values).then(() => resolve('创建成功'))
+    }).then((msg) => {
+      message.success(msg)
+      actionRef.current?.reload()
+      setVisible(false)
+    })
+  }
+
+  const columns: ProColumns<API.Tag>[] = [
+    { title: 'id', dataIndex: 'id', align: 'center' },
+    { title: '名称', dataIndex: 'name', align: 'center' },
+    { title: '路径', dataIndex: 'path', align: 'center' },
+    { title: '描述', dataIndex: 'description', align: 'center' },
+    // TODO: 后端排序
+    { title: '排序', dataIndex: 'sort', align: 'center', sorter: true },
+    { title: '文章', dataIndex: 'count', align: 'center' },
+    {
+      title: '操作',
+      valueType: 'option',
+      align: 'center',
+      width: 250,
+      render: (_, entity) => (
+        <div>
+          <Button type='text' icon={<EditOutlined />} size='small' onClick={handleUpdate(entity)}>
+            编辑
+          </Button>
+          <Button type='link' icon={<LinkOutlined />} size='small'>
+            查看
+          </Button>
+          <Button
+            type='text'
+            icon={<DeleteOutlined />}
+            size='small'
+            danger
+            onClick={handleRemove(entity)}
+          >
+            删除
+          </Button>
+        </div>
+      ),
+    },
+  ]
+
+  return (
+    <PageContainer>
+      <ProTable
+        headerTitle='标签管理'
+        columns={columns}
+        search={false}
+        rowKey='id'
+        actionRef={actionRef}
+        request={(params, sort) => queryTagList({ ...params, ...sort })}
+        rowSelection={{
+          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+        }}
+        tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
+          <Button
+            danger
+            type='text'
+            onClick={() => {
+              // TODO: 批量删除
+              console.log(selectedRowKeys)
+              onCleanSelected()
+            }}
+          >
+            批量删除
+          </Button>
+        )}
+        options={{
+          search: { name: 'name' },
+        }}
+        toolBarRender={() => [
+          <Button key='3' type='primary' onClick={handleCreate}>
+            <PlusOutlined />
+            新建
+          </Button>,
+        ]}
+      />
+      <TagModal
+        title={temp ? '编辑标签' : '添加标签'}
+        tag={temp}
+        visible={visible}
+        onChange={setVisible}
+        onFinish={handleFinish}
+      />
+    </PageContainer>
+  )
+}
+
+export default TagList
