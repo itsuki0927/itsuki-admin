@@ -35,6 +35,9 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
       onFinish={(values) =>
         onFinish({ ...tag, ...values }).then(() => restFormRef.current?.resetFields())
       }
+      modalProps={{
+        onCancel: () => restFormRef.current?.resetFields(),
+      }}
     >
       {tag?.id && (
         <>
