@@ -1,3 +1,4 @@
+import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, {
   ModalForm,
@@ -6,8 +7,8 @@ import ProForm, {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-form'
-import { useRef } from 'react'
 import { Form, Typography } from 'antd'
+import { useRef } from 'react'
 
 type TagModalProps = {
   visible: boolean
@@ -17,11 +18,12 @@ type TagModalProps = {
   title: string
 }
 
-const TagModal = ({ title, visible, onChange, tag = {}, onFinish }: TagModalProps) => {
+const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
     <ModalForm<API.Tag>
-      formRef={restFormRef}
+      // TODO: 先拿any顶一会
+      formRef={restFormRef as any}
       visible={visible}
       title={title}
       onVisibleChange={onChange}

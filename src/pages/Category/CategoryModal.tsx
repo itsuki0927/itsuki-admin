@@ -1,3 +1,4 @@
+import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, {
   ModalForm,
@@ -18,11 +19,12 @@ type TagModalProps = {
   tree: any[]
 }
 
-const TagModal = ({ title, visible, onChange, category = {}, onFinish, tree }: TagModalProps) => {
+const TagModal = ({ title, visible, onChange, category, onFinish, tree }: TagModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
     <ModalForm<API.Category>
-      formRef={restFormRef}
+      // TODO: 先拿any顶一会
+      formRef={restFormRef as any}
       visible={visible}
       title={title}
       onVisibleChange={onChange}

@@ -1,16 +1,15 @@
 // @ts-ignore
 /* eslint-disable */
+import { IdentifiableEntity } from '@/helper/http.interface'
 
 declare namespace API {
-  type Admin = {
-    id: number
+  type Admin = IdentifiableEntity<{
     username: string
     nickname: string
     avatar: string
     role: string
     description: string
-    createAt: Date
-  }
+  }>
   type CurrentAdmin = Admin
 
   type LoginResponse = {
@@ -89,40 +88,31 @@ declare namespace API {
     type?: NoticeIconItemType
   }
 
-  type Article = {
-    id?: number
+  type Article = IdentifiableEntity<{
     title?: string
     description?: string
     content?: string
     author?: string
     cover?: string
     status?: number
-    createAt?: Date
-    updateAt?: Date
-  }
+  }>
 
-  type Tag = {
-    id?: number
+  type Tag = IdentifiableEntity<{
     name?: string
     description?: string
     path?: string
     count?: number
     sort?: number
-    createAt?: Date
-    updateAt?: Date
     expand?: string
-  }
+  }>
 
-  type Category = {
-    id?: number
+  type Category = IdentifiableEntity<{
     name?: string
     description?: string
     path?: string
     count?: number
     sort?: number
-    createAt?: Date
-    updateAt?: Date
     expand?: string
     parentId?: number
-  }
+  }>
 }

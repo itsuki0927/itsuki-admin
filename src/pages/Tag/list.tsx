@@ -1,4 +1,5 @@
 import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
+import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'

@@ -4,6 +4,7 @@ import {
   removeCategory,
   updateCategory,
 } from '@/services/ant-design-pro/category'
+import type { API } from '@/services/ant-design-pro/typings'
 import compose from '@/utils/compose'
 import { convertToTreeData, getAntdTreeByTree } from '@/utils/tree'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'

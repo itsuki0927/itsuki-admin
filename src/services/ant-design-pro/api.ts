@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 import { request } from 'umi'
+import { API } from './typings'
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
