@@ -112,4 +112,17 @@ declare namespace API {
     updateAt?: Date
     expand?: string
   }
+
+  type Category = {
+    id?: number
+    name?: string
+    description?: string
+    path?: string
+    count?: number
+    sort?: number
+    createAt?: Date
+    updateAt?: Date
+    expand?: string
+    parentId?: number
+  }
 }

@@ -56,4 +56,5 @@ export default {
   'menu.article.list': '文章列表',
 
   'menu.tag': '标签管理',
+  'menu.category': '分类管理',
 }

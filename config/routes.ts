@@ -62,6 +62,12 @@
     component: './Tag/list',
   },
   {
+    name: 'category',
+    path: '/category',
+    icon: 'crown',
+    component: './Category/list',
+  },
+  {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',
