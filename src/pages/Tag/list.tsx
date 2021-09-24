@@ -122,11 +122,14 @@ const TagList = () => {
         )}
         options={{
           search: { name: 'name' },
+          reload: false,
+          density: false,
+          setting: false,
         }}
         toolBarRender={() => [
           <Button key='3' type='primary' onClick={handleCreate}>
             <PlusOutlined />
-            新建
+            新建标签
           </Button>,
         ]}
       />

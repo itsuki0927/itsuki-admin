@@ -93,10 +93,10 @@ const CategoryList = () => {
         headerBordered
         extra={
           <Space>
-            <Button type='primary' icon={<EditOutlined />} size='small' onClick={handleCreate}>
-              创建新分类
+            <Button type='primary' icon={<EditOutlined />} onClick={handleCreate}>
+              创建分类
             </Button>
-            <Button size='small' icon={<ReloadOutlined />} onClick={handleReload}>
+            <Button icon={<ReloadOutlined />} onClick={handleReload}>
               刷新分类
             </Button>
           </Space>
