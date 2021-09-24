@@ -8,7 +8,7 @@ import { API } from './typings'
 export const createTag = (data: API.Tag) => request<API.Tag>('/tag', { method: 'POST', data })
 
 /** 查询标签 GET /tag */
-export const queryTagList = (params: { name?: string; [key: string]: any }) =>
+export const queryTagList = (params?: { name?: string; [key: string]: any }) =>
   request<SearchResponse<API.Tag>>('/tag', { method: 'GET', params })
 
 /** 删除标签 DELETE /tag/:id */

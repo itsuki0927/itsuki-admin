@@ -5,4 +5,8 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    'consistent-return': 0,
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 0,
+  },
 }
