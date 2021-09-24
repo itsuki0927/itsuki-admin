@@ -1,5 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
+import { ArticleOrigin } from '@/constants/article/origin'
+import { ArticleOpen } from '@/constants/article/public'
+import { PublishState } from '@/constants/publish'
 import { IdentifiableEntity } from '@/helper/http.interface'
 
 declare namespace API {
@@ -95,6 +98,14 @@ declare namespace API {
     author?: string
     cover?: string
     status?: number
+    open?: ArticleOpen
+    publish?: PublishState
+    origin?: ArticleOrigin
+    reading?: number
+    liking?: number
+    commenting?: number
+    tags?: API.Tag[]
+    categories?: API.Category[]
   }>
 
   type Tag = IdentifiableEntity<{

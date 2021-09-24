@@ -12,13 +12,13 @@ export type WrapperResponse<T> = {
   success: boolean
 }
 
-export type BaseSearchRequest = {
-  offset: number
-  limit: number
-  sortBy: string
-  sortOrder: string
-  [key: string]: any
-}
+export type BaseSearchRequest<T = any> = {
+  offset?: number
+  limit?: number
+  sortBy?: string
+  sortOrder?: string
+} & T
+
 export type SearchResponse<T extends IdentifiableEntity> = {
   total: number
   data: T[]

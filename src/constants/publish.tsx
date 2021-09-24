@@ -14,4 +14,6 @@ const publishStateMap = new Map(
   ].map((item) => [item.id, item])
 )
 
+export const ps = (state: PublishState) => publishStateMap.get(state)!
+
 export const publishStates = [...publishStateMap.values()]

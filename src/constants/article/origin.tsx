@@ -30,4 +30,6 @@ const articleOriginMap = new Map(
   ].map((item) => [item.id, item])
 )
 
+export const ao = (state: ArticleOrigin) => articleOriginMap.get(state)!
+
 export const articleOrigins = [...articleOriginMap.values()]

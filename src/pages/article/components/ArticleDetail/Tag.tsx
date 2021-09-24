@@ -23,7 +23,7 @@ const Tag = ({ onChange }: TagProps) => {
           name: item.name,
         }
       })
-      setChecked(temp)
+      setChecked(temp as any[])
     }
   }, [data])
 
@@ -56,7 +56,7 @@ const Tag = ({ onChange }: TagProps) => {
         </Spin>
       )}
       <Divider type='vertical' />
-      <Button size='small' icon={<ReloadOutlined />} onClick={() => refresh()}>
+      <Button size='small' type='dashed' icon={<ReloadOutlined />} onClick={() => refresh()}>
         刷新列表
       </Button>
     </Space>

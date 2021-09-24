@@ -29,4 +29,6 @@ const articleOpenMap = new Map(
   ].map((item) => [item.id, item])
 )
 
+export const ap = (state: ArticleOpen) => articleOpenMap.get(state)!
+
 export const articleOpens = [...articleOpenMap.values()]

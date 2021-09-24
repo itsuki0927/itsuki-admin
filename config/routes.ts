@@ -53,6 +53,12 @@
         icon: 'smile',
         component: './Article/create',
       },
+      {
+        path: '/article/list',
+        name: 'list',
+        icon: 'smile',
+        component: './Article/list',
+      },
     ],
   },
   {
