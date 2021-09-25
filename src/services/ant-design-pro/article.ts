@@ -42,3 +42,6 @@ export const queryArticleById = (id: number) =>
 /** 更新文章 PUT /article/:id */
 export const updateArticle = (id: number, data: any) =>
   request<API.Article>(`/article/${id}`, { method: 'PUT', data })
+
+/** 删除文章 DELETE /article/:id */
+export const deleteArticle = (id: number) => request<number>(`/article/${id}`, { method: 'DELETE' })

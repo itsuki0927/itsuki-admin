@@ -1,13 +1,14 @@
-import { queryArticleById, updateArticle } from '@/services/ant-design-pro/article'
+import { deleteArticle, queryArticleById, updateArticle } from '@/services/ant-design-pro/article'
 import { CommentOutlined, DeleteOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
-import { Badge, Button, Space } from 'antd'
-import { useRequest } from 'umi'
+import { Badge, Button, message, Space, Modal } from 'antd'
+import { history, useParams, useRequest } from 'umi'
 import ArticleDetail from './components/ArticleDetail'
 
 const EditArticle = () => {
+  const { id } = useParams<{ id: string }>()
   const { loading, data } = useRequest(() =>
-    queryArticleById(1).then((result) => {
+    queryArticleById(+id).then((result) => {
       // eslint-disable-next-line no-param-reassign
       result.keywords = result.keywords?.split('、') as any
       // eslint-disable-next-line no-param-reassign
@@ -18,12 +19,31 @@ const EditArticle = () => {
     })
   )
 
+  const handleRemove = () => {
+    Modal.confirm({
+      title: `你确定要删除《${data?.title}》嘛?`,
+      content: '此操作不能撤销!!!',
+      onOk() {
+        deleteArticle(+id).then(() => {
+          message.success('删除成功')
+          history.replace('/article/list')
+        })
+      },
+    })
+  }
+
   return (
     <PageContainer
       loading={loading}
       extra={
         <Space>
-          <Button danger type='dashed' size='small' icon={<DeleteOutlined />}>
+          <Button
+            danger
+            type='dashed'
+            size='small'
+            onClick={handleRemove}
+            icon={<DeleteOutlined />}
+          >
             删除文章
           </Button>
           <Badge count={data?.commenting}>
