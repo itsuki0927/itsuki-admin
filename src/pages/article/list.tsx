@@ -150,7 +150,7 @@ const ArticleList = () => {
       width: 110,
       render: (_, article) => (
         <Space direction='vertical'>
-          <Link to={`/article/${article.id}`}>
+          <Link to={`/article/edit/${article.id}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
               文章详情
             </Button>

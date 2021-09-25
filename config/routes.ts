@@ -54,6 +54,13 @@
         component: './Article/create',
       },
       {
+        path: '/article/edit/:id',
+        name: 'edit',
+        icon: 'smile',
+        component: './Article/edit',
+        hideInMenu: true,
+      },
+      {
         path: '/article/list',
         name: 'list',
         icon: 'smile',

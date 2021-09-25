@@ -53,7 +53,7 @@ const Category = ({ value, onChange }: CategoryProps) => {
   )
 }
 
-const FormCategory = () => {
+const CategorySelect = () => {
   return (
     <Form.Item
       name='categoryIds'
@@ -74,4 +74,4 @@ const FormCategory = () => {
   )
 }
 
-export default FormCategory
+export default CategorySelect

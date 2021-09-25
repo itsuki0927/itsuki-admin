@@ -2,30 +2,21 @@ import { useRequest } from 'umi'
 import { Button, Space, Typography, Form, Divider, Spin } from 'antd'
 import { queryTagList } from '@/services/ant-design-pro/tag'
 import { CheckOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
 
 type TagProps = {
   value?: number[]
   onChange?: (tags: number[]) => void
 }
 
-const Tag = ({ onChange }: TagProps) => {
+const Tag = ({ onChange, value: propValue }: TagProps) => {
   const { data, loading, refresh } = useRequest(() => queryTagList())
 
-  const [checked, setChecked] = useState<{ check: boolean; value: number; name: string }[]>([])
+  const value = propValue || []
 
-  useEffect(() => {
-    if (data) {
-      const temp = data.map((item) => {
-        return {
-          checked: false,
-          value: item.id,
-          name: item.name,
-        }
-      })
-      setChecked(temp as any[])
-    }
-  }, [data])
+  function handleCheck(item: API.Tag, check: boolean) {
+    const omitValues = check ? [...value, item.id] : value.filter((v) => v !== item.id)
+    onChange?.(omitValues as number[])
+  }
 
   return (
     <Space>
@@ -34,25 +25,20 @@ const Tag = ({ onChange }: TagProps) => {
       ) : (
         <Spin spinning={loading}>
           <Space>
-            {checked.map((item, index) => (
-              <Button
-                key={item.value}
-                size='small'
-                type={item.check ? 'primary' : 'default'}
-                onClick={() => {
-                  const check = !item.check
-                  checked.splice(index, 1, {
-                    ...item,
-                    check,
-                  })
-                  setChecked([...checked])
-                  onChange?.(checked.filter((v) => v.check).map((v) => v.value))
-                }}
-                icon={item.check ? <CheckOutlined /> : <TagOutlined />}
-              >
-                {item.name}
-              </Button>
-            ))}
+            {data.map((item) => {
+              const check = value.includes(item.id)
+              return (
+                <Button
+                  key={item.id}
+                  size='small'
+                  type={check ? 'primary' : 'default'}
+                  onClick={() => handleCheck(item, !check)}
+                  icon={check ? <CheckOutlined /> : <TagOutlined />}
+                >
+                  {item.name}
+                </Button>
+              )
+            })}
           </Space>
         </Spin>
       )}
@@ -64,7 +50,7 @@ const Tag = ({ onChange }: TagProps) => {
   )
 }
 
-const FormTag = () => {
+const TagSelect = () => {
   return (
     <Form.Item name='tagIds' label='标签'>
       <Tag />
@@ -72,4 +58,4 @@ const FormTag = () => {
   )
 }
 
-export default FormTag
+export default TagSelect

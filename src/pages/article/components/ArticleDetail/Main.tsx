@@ -2,11 +2,11 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form'
 import { Form } from 'antd'
-import FormTag from './Tag'
+import TagSelect from './Tag'
 
 const Main = () => {
   return (
-    <ProCard title='创建文章' headerBordered>
+    <ProCard ghost>
       <ProFormText
         rules={[{ required: true, message: '请输入文章标题' }]}
         name='title'
@@ -27,7 +27,7 @@ const Main = () => {
         label='关键字'
         mode='tags'
       />
-      <FormTag />
+      <TagSelect />
       <Form.Item
         name='content'
         rules={[{ required: true, message: '请输入文章内容' }]}

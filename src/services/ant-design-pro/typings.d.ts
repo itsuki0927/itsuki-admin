@@ -98,6 +98,7 @@ declare namespace API {
     author?: string
     cover?: string
     status?: number
+    keywords?: string
     open?: ArticleOpen
     publish?: PublishState
     origin?: ArticleOrigin
