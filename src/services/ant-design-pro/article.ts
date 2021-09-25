@@ -27,6 +27,14 @@ export type ArticleDetailResponse = API.Article & {
   categoryIds?: number[]
 }
 
+/**
+ * 文章Patch请求类
+ */
+export type ArticlePatchRequest = {
+  ids: number[]
+  state: PublishState
+}
+
 /** 创建文章 POST /article */
 export const createArticle = (data: API.Article) =>
   request<API.Article>('/article', { method: 'POST', data })
@@ -45,3 +53,7 @@ export const updateArticle = (id: number, data: any) =>
 
 /** 删除文章 DELETE /article/:id */
 export const deleteArticle = (id: number) => request<number>(`/article/${id}`, { method: 'DELETE' })
+
+/** 更新文章 PATCH /article */
+export const patchArticle = (data: ArticlePatchRequest) =>
+  request<number>('/article', { method: 'PATCH', data })

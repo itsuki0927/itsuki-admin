@@ -2,6 +2,7 @@ import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { ps, PublishState } from '@/constants/publish'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
+import { patchArticle } from '@/services/ant-design-pro/article'
 import { queryArticleList } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import {
@@ -17,15 +18,31 @@ import {
   TagOutlined,
 } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
-import type { ProColumns } from '@ant-design/pro-table'
+import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Button, Card, Space, Tag, Typography } from 'antd'
-import { useState } from 'react'
+import { Button, Card, message, Space, Tag, Typography, Modal } from 'antd'
+import { useRef, useState } from 'react'
 import { history, Link } from 'umi'
 import ArticleQuery from './Query'
 
 const ArticleList = () => {
   const [query, setQuery] = useState<ArticleSearchRequest | undefined>()
+  const actionRef = useRef<ActionType | undefined>()
+
+  const handleStateChange = (ids: number[], state: PublishState) => {
+    Modal.confirm({
+      title: `确定要将 状态变更为 [${ps(state).name}] 状态嘛?`,
+      content: '此操作不能撤销!!!',
+      centered: true,
+      onOk() {
+        patchArticle({ ids, state }).then(() => {
+          message.success('变更成功')
+          actionRef.current?.reload()
+        })
+      },
+    })
+  }
+
   const columns: ProColumns<API.Article>[] = [
     { title: 'id', width: 40, dataIndex: 'id' },
     {
@@ -156,17 +173,36 @@ const ArticleList = () => {
             </Button>
           </Link>
           {article.publish === PublishState.Draft && (
-            <Button size='small' type='text' block icon={<CheckOutlined />}>
+            <Button
+              size='small'
+              type='text'
+              block
+              icon={<CheckOutlined />}
+              onClick={() => handleStateChange([article.id], PublishState.Published)}
+            >
               <Typography.Text type='success'>直接发布</Typography.Text>
             </Button>
           )}
           {article.publish === PublishState.Published && (
-            <Button size='small' type='text' block danger icon={<DeleteOutlined />}>
+            <Button
+              size='small'
+              type='text'
+              block
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => handleStateChange([article.id], PublishState.Recycle)}
+            >
               移回收站
             </Button>
           )}
           {article.publish === PublishState.Recycle && (
-            <Button size='small' type='text' block icon={<RollbackOutlined />}>
+            <Button
+              size='small'
+              type='text'
+              block
+              icon={<RollbackOutlined />}
+              onClick={() => handleStateChange([article.id], PublishState.Draft)}
+            >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
           )}
@@ -182,6 +218,7 @@ const ArticleList = () => {
     <PageContainer>
       <ArticleQuery onFinish={(values) => setQuery(values)} />
       <ProTable
+        actionRef={actionRef}
         headerTitle='文章列表'
         search={false}
         params={query}
