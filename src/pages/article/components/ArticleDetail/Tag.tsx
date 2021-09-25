@@ -36,6 +36,7 @@ const Tag = ({ onChange }: TagProps) => {
           <Space>
             {checked.map((item, index) => (
               <Button
+                key={item.value}
                 size='small'
                 type={item.check ? 'primary' : 'default'}
                 onClick={() => {
