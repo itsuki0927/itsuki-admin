@@ -48,6 +48,7 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
         onFinish={(values) => {
           return compose(resolve, onFinish, omitBy)(values, (v: any) => v === SELECT_ALL_VALUE)
         }}
+        onReset={() => onFinish(initialValues)}
       >
         <ProFormText name='name' label='应用名称' />
         <ProFormSelect
