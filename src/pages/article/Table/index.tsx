@@ -22,6 +22,7 @@ import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'ant
 import { Link, history } from 'umi'
 import type { API } from '@/services/ant-design-pro/typings'
 import { useRef } from 'react'
+import { formatDate } from '@/transforms/date.transform'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
@@ -140,8 +141,8 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       render: (_, { createAt, updateAt }) => {
         return (
           <Space direction='vertical'>
-            <span>最早发布：{createAt}</span>
-            <span>最后更新：{updateAt}</span>
+            <span>最早发布：{formatDate(createAt)}</span>
+            <span>最后更新：{formatDate(updateAt)}</span>
           </Space>
         )
       },
