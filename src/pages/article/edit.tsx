@@ -63,7 +63,6 @@ const EditArticle = () => {
       }
     >
       <ArticleDetail
-        title='更新文章'
         initialValues={data as any}
         onFinish={(values) => {
           return updateArticle(data?.id!, values).then(() => true)

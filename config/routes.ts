@@ -27,7 +27,7 @@ export default [
     name: '文章管理',
     icon: 'crown',
     routes: [
-      { path: '/article/create', name: '创建文章', icon: 'smile', component: './article/create' },
+      { path: '/article/create', name: '撰写文章', icon: 'smile', component: './article/create' },
       {
         path: '/article/edit/:id',
         name: '更新文章',

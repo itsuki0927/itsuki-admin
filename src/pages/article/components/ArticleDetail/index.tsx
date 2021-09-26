@@ -10,10 +10,9 @@ import Options from './Options'
 type ArticleDetailProps = {
   onFinish: (values: API.Article) => Promise<boolean>
   initialValues?: API.Article
-  title: string
 }
 
-const ArticleDetail = ({ onFinish, initialValues, title }: ArticleDetailProps) => {
+const ArticleDetail = ({ onFinish, initialValues }: ArticleDetailProps) => {
   return (
     <ProForm<API.Article>
       onFinish={onFinish}
@@ -26,7 +25,7 @@ const ArticleDetail = ({ onFinish, initialValues, title }: ArticleDetailProps) =
       }}
     >
       <ProCard ghost gutter={8}>
-        <ProCard title={title} headerBordered>
+        <ProCard title='基本信息' headerBordered>
           <Main />
         </ProCard>
 

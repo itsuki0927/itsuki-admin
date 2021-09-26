@@ -1,7 +1,7 @@
-import { useRequest } from 'umi'
-import { Button, Space, Typography, Form, Divider, Spin } from 'antd'
 import { queryTagList } from '@/services/ant-design-pro/tag'
 import { CheckOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
+import { Button, Divider, Form, Space, Spin, Typography } from 'antd'
+import { useRequest } from 'umi'
 
 type TagProps = {
   value?: number[]
