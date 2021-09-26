@@ -10,7 +10,7 @@ import ProForm, {
 import { Form, TreeSelect, Typography } from 'antd'
 import { useRef } from 'react'
 
-type TagModalProps = {
+type CategoryModalProps = {
   visible: boolean
   onChange: (visible: boolean) => void
   onFinish: (values: API.Category) => Promise<boolean | void>
@@ -19,7 +19,14 @@ type TagModalProps = {
   tree: any[]
 }
 
-const TagModal = ({ title, visible, onChange, category, onFinish, tree }: TagModalProps) => {
+const CategoryModal = ({
+  title,
+  visible,
+  onChange,
+  category,
+  onFinish,
+  tree,
+}: CategoryModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
     <ModalForm<API.Category>
@@ -113,4 +120,4 @@ const TagModal = ({ title, visible, onChange, category, onFinish, tree }: TagMod
   )
 }
 
-export default TagModal
+export default CategoryModal

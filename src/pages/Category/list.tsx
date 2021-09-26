@@ -5,8 +5,8 @@ import {
   updateCategory,
 } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
-import compose from '@/utils/compose'
 import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree.transform'
+import compose from '@/utils/compose'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { PageContainer } from '@ant-design/pro-layout'
@@ -40,6 +40,7 @@ const CategoryList = () => {
       onOk() {
         removeCategory(entity.id!).then(() => {
           message.success('删除成功')
+          handleReload()
         })
       },
     })
@@ -53,7 +54,6 @@ const CategoryList = () => {
   const handleUpdate =
     ({ expand, ...rest }: API.Category) =>
     () => {
-      console.log('handleUpdate')
       setVisible(true)
       if (expand) {
         // eslint-disable-next-line no-param-reassign
@@ -138,7 +138,7 @@ const CategoryList = () => {
                       size='small'
                       type='text'
                       icon={<EditOutlined />}
-                      onClick={() => handleUpdate(category.id!)}
+                      onClick={handleUpdate(category)}
                     >
                       编辑
                     </Button>
@@ -148,7 +148,7 @@ const CategoryList = () => {
                       type='text'
                       danger={true}
                       icon={<DeleteOutlined />}
-                      onClick={() => handleRemove(category)}
+                      onClick={handleRemove(category)}
                     >
                       删除
                     </Button>
