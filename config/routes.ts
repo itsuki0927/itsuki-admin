@@ -5,7 +5,7 @@ export default [
     routes: [
       {
         path: '/user',
-        routes: [{ name: '登录', path: '/user/login', component: './Admin/Login' }],
+        routes: [{ name: '登录', path: '/user/login', component: './admin/Login' }],
       },
       { component: './404' },
     ],
@@ -27,19 +27,19 @@ export default [
     name: '文章管理',
     icon: 'crown',
     routes: [
-      { path: '/article/create', name: '创建文章', icon: 'smile', component: './Article/create' },
+      { path: '/article/create', name: '创建文章', icon: 'smile', component: './article/create' },
       {
         path: '/article/edit/:id',
         name: '更新文章',
         icon: 'smile',
-        component: './Article/edit',
+        component: './article/edit',
         hideInMenu: true,
       },
-      { path: '/article/list', name: '文章列表', icon: 'smile', component: './Article/list' },
+      { path: '/article/list', name: '文章列表', icon: 'smile', component: './article/list' },
     ],
   },
-  { path: '/tag', name: '标签管理', icon: 'crown', component: './Tag/list' },
-  { path: '/category', name: '分类管理', icon: 'crown', component: './Category/list' },
+  { path: '/tag', name: '标签管理', icon: 'crown', component: './tag/list' },
+  { path: '/category', name: '分类管理', icon: 'crown', component: './category/list' },
   { path: '/', redirect: '/welcome' },
   { component: './404' },
 ]
