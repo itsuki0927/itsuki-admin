@@ -1,96 +1,45 @@
-﻿export default [
+export default [
   {
     path: '/user',
     layout: false,
     routes: [
       {
         path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './Admin/Login',
-          },
-        ],
+        routes: [{ name: '登录', path: '/user/login', component: './Admin/Login' }],
       },
-      {
-        component: './404',
-      },
+      { component: './404' },
     ],
   },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
+  { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
   {
     path: '/admin',
-    name: 'admin',
+    name: '管理页',
     icon: 'crown',
     access: 'canAdmin',
     component: './Admin',
     routes: [
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        icon: 'smile',
-        component: './Welcome',
-      },
-      {
-        component: './404',
-      },
+      { path: '/admin/sub-page', name: '二级管理页', icon: 'smile', component: './Welcome' },
+      { component: './404' },
     ],
   },
   {
-    name: 'article',
     path: '/article',
+    name: '文章管理',
     icon: 'crown',
     routes: [
-      {
-        path: '/article/create',
-        name: 'create',
-        icon: 'smile',
-        component: './Article/create',
-      },
+      { path: '/article/create', name: '创建文章', icon: 'smile', component: './Article/create' },
       {
         path: '/article/edit/:id',
-        name: 'edit',
+        name: '更新文章',
         icon: 'smile',
         component: './Article/edit',
         hideInMenu: true,
       },
-      {
-        path: '/article/list',
-        name: 'list',
-        icon: 'smile',
-        component: './Article/list',
-      },
+      { path: '/article/list', name: '文章列表', icon: 'smile', component: './Article/list' },
     ],
   },
-  {
-    name: 'tag',
-    path: '/tag',
-    icon: 'crown',
-    component: './Tag/list',
-  },
-  {
-    name: 'category',
-    path: '/category',
-    icon: 'crown',
-    component: './Category/list',
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
-    path: '/',
-    redirect: '/welcome',
-  },
-  {
-    component: './404',
-  },
+  { path: '/tag', name: '标签管理', icon: 'crown', component: './Tag/list' },
+  { path: '/category', name: '分类管理', icon: 'crown', component: './Category/list' },
+  { path: '/', redirect: '/welcome' },
+  { component: './404' },
 ]
