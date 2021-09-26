@@ -25,7 +25,7 @@ export default [
   {
     path: '/article',
     name: '文章管理',
-    icon: 'crown',
+    icon: 'coffee',
     routes: [
       { path: '/article/create', name: '撰写文章', icon: 'smile', component: './article/create' },
       {
@@ -38,8 +38,8 @@ export default [
       { path: '/article/list', name: '文章列表', icon: 'smile', component: './article/list' },
     ],
   },
-  { path: '/tag', name: '标签管理', icon: 'crown', component: './tag/list' },
-  { path: '/category', name: '分类管理', icon: 'crown', component: './category/list' },
+  { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },
+  { path: '/category', name: '分类管理', icon: 'folder-open', component: './category/list' },
   { path: '/', redirect: '/welcome' },
   { component: './404' },
 ]
