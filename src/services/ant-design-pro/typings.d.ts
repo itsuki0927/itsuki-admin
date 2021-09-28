@@ -127,4 +127,18 @@ declare namespace API {
     expand?: string
     parentId?: number
   }>
+
+  type SystemConfig = IdentifiableEntity<{
+    liking?: number
+    title?: string
+    subtitle?: string
+    email?: string
+    keywords?: string
+    description?: string
+    domain?: string
+    record?: string
+    ipBlackList?: string
+    emailBlackList?: string
+    keywordBlackList?: string
+  }>
 }
