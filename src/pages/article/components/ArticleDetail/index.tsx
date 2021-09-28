@@ -1,3 +1,4 @@
+import type { ArticleActionRequest } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import ProCard from '@ant-design/pro-card'
 import ProForm from '@ant-design/pro-form'
@@ -8,13 +9,13 @@ import Main from './Main'
 import Options from './Options'
 
 type ArticleDetailProps = {
-  onFinish: (values: API.Article) => Promise<boolean>
+  onFinish: (values: ArticleActionRequest) => Promise<boolean>
   initialValues?: API.Article
 }
 
 const ArticleDetail = ({ onFinish, initialValues }: ArticleDetailProps) => {
   return (
-    <ProForm<API.Article>
+    <ProForm<ArticleActionRequest>
       onFinish={onFinish}
       initialValues={initialValues}
       submitter={{

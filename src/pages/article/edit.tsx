@@ -1,7 +1,7 @@
 import { deleteArticle, queryArticleById, updateArticle } from '@/services/ant-design-pro/article'
 import { CommentOutlined, DeleteOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
-import { Badge, Button, message, Space, Modal } from 'antd'
+import { Badge, Button, message, Modal, Space } from 'antd'
 import { history, useParams, useRequest } from 'umi'
 import ArticleDetail from './components/ArticleDetail'
 
@@ -65,7 +65,10 @@ const EditArticle = () => {
       <ArticleDetail
         initialValues={data as any}
         onFinish={(values) => {
-          return updateArticle(data?.id!, values).then(() => true)
+          return updateArticle({ ...data, ...values }).then(() => {
+            message.success('更新成功')
+            return true
+          })
         }}
       />
     </PageContainer>

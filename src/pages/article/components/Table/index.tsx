@@ -67,7 +67,6 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
               backgroundSize: 'cover',
               minHeight: '100px',
               backgroundImage: `url(${cover})`,
-              backgroundBlendMode: 'soft-light',
             }}
           >
             <Card.Meta

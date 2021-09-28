@@ -8,7 +8,6 @@ const CreateArticle = () => {
     <PageContainer>
       <ArticleDetail
         onFinish={(value) => {
-          console.log('value:', value)
           return createArticle(value).then(() => {
             message.success('发布成功')
             return true

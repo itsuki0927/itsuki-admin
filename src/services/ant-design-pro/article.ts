@@ -8,6 +8,66 @@ import { request } from 'umi'
 import { API } from './typings'
 
 /**
+ * 文章创建、更新封装类
+ */
+export type ArticleActionRequest = {
+  /**
+   * 标题
+   */
+  title: string
+
+  /**
+   * 描述
+   */
+  description: string
+
+  /**
+   * 关键字
+   */
+  keywords: string
+
+  /**
+   * 内容
+   */
+  content: string
+
+  /**
+   * 封面
+   */
+  cover?: string
+
+  /**
+   * 分类id
+   */
+  categoryIds?: number[]
+
+  /**
+   * 标签id
+   */
+  tagIds?: number[]
+
+  /**
+   * 文章密码
+   */
+  password?: string
+
+  /**
+   * 发布状态: 0 -> 草稿, 1 -> 已发布, 2 -> 回收站
+   */
+  publish: PublishState
+
+  /**
+   * 文章来源: 0 -> 原创, 1 -> 转载, 2 -> 混合
+   */
+  origin: ArticleOrigin
+
+  /**
+   * 公开类型: 0 -> 需要密码, 1 -> 公开, 2 -> 私密
+   */
+  open: ArticleOpen
+}
+
+/**
  * 文章搜索请求类
  */
 export type ArticleSearchRequest = BaseSearchRequest<{
@@ -36,7 +96,7 @@ export type ArticlePatchRequest = {
 }
 
 /** 创建文章 POST /article */
-export const createArticle = (data: API.Article) =>
+export const createArticle = (data: ArticleActionRequest) =>
   request<API.Article>('/article', { method: 'POST', data })
 
 /** 查询文章列表 GET /article */
@@ -48,7 +108,7 @@ export const queryArticleById = (id: number) =>
   request<ArticleDetailResponse>(`/article/${id}`, { method: 'GET' })
 
 /** 更新文章 PUT /article/:id */
-export const updateArticle = (id: number, data: any) =>
+export const updateArticle = ({ id, ...data }: ArticleActionRequest) =>
   request<API.Article>(`/article/${id}`, { method: 'PUT', data })
 
 /** 删除文章 DELETE /article/:id */
