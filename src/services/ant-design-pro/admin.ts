@@ -32,7 +32,7 @@ export type AdminSaveRequest = {
 
 /** 获取当前的用户 GET /api/currentUser */
 export const currentAdmin = (options?: { [key: string]: any }) =>
-  request<API.CurrentAdmin>('/admin/current-user', {
+  request<API.CurrentAdmin>('/admin/current-admin', {
     method: 'GET',
     ...(options || {}),
   })
