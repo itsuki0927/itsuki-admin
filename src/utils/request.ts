@@ -5,7 +5,7 @@ import type { RequestConfig } from 'umi'
 const authHeaderInterceptor = (url: string, options: any) => {
   const token = getToken()
   if (token) {
-    const authHeader = { Authorization: `Bearer ${token}` }
+    const authHeader = { Authorization: `Bearer ${token}`, ...options.headers }
     return {
       url,
       options: { ...options, interceptors: true, headers: authHeader },
