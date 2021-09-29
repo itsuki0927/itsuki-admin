@@ -12,6 +12,7 @@ import classnames from 'classnames'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
+import ImageUploaderModal from '../ImageUploader/Modal'
 import ScreenFull from '../Screenfull'
 import { editor, KeyCode, KeyMod } from './monaco'
 import styles from './style.module.less'
@@ -67,14 +68,13 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   const propValue = props.value || ''
   const cacheID = props.cacheID || window.location.pathname
   const [fullscreen, setFullscreen] = useState(false)
+  const [isPreview, setPreview] = useState(false)
+  const [uploaderModalVisible, setUploaderModalVisible] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const ueditor = useRef<editor.IStandaloneCodeEditor>()
-  const [isPreview, setPreview] = useState<boolean>(false)
   const [language, setLanguage] = useState<UEditorLanguage>(
     props.language || UEditorLanguage.Markdown
   )
-
-  // const [isVisibleUploaderModal, setUploaderModalVisible] = useState(false)
 
   const handleSaveContent = () => {
     // const time = timestampToYMD(Date.now())
@@ -255,14 +255,14 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
           <Space className={styles.right}>
             {language === UEditorLanguage.Markdown && (
               <>
-                {/* <ImageUploaderModal
-                  visible={isVisibleUploaderModal}
+                <ImageUploaderModal
+                  visible={uploaderModalVisible}
                   onClose={() => setUploaderModalVisible(false)}
-                /> */}
+                />
                 <Button
                   size='small'
                   icon={<CloudUploadOutlined />}
-                  // onClick={() => setUploaderModalVisible(true)}
+                  onClick={() => setUploaderModalVisible(true)}
                 />
                 <Button
                   size='small'

@@ -1,5 +1,7 @@
 import { STATIC_URL } from '@/config'
+import { copy } from '@/utils/copy'
 import {
+  CheckOutlined,
   CopyOutlined,
   FileMarkdownOutlined,
   LinkOutlined,
@@ -27,6 +29,7 @@ const ImageUploader = ({
   disabledMarkdown,
 }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const beforeUpload = (file: File) => {
     const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)
@@ -76,14 +79,26 @@ const ImageUploader = ({
     })
   }
 
+  const handleRemove = () => onChange?.('')
+
+  const handleCopy = () => {
+    copy(getMarkdown(value ?? ''))
+    message.success('复制成功')
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 5000)
+  }
+
   return (
-    <Space direction='vertical' className={styles.imageUploader}>
+    <Space direction='vertical' className={styles.imageUploader} size={12}>
       <Upload
         name='file'
         listType='picture-card'
         className={styles.uploader}
         maxCount={1}
         beforeUpload={beforeUpload}
+        onRemove={handleRemove}
         showUploadList={false}
         disabled={uploading}
         customRequest={(options) => {
@@ -120,7 +135,11 @@ const ImageUploader = ({
             value={getMarkdown(value)}
           />
           <Tooltip title='Copy Markdown'>
-            <Button icon={<CopyOutlined />} onClick={() => {}} />
+            <Button
+              icon={copied ? <CheckOutlined /> : <CopyOutlined />}
+              disabled={copied}
+              onClick={handleCopy}
+            />
           </Tooltip>
         </Input.Group>
       )}
