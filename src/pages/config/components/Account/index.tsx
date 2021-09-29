@@ -10,7 +10,7 @@ import { useRef } from 'react'
 import { history, useModel } from 'umi'
 
 const BasicView = () => {
-  const { initialState } = useModel('@@initialState')
+  const { initialState, setInitialState } = useModel('@@initialState')
   const formRef = useRef<ProFormInstance<AdminSaveRequest>>()
 
   // 验证重复输入密码
@@ -38,7 +38,8 @@ const BasicView = () => {
           location.reload()
         }, 1680)
       } else {
-        initialState?.fetchUserInfo?.().then(() => {
+        initialState?.fetchUserInfo?.().then((currentUser) => {
+          setInitialState((s) => ({ ...s, currentUser }))
           message.success('保存成功')
         })
       }
