@@ -1,7 +1,10 @@
+import useQuery from '@/hooks/useQuery'
 import { SettingOutlined, UserOutlined } from '@ant-design/icons'
-import { GridContent } from '@ant-design/pro-layout'
+import ProCard from '@ant-design/pro-card'
+import { GridContent, PageContainer } from '@ant-design/pro-layout'
 import { Menu } from 'antd'
 import { createRef, useEffect, useState } from 'react'
+import { history } from 'umi'
 import AccountView from './components/Account'
 import BaseView from './components/Base'
 import styles from './style.less'
@@ -25,6 +28,13 @@ const SystemConfig = () => {
   let main = createRef<HTMLDivElement | null>()
   const [mode, setMode] = useState<'inline' | 'horizontal'>('inline')
   const [selectKey, setSelectKey] = useState<ConfigStateKeys>('base')
+  const { tab = 'base' } = useQuery<{ tab: string }>()
+
+  useEffect(() => {
+    if (tab !== selectKey) {
+      setSelectKey(tab as ConfigStateKeys)
+    }
+  }, [tab])
 
   const resize = () => {
     if (!main.current) {
@@ -76,30 +86,37 @@ const SystemConfig = () => {
   }
 
   return (
-    <GridContent>
-      <div
-        className={styles.main}
-        ref={(ref) => {
-          if (ref) {
-            main = ref as any
-          }
-        }}
-      >
-        <div className={styles.leftMenu}>
-          <Menu
-            mode={mode}
-            selectedKeys={[selectKey]}
-            onClick={({ key }) => setSelectKey(key as ConfigStateKeys)}
+    <PageContainer>
+      <ProCard title='系统设置' headerBordered>
+        <GridContent>
+          <div
+            className={styles.main}
+            ref={(ref) => {
+              if (ref) {
+                main = ref as any
+              }
+            }}
           >
-            {getMenu()}
-          </Menu>
-        </div>
-        <div className={styles.right}>
-          <div className={styles.title}>{getRightTitle()}</div>
-          {renderChildren()}
-        </div>
-      </div>
-    </GridContent>
+            <div className={styles.leftMenu}>
+              <Menu
+                mode={mode}
+                selectedKeys={[selectKey]}
+                onClick={({ key }) => {
+                  history.replace(`${location.pathname}?tab=${key}`)
+                  setSelectKey(key as ConfigStateKeys)
+                }}
+              >
+                {getMenu()}
+              </Menu>
+            </div>
+            <div className={styles.right}>
+              <div className={styles.title}>{getRightTitle()}</div>
+              {renderChildren()}
+            </div>
+          </div>
+        </GridContent>
+      </ProCard>
+    </PageContainer>
   )
 }
 

@@ -57,7 +57,7 @@ const GlobalHeaderRight: React.FC = () => {
       >
         <QuestionCircleOutlined />
       </span>
-      <Avatar />
+      <Avatar menu />
     </Space>
   )
 }
