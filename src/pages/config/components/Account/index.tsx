@@ -7,7 +7,7 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, { ProFormText } from '@ant-design/pro-form'
 import { Col, Divider, Form, message, notification, Row } from 'antd'
 import { useRef } from 'react'
-import { useModel, history } from 'umi'
+import { history, useModel } from 'umi'
 
 const BasicView = () => {
   const { initialState } = useModel('@@initialState')
@@ -58,11 +58,11 @@ const BasicView = () => {
         },
         render: (_, dom) => (
           <Row>
-            <Col push={2}>{dom.pop()}</Col>
+            <Col push={4}>{dom.pop()}</Col>
           </Row>
         ),
       }}
-      labelCol={{ span: 2 }}
+      labelCol={{ span: 4 }}
       initialValues={initialState?.currentUser}
       onFinish={handleFinish}
     >

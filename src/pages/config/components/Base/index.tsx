@@ -1,8 +1,9 @@
 import { querySystemConfig, saveSystemConfig } from '@/services/ant-design-pro/config'
 import type { API } from '@/services/ant-design-pro/typings'
+import { CheckOutlined, HeartOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import ProForm, { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form'
-import { message, Spin } from 'antd'
+import { Col, Form, message, Row, Spin } from 'antd'
 import { useRequest } from 'umi'
 
 const BasicView = () => {
@@ -31,10 +32,17 @@ const BasicView = () => {
         searchConfig: {
           submitText: '保存',
         },
-        render: (_, dom) => {
-          return dom.pop()
+        submitButtonProps: {
+          icon: <CheckOutlined />,
         },
+        render: (_, dom) => (
+          <Row>
+            <Col push={4}>{dom.pop()}</Col>
+          </Row>
+        ),
       }}
+      labelCol={{ span: 4 }}
+      layout='horizontal'
       onFinish={(values) => {
         return saveSystemConfig({ ...data, ...values } as API.SystemConfig).then(() => {
           message.success('保存成功')
@@ -42,6 +50,7 @@ const BasicView = () => {
         })
       }}
     >
+      <Form.Item label={<HeartOutlined />}>{data?.liking || '-'} 次</Form.Item>
       <ProFormText
         width='lg'
         label='站点标题'
@@ -84,21 +93,21 @@ const BasicView = () => {
       <ProFormSelect
         width='lg'
         mode='tags'
-        label='Ip 黑名单'
+        label='IP 黑名单'
         name='ipBlackList'
         transform={(value) => ({ ipBlackList: value.join(',') })}
       />
       <ProFormSelect
         width='lg'
         mode='tags'
-        label='email 黑名单'
+        label='邮箱 黑名单'
         name='emailBlackList'
         transform={(value) => ({ emailBlackList: value.join(',') })}
       />
       <ProFormSelect
         width='lg'
         mode='tags'
-        label='keyword 黑名单'
+        label='关键字 黑名单'
         name='keywordBlackList'
         transform={(value) => ({ keywordBlackList: value.join(',') })}
       />
