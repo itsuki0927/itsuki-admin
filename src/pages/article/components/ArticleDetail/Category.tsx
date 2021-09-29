@@ -45,7 +45,7 @@ const Category = ({ value, onChange }: CategoryProps) => {
           }}
         />
       )}
-      <Divider style={{ margin: '12px 0' }} />
+      <Divider />
       <Button icon={<ReloadOutlined />} type='dashed' size='small' onClick={() => refresh()}>
         刷新列表
       </Button>
