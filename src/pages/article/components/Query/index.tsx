@@ -4,24 +4,13 @@ import { publishStates } from '@/constants/publish'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { queryCategoryList } from '@/services/ant-design-pro/category'
 import { queryTagList } from '@/services/ant-design-pro/tag'
+import { getSelectOptionsByState } from '@/transforms/option'
 import compose from '@/utils/compose'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form'
-import { Space } from 'antd'
 import { omitBy } from 'lodash'
 
 const SELECT_ALL_VALUE = -101
-
-const buildOptions = (data: any[]) =>
-  data.map((item) => ({
-    value: item.id,
-    label: (
-      <Space>
-        {item.icon}
-        {item.name}
-      </Space>
-    ),
-  }))
 
 type ArticleQueryProps = {
   onFinish: (values: ArticleSearchRequest) => void
@@ -59,20 +48,23 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
               label: '全部状态',
               value: SELECT_ALL_VALUE,
             },
-            ...buildOptions(publishStates),
+            ...getSelectOptionsByState(publishStates),
           ]}
         />
         <ProFormSelect
           name='open'
           label='公开状态'
-          options={[{ label: '全部可见', value: SELECT_ALL_VALUE }, ...buildOptions(articleOpens)]}
+          options={[
+            { label: '全部可见', value: SELECT_ALL_VALUE },
+            ...getSelectOptionsByState(articleOpens),
+          ]}
         />
         <ProFormSelect
           name='origin'
           label='来源状态'
           options={[
             { label: '全部来源', value: SELECT_ALL_VALUE },
-            ...buildOptions(articleOrigins),
+            ...getSelectOptionsByState(articleOrigins),
           ]}
         />
         <ProFormSelect

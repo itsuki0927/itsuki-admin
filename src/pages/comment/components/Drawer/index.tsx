@@ -4,6 +4,7 @@ import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
+import { getSelectOptionsByState } from '@/transforms/option'
 import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url'
 import { CheckOutlined, LinkOutlined, SendOutlined } from '@ant-design/icons'
 import {
@@ -13,7 +14,7 @@ import {
   ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-form'
-import { Avatar, Button, Divider, Form, message, Space, Typography } from 'antd'
+import { Avatar, Button, Divider, Form, message, Typography } from 'antd'
 
 type CommentDrawerProps = {
   comment?: API.Comment
@@ -132,17 +133,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         name='status'
         label='评论状态'
         rules={[{ required: true, message: '请选择评论状态' }]}
-        options={commentStates.map((state) => {
-          return {
-            value: state.id,
-            label: (
-              <Space>
-                {state.icon}
-                {state.name}
-              </Space>
-            ),
-          }
-        })}
+        options={getSelectOptionsByState(commentStates)}
       />
       <Form.Item
         name='content'
