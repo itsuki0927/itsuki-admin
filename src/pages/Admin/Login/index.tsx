@@ -27,14 +27,14 @@ const Login: React.FC = () => {
     const userInfo = await initialState?.fetchUserInfo?.()
     console.log('userInfo:', userInfo)
     if (userInfo) {
-      await setInitialState((s) => ({
+      await setInitialState((s: any) => ({
         ...s,
         currentUser: userInfo,
       }))
     }
   }
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: any) => {
     setSubmitting(true)
     try {
       // 登录
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
               },
             }}
             onFinish={async (values) => {
-              await handleSubmit(values as API.LoginParams)
+              await handleSubmit(values as any)
             }}
           >
             {state === 'NOT_OK' && <LoginMessage content={'账户或密码错误(admin/ant.design)'} />}
