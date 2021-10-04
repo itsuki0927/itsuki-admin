@@ -1,9 +1,10 @@
 import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { ps, PublishState } from '@/constants/publish'
-import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
-import { patchArticle } from '@/services/ant-design-pro/article'
+import type { ArticlePatchRequest, ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { queryArticleList } from '@/services/ant-design-pro/article'
+import type { API } from '@/services/ant-design-pro/typings'
+import { formatDate } from '@/transforms/date.transform'
 import {
   CheckOutlined,
   CommentOutlined,
@@ -18,26 +19,25 @@ import {
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
-import { Link, history } from 'umi'
-import type { API } from '@/services/ant-design-pro/typings'
+import { Button, Card, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef } from 'react'
-import { formatDate } from '@/transforms/date.transform'
+import { history, Link } from 'umi'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
+  onPatch: (data: ArticlePatchRequest) => Promise<number>
 }
 
-const ArticleTable = ({ query }: ArticleTableProps) => {
+const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
   const actionRef = useRef<ActionType | undefined>()
+
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
     Modal.confirm({
       title: `确定要将 状态变更为 [${ps(state).name}] 状态嘛?`,
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
-        patchArticle({ ids, state }).then(() => {
-          message.success('变更成功')
+        onPatch({ ids, state }).then(() => {
           actionRef.current?.reload()
           if (cb) {
             cb()

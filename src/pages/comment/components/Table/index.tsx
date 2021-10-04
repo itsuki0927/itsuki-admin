@@ -17,7 +17,7 @@ import {
 import type { ProFormInstance } from '@ant-design/pro-form'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Avatar, Button, Input, message, Modal, Popover, Space, Tag, Typography } from 'antd'
+import { Avatar, Button, Input, Modal, Popover, Space, Tag, Typography } from 'antd'
 import { useEffect, useRef } from 'react'
 
 type CommentTableProps = {
@@ -44,7 +44,6 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       centered: true,
       onOk() {
         onStateChange(data).then(() => {
-          message.success('状态变更成功')
           actionRef.current?.reload()
         })
       },
@@ -58,7 +57,6 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       centered: true,
       onOk() {
         onRemove(id).then(() => {
-          message.success('删除成功')
           actionRef.current?.reload()
         })
       },

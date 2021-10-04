@@ -15,7 +15,7 @@ import {
   ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-form'
-import { Avatar, Button, Divider, Form, message, Typography } from 'antd'
+import { Avatar, Button, Divider, Form, Typography } from 'antd'
 
 type CommentDrawerProps = {
   comment?: API.Comment
@@ -33,7 +33,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 21 }}
       title='评论详情'
-      onFinish={(values) => onFinish({ ...values }).then(() => message.success('更新成功'))}
+      onFinish={onFinish}
       {...rest}
       submitter={{
         searchConfig: {
@@ -117,7 +117,9 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
               : getBlogArticleUrl(comment?.articleId!)
           }
         >
-          {comment?.articleId === COMMENT_GUESTBOOK_ID ? '留言板' : '评论文章'}
+          {comment?.articleId === COMMENT_GUESTBOOK_ID
+            ? '留言板'
+            : `${comment?.articleTitle || '-'}`}
           <Divider type='vertical' />#{comment?.id}
         </Button>
       </Form.Item>
