@@ -3,6 +3,7 @@ import { commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
 import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
+import { getGravatarUrl } from '@/transforms/gravatar'
 import { CheckOutlined, LinkOutlined, SendOutlined } from '@ant-design/icons'
 import {
   DrawerForm,
@@ -12,7 +13,6 @@ import {
   ProFormText,
 } from '@ant-design/pro-form'
 import { Avatar, Button, Divider, Form, message, Space, Typography } from 'antd'
-import gravatar from 'gravatar'
 
 type CommentDrawerProps = {
   comment?: API.Comment
@@ -49,7 +49,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
       <Form.Item label='最后修改于'>{formatDate(comment?.updateAt!)}</Form.Item>
       <ProFormSwitch name='fix' label='置顶评论' disabled />
       <Form.Item label='用户头像'>
-        <Avatar shape='square' size='large' src={gravatar.url(comment?.email!)} />
+        <Avatar shape='square' size='large' src={getGravatarUrl(comment?.email!)} />
       </Form.Item>
       <ProFormText
         label='用户昵称'

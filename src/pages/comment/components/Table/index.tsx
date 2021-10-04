@@ -3,6 +3,7 @@ import type { CommentPatchRequest } from '@/services/ant-design-pro/comment'
 import { queryCommentList } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
+import { getGravatarUrl } from '@/transforms/gravatar'
 import {
   CheckOutlined,
   DeleteOutlined,
@@ -15,7 +16,6 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Avatar, Button, Input, message, Modal, Popover, Space, Tag, Typography } from 'antd'
-import gravatar from 'gravatar'
 import { useEffect, useRef } from 'react'
 
 type CommentTableProps = {
@@ -130,7 +130,7 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
         <Space direction='vertical'>
           <span>
             头像：
-            <Avatar shape='square' size='small' src={gravatar.url(email, { protocol: 'https' })} />
+            <Avatar shape='square' size='small' src={getGravatarUrl(email)} />
           </span>
           <span>名字：{nickname}</span>
           <span>
