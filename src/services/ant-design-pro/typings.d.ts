@@ -141,4 +141,77 @@ declare namespace API {
     emailBlackList?: string
     keywordBlackList?: string
   }>
+
+  type Comment = IdentifiableEntity<{
+    /**
+     * 昵称
+     */
+    nickname: string
+
+    /**
+     * 邮箱
+     */
+    email: string
+
+    /**
+     * 网址
+     */
+    website: string
+
+    /**
+     * 内容
+     */
+    content: string
+
+    /**
+     * 喜欢数
+     */
+    liking: number
+
+    /**
+     * ip
+     */
+    ip: string
+
+    /**
+     * 省份
+     */
+    city: string
+
+    /**
+     * 城市
+     */
+    province: string
+
+    /**
+     * 设备
+     */
+    agent: string
+
+    /**
+     * 状态
+     */
+    status: number
+
+    /**
+     * 是否置顶
+     * 0 -> 不置顶, 1 -> 置顶
+     */
+    fix: string
+
+    /**
+     * 扩展
+     */
+    expand: string
+
+    /**
+     * 父id
+     */
+    parentId: number
+
+    /**
+     * 文章id
+     */
+    articleId: number
+  }>
 }
