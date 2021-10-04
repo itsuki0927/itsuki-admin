@@ -4,6 +4,7 @@ import { queryCommentList } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
+import { parserBrowser, parserOS } from '@/transforms/ua'
 import { getBlogArticleUrl } from '@/transforms/url'
 import {
   CheckOutlined,
@@ -156,7 +157,7 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       width: 230,
       dataIndex: 'content',
       search: false,
-      render: (_, { city, province, ip, createAt }) => (
+      render: (_, { city, province, ip, createAt, agent }) => (
         <Space direction='vertical'>
           <span>
             IP：
@@ -175,12 +176,12 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
               placement='right'
               content={
                 <div>
-                  <p>浏览器：Chrome</p>
-                  <div>系统：Mac</div>
+                  <p>浏览器：{parserBrowser(agent)}</p>
+                  <div>系统：{parserOS(agent)}</div>
                 </div>
               }
             >
-              Chrome | 91
+              {parserBrowser(agent)}
             </Popover>
           </span>
           <span>

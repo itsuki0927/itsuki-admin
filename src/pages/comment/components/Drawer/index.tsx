@@ -5,6 +5,7 @@ import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
 import { getSelectOptionsByState } from '@/transforms/option'
+import { parserBrowser, parserOS } from '@/transforms/ua'
 import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url'
 import { CheckOutlined, LinkOutlined, SendOutlined } from '@ant-design/icons'
 import {
@@ -91,9 +92,9 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         {comment?.province || '-'}
       </Form.Item>
       <Form.Item label='终端'>
-        {comment?.agent!}
+        {parserBrowser(comment?.agent!)}
         <Divider type='vertical' />
-        {comment?.agent!}
+        {parserOS(comment?.agent!)}
       </Form.Item>
       <ProFormDigit
         name='liking'
