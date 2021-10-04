@@ -213,5 +213,15 @@ declare namespace API {
      * 文章id
      */
     articleId: number
+
+    /**
+     * 文章标题
+     */
+    articleTitle: string
+
+    /**
+     * 文章描述
+     */
+    articleDescription: string
   }>
 }
