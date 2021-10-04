@@ -4,6 +4,7 @@ import { queryCommentList } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
+import { getBlogArticleUrl } from '@/transforms/url'
 import {
   CheckOutlined,
   DeleteOutlined,
@@ -308,7 +309,7 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
             type='link'
             target='_blank'
             icon={<LinkOutlined />}
-            href={''}
+            href={getBlogArticleUrl(comment.articleId)}
           >
             宿主页面
           </Button>

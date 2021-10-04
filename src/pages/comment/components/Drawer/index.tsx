@@ -4,6 +4,7 @@ import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
+import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url'
 import { CheckOutlined, LinkOutlined, SendOutlined } from '@ant-design/icons'
 import {
   DrawerForm,
@@ -104,7 +105,16 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         ]}
       />
       <Form.Item label='宿主文章'>
-        <Button type='link' target='_blank' icon={<LinkOutlined />} href={''}>
+        <Button
+          type='link'
+          target='_blank'
+          icon={<LinkOutlined />}
+          href={
+            comment?.articleId === COMMENT_GUESTBOOK_ID
+              ? getBlogGuestbookUrl()
+              : getBlogArticleUrl(comment?.articleId!)
+          }
+        >
           {comment?.articleId === COMMENT_GUESTBOOK_ID ? '留言板' : '评论文章'}
           <Divider type='vertical' />#{comment?.id}
         </Button>
