@@ -1,3 +1,4 @@
+import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
@@ -42,19 +43,21 @@ const TagList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const handleFinish = (values: API.Tag) => {
-    return new Promise<string>((resolve) => {
-      if (values.expand) {
-        // eslint-disable-next-line no-param-reassign
-        values.expand = JSON.stringify(values.expand)
-      }
-      // 有ID 表示更新
-      if (values?.id) {
-        return updateTag(values).then(() => resolve('更新成功'))
-      }
-      return createTag(values).then(() => resolve('创建成功'))
-    }).then((msg) => {
-      message.success(msg)
+  const confirmUpdate = (values: TagActionRequest) => {
+    if (values.expand) {
+      // eslint-disable-next-line no-param-reassign
+      values.expand = JSON.stringify(values.expand)
+    }
+    return updateTag(temp?.id!, values).then(() => {
+      message.success('更新成功')
+      actionRef.current?.reload()
+      setVisible(false)
+    })
+  }
+
+  const confirmCreate = (values: TagActionRequest) => {
+    return createTag(values).then(() => {
+      message.success('创建成功')
       actionRef.current?.reload()
       setVisible(false)
     })
@@ -138,7 +141,7 @@ const TagList = () => {
         tag={temp}
         visible={visible}
         onChange={setVisible}
-        onFinish={handleFinish}
+        onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
       />
     </PageContainer>
   )

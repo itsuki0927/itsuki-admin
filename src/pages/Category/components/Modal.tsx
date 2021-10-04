@@ -1,3 +1,4 @@
+import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, {
@@ -13,7 +14,7 @@ import { useRef } from 'react'
 type CategoryModalProps = {
   visible: boolean
   onChange: (visible: boolean) => void
-  onFinish: (values: API.Category) => Promise<boolean | void>
+  onFinish: (values: CategoryActionRequest) => Promise<boolean | void>
   category?: API.Category
   title: string
   tree: any[]
@@ -29,7 +30,7 @@ const CategoryModal = ({
 }: CategoryModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
-    <ModalForm<API.Category>
+    <ModalForm<CategoryActionRequest>
       // TODO: 先拿any顶一会
       formRef={restFormRef as any}
       visible={visible}
@@ -40,9 +41,7 @@ const CategoryModal = ({
       wrapperCol={{ span: 18 }}
       initialValues={category}
       key={category?.id}
-      onFinish={(values) =>
-        onFinish({ ...category, ...values }).then(() => restFormRef.current?.resetFields())
-      }
+      onFinish={(values) => onFinish(values).then(() => restFormRef.current?.resetFields())}
       modalProps={{
         onCancel: () => restFormRef.current?.resetFields(),
       }}

@@ -1,3 +1,4 @@
+import type { LoginParams } from '@/services/ant-design-pro/admin'
 import { login } from '@/services/ant-design-pro/admin'
 import { setToken } from '@/utils/auth'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
@@ -34,7 +35,7 @@ const Login: React.FC = () => {
     }
   }
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: LoginParams) => {
     setSubmitting(true)
     try {
       // 登录
@@ -73,7 +74,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className={styles.main}>
-          <ProForm
+          <ProForm<LoginParams>
             initialValues={{
               autoLogin: true,
             }}
@@ -89,7 +90,7 @@ const Login: React.FC = () => {
               },
             }}
             onFinish={async (values) => {
-              await handleSubmit(values as any)
+              await handleSubmit(values)
             }}
           >
             {state === 'NOT_OK' && <LoginMessage content={'账户或密码错误(admin/ant.design)'} />}

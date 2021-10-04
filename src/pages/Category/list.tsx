@@ -1,3 +1,4 @@
+import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import {
   createCategory,
   queryCategoryList,
@@ -62,20 +63,28 @@ const CategoryList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const handleFinish = (values: API.Category) => {
-    return new Promise<string>((resolve) => {
-      if (values.expand) {
-        // eslint-disable-next-line no-param-reassign
-        values.expand = JSON.stringify(values.expand)
-      }
-      // 有ID 表示更新
-      if (values?.id) {
-        return updateCategory(values).then(() => resolve('更新成功'))
-      }
-      return createCategory(values).then(() => resolve('创建成功'))
-    }).then((msg) => {
+  const confirmUpdate = (values: CategoryActionRequest) => {
+    if (values.expand) {
+      // eslint-disable-next-line no-param-reassign
+      values.expand = JSON.stringify(values.expand)
+    }
+    // 有ID 表示更新
+    return updateCategory(temp?.id!, values).then(() => {
       handleReload()
-      message.success(msg)
+      message.success('更新成功')
+      setVisible(false)
+    })
+  }
+
+  const confirmCreate = (values: CategoryActionRequest) => {
+    if (values.expand) {
+      // eslint-disable-next-line no-param-reassign
+      values.expand = JSON.stringify(values.expand)
+    }
+    // 有ID 表示更新
+    return createCategory(values).then(() => {
+      handleReload()
+      message.success('创建成功')
       setVisible(false)
     })
   }
@@ -168,7 +177,7 @@ const CategoryList = () => {
           tree={getAntdTreeByTree(convertToTreeData(categoryList), temp?.id)}
           visible={visible}
           onChange={setVisible}
-          onFinish={handleFinish}
+          onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
         />
       </ProCard>
     </PageContainer>

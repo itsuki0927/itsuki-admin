@@ -2,49 +2,40 @@
 /* eslint-disable */
 import { request } from 'umi'
 import { API } from './typings'
-
-export type AdminSaveRequest = {
-  /**
-   * 头像
-   */
-  avatar: string
-  /**
-   * 昵称
-   */
-  nickname: string
-  /**
-   * 描述
-   */
-  description: string
-  /**
-   * 密码
-   */
-  password: string
-  /**
-   * 新密码
-   */
-  newPassword: string
-  /**
-   * 确认密码
-   */
-  confirm: string
+export type LoginResponse = {
+  status: string
+  token: string
+  expiration: string
 }
 
-/** 获取当前的用户 GET /api/currentUser */
-export const currentAdmin = (options?: { [key: string]: any }) =>
+export type LoginParams = {
+  username: string
+  password: string
+}
+
+export type AdminSaveRequest = {
+  avatar: string
+  nickname: string
+  description: string
+  password?: string
+  newPassword?: string
+  confirm?: string
+}
+
+/** 获取当前的用户 GET /admin/current-admin */
+export const queryCurrentAdmin = () =>
   request<API.CurrentAdmin>('/admin/current-admin', {
     method: 'GET',
-    ...(options || {}),
   })
 
-/** 登录接口 POST /api/login/account */
-export const login = (body: API.LoginParams, options?: { [key: string]: any }) =>
-  request<API.LoginResponse>('/admin/login', {
+/** 登录接口 POST /admin/login*/
+export const login = (body: LoginParams) =>
+  request<LoginResponse>('/admin/login', {
     method: 'POST',
     data: body,
-    ...(options || {}),
   })
 
+/** 保存信息 POST /admin/save */
 export const saveAdminInfo = (data: AdminSaveRequest) =>
   request<API.Admin>('/admin/save', {
     method: 'POST',

@@ -1,3 +1,4 @@
+import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, {
@@ -13,7 +14,7 @@ import { useRef } from 'react'
 type TagModalProps = {
   visible: boolean
   onChange: (visible: boolean) => void
-  onFinish: (values: API.Tag) => Promise<boolean | void>
+  onFinish: (values: TagActionRequest) => Promise<boolean | void>
   tag?: API.Tag
   title: string
 }
@@ -21,7 +22,7 @@ type TagModalProps = {
 const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
-    <ModalForm<API.Tag>
+    <ModalForm<TagActionRequest>
       // TODO: 先拿any顶一会
       formRef={restFormRef as any}
       visible={visible}
@@ -32,9 +33,7 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
       wrapperCol={{ span: 18 }}
       initialValues={tag}
       key={tag?.id}
-      onFinish={(values) =>
-        onFinish({ ...tag, ...values }).then(() => restFormRef.current?.resetFields())
-      }
+      onFinish={(values) => onFinish(values).then(() => restFormRef.current?.resetFields())}
       modalProps={{
         onCancel: () => restFormRef.current?.resetFields(),
       }}

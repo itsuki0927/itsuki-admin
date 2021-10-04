@@ -15,70 +15,52 @@ declare namespace API {
   }>
   type CurrentAdmin = Admin
 
-  type LoginResponse = {
-    status: string
-    token: string
-    expiration: string
-  }
-
-  type PageParams = {
-    current?: number
-    pageSize?: number
-  }
-
-  type LoginParams = {
-    username?: string
-    password?: string
-    autoLogin?: boolean
-    type?: string
-  }
-
   type Article = IdentifiableEntity<{
-    title?: string
-    description?: string
-    content?: string
-    author?: string
-    cover?: string
-    status?: number
-    keywords?: string
-    open?: ArticleOpen
-    publish?: PublishState
-    origin?: ArticleOrigin
-    reading?: number
-    liking?: number
-    commenting?: number
-    tags?: API.Tag[]
-    categories?: API.Category[]
+    title: string
+    description: string
+    content: string
+    author: string
+    cover: string
+    status: number
+    keywords: string
+    open: ArticleOpen
+    publish: PublishState
+    origin: ArticleOrigin
+    reading: number
+    liking: number
+    commenting: number
+    tags: API.Tag[]
+    categories: API.Category[]
   }>
 
   type Tag = IdentifiableEntity<{
-    name?: string
-    description?: string
-    path?: string
-    count?: number
-    sort?: number
+    name: string
+    description: string
+    path: string
+    count: number
+    sort: number
     expand?: string
   }>
 
   type Category = IdentifiableEntity<{
-    name?: string
-    description?: string
-    path?: string
-    count?: number
-    sort?: number
+    name: string
+    description: string
+    path: string
+    count: number
+    sort: number
+    parentId: number
     expand?: string
-    parentId?: number
   }>
 
   type SystemConfig = IdentifiableEntity<{
-    liking?: number
-    title?: string
-    subtitle?: string
-    email?: string
-    keywords?: string
-    description?: string
-    domain?: string
-    record?: string
+    liking: number
+    title: string
+    subtitle: string
+    email: string
+    keywords: string
+    description: string
+    domain: string
+    record: string
     ipBlackList?: string
     emailBlackList?: string
     keywordBlackList?: string

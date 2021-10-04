@@ -9,11 +9,8 @@ const EditArticle = () => {
   const { id } = useParams<{ id: string }>()
   const { loading, data } = useRequest(() =>
     queryArticleById(+id).then((result) => {
-      // eslint-disable-next-line no-param-reassign
       result.keywords = result.keywords?.split('、') as any
-      // eslint-disable-next-line no-param-reassign
       result.tagIds = result.tags?.map((v) => v.id)
-      // eslint-disable-next-line no-param-reassign
       result.categoryIds = result.categories?.map((v) => v.id)
       return { data: result }
     })
@@ -63,9 +60,9 @@ const EditArticle = () => {
       }
     >
       <ArticleDetail
-        initialValues={data as any}
+        initialValues={data}
         onFinish={(values) => {
-          return updateArticle({ ...data, ...values }).then(() => {
+          return updateArticle(data?.id!, values).then(() => {
             message.success('更新成功')
             return true
           })
