@@ -16,17 +16,24 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Avatar, Button, Input, message, Modal, Popover, Space, Tag, Typography } from 'antd'
 import gravatar from 'gravatar'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 type CommentTableProps = {
   onStateChange: (data: CommentPatchRequest) => Promise<number>
   onRemove: (id: number) => Promise<number>
   onDetail: (comment: API.Comment) => void
+  refresh: boolean
 }
 
-const CommentTable = ({ onStateChange, onRemove, onDetail }: CommentTableProps) => {
+const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTableProps) => {
   const formRef = useRef<ProFormInstance | undefined>()
   const actionRef = useRef<ActionType | undefined>()
+
+  // TODO: 有更好的方式解决
+  // HACK: 用这种方式先实现
+  useEffect(() => {
+    actionRef?.current?.reload()
+  }, [refresh])
 
   const handleStateChange = (data: CommentPatchRequest) => {
     Modal.confirm({
@@ -65,7 +72,13 @@ const CommentTable = ({ onStateChange, onRemove, onDetail }: CommentTableProps) 
 
   const columns: ProColumns<API.Comment>[] = [
     { title: 'ID', width: 40, dataIndex: 'id', search: false },
-    { title: 'PID', width: 40, dataIndex: 'parentId', search: false },
+    {
+      title: 'PID',
+      width: 40,
+      dataIndex: 'parentId',
+      search: false,
+      renderText: (text) => text || '-',
+    },
     {
       title: 'AID',
       width: 40,

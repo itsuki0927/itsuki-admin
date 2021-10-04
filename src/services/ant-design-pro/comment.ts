@@ -15,6 +15,19 @@ export type CommentSearchRequest = BaseSearchRequest<{
 }>
 
 /**
+ * 文章update请求类
+ */
+export type CommentUpdateRequest = {
+  nickname: string
+  email: string
+  website: string
+  content: string
+  liking: number
+  expand: string
+  status: CommentState
+}
+
+/**
  * 文章patch请求类
  */
 export type CommentPatchRequest = {
@@ -25,6 +38,10 @@ export type CommentPatchRequest = {
 /** 查询文章列表 GET /comment */
 export const queryCommentList = (params?: CommentSearchRequest) =>
   request<SearchResponse<API.Comment>>('/comment', { method: 'GET', params })
+
+/** 更新文章 PUT /comment/:id */
+export const updateComment = (id: number, data: CommentUpdateRequest) =>
+  request<API.Comment>(`/comment/${id}`, { method: 'PUT', data })
 
 /** 更新文章 PATCH /comment */
 export const patchComment = (data: CommentPatchRequest) =>
