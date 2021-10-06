@@ -1,4 +1,5 @@
-import { CommentState, commentStates, cs } from '@/constants/comment'
+import { CommentState, commentStates, COMMENT_GUESTBOOK_ID, cs } from '@/constants/comment'
+import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
 import type { CommentPatchRequest } from '@/services/ant-design-pro/comment'
 import { queryCommentList } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
@@ -63,9 +64,9 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
     })
   }
 
-  const handleArticleIdChange = (AID: number) => {
+  const handleArticleIdChange = (articleId: string) => {
     formRef.current?.setFieldsValue({
-      AID,
+      articleId,
     })
     formRef.current?.submit()
   }
@@ -90,8 +91,8 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       ),
       valueType: 'select',
       valueEnum: {
-        0: '全部评论',
-        '-1': '留言评论',
+        [SELECT_ALL_VALUE]: '全部评论',
+        [COMMENT_GUESTBOOK_ID]: '留言评论',
       },
       fieldProps: {
         dropdownRender: (menu: React.ReactElement) => (
@@ -103,8 +104,9 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
                 size='small'
                 type='number'
                 placeholder='AID'
+                min={1}
                 enterButton={<span>GO</span>}
-                onSearch={(value) => handleArticleIdChange(value as any)}
+                onSearch={(value) => handleArticleIdChange(value)}
               />
             </div>
           </div>
@@ -115,6 +117,7 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       title: '内容',
       width: 300,
       dataIndex: 'content',
+      search: false,
       render: (_, { content }) => (
         <Typography.Paragraph ellipsis={{ rows: 6, expandable: true }}>
           {content}
@@ -122,9 +125,14 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       ),
     },
     {
+      title: '关键字',
+      dataIndex: 'keyword',
+      hideInTable: true,
+    },
+    {
       title: '个人信息',
       width: 240,
-      dataIndex: 'content',
+      key: 'profile',
       search: false,
       render: (_, { email, nickname, website }) => (
         <Space direction='vertical'>
@@ -152,8 +160,8 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
     },
     {
       title: '发布于',
+      key: 'time',
       width: 230,
-      dataIndex: 'content',
       search: false,
       render: (_, { city, province, ip, createAt, agent }) => (
         <Space direction='vertical'>
@@ -196,7 +204,7 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       valueType: 'select',
       fieldProps: {
         options: [
-          { label: '全部状态', value: 'ALL' },
+          { label: '全部状态', value: SELECT_ALL_VALUE },
           ...commentStates.map((state) => {
             return {
               value: state.id,
@@ -325,7 +333,10 @@ const CommentTable = ({ onStateChange, onRemove, onDetail, refresh }: CommentTab
       headerTitle='评论列表'
       rowKey='id'
       columns={columns}
-      request={(params) => queryCommentList(params as any)}
+      beforeSearchSubmit={(target) => {
+        return omitSelectAllValue(target)
+      }}
+      request={(params) => queryCommentList(params)}
     />
   )
 }

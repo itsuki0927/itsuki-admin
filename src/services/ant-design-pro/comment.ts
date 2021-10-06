@@ -9,7 +9,7 @@ import { API } from './typings'
  * 文章搜索请求类
  */
 export type CommentSearchRequest = BaseSearchRequest<{
-  name?: string
+  keyword?: string
   status?: number
   articleId?: number
 }>
