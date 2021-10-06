@@ -1,4 +1,4 @@
-import { querySystemConfig, saveSystemConfig } from '@/services/ant-design-pro/config'
+import { querySystemSettings, saveSystemSettings } from '@/services/ant-design-pro/settings'
 import type { API } from '@/services/ant-design-pro/typings'
 import { CheckOutlined, HeartOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
@@ -8,11 +8,7 @@ import { useRequest } from 'umi'
 
 const BasicView = () => {
   const { data, loading } = useRequest(() =>
-    querySystemConfig().then((temp) => {
-      temp.keywords = temp.keywords?.split(',').filter(Boolean) as any
-      temp.ipBlackList = temp.ipBlackList?.split(',').filter(Boolean) as any
-      temp.emailBlackList = temp.emailBlackList?.split(',').filter(Boolean) as any
-      temp.keywordBlackList = temp.keywordBlackList?.split(',').filter(Boolean) as any
+    querySystemSettings().then((temp) => {
       return { data: temp }
     })
   )
@@ -44,7 +40,7 @@ const BasicView = () => {
       labelCol={{ span: 4 }}
       layout='horizontal'
       onFinish={(values) => {
-        return saveSystemConfig({ ...data, ...values } as API.SystemConfig).then(() => {
+        return saveSystemSettings({ ...data, ...values } as API.SystemSettings).then(() => {
           message.success('保存成功')
           return true
         })
@@ -74,7 +70,6 @@ const BasicView = () => {
         mode='tags'
         label='关键词'
         name='keywords'
-        transform={(value) => ({ keywords: value.join(',') })}
         rules={[{ required: true, message: '请输入关键词' }]}
       />
       <ProFormText
@@ -90,27 +85,9 @@ const BasicView = () => {
         rules={[{ required: true, message: '请输入站点邮箱' }]}
       />
       <ProFormText width='lg' label='ICP 备案号' name='record' />
-      <ProFormSelect
-        width='lg'
-        mode='tags'
-        label='IP 黑名单'
-        name='ipBlackList'
-        transform={(value) => ({ ipBlackList: value.join(',') })}
-      />
-      <ProFormSelect
-        width='lg'
-        mode='tags'
-        label='邮箱 黑名单'
-        name='emailBlackList'
-        transform={(value) => ({ emailBlackList: value.join(',') })}
-      />
-      <ProFormSelect
-        width='lg'
-        mode='tags'
-        label='关键字 黑名单'
-        name='keywordBlackList'
-        transform={(value) => ({ keywordBlackList: value.join(',') })}
-      />
+      <ProFormSelect width='lg' mode='tags' label='IP 黑名单' name='ipBlackList' />
+      <ProFormSelect width='lg' mode='tags' label='邮箱 黑名单' name='emailBlackList' />
+      <ProFormSelect width='lg' mode='tags' label='关键字 黑名单' name='keywordBlackList' />
     </ProForm>
   )
 }
