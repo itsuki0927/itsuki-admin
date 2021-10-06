@@ -24,7 +24,7 @@ const menuMap = {
   },
 }
 
-const SystemConfig = () => {
+const SystemSettings = () => {
   let main = createRef<HTMLDivElement | null>()
   const [mode, setMode] = useState<'inline' | 'horizontal'>('inline')
   const [selectKey, setSelectKey] = useState<ConfigStateKeys>('base')
@@ -120,4 +120,4 @@ const SystemConfig = () => {
   )
 }
 
-export default SystemConfig
+export default SystemSettings

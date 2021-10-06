@@ -52,7 +52,7 @@ declare namespace API {
     expand?: string
   }>
 
-  type SystemConfig = IdentifiableEntity<{
+  type SystemSettings = IdentifiableEntity<{
     liking: number
     title: string
     subtitle: string
@@ -61,9 +61,9 @@ declare namespace API {
     description: string
     domain: string
     record: string
-    ipBlackList?: string
-    emailBlackList?: string
-    keywordBlackList?: string
+    ipBlackList?: string[]
+    emailBlackList?: string[]
+    keywordBlackList?: string[]
   }>
 
   type Comment = IdentifiableEntity<{
