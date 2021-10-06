@@ -1,5 +1,6 @@
 import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
+import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
 import type { ArticlePatchRequest, ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { queryArticleList } from '@/services/ant-design-pro/article'
@@ -222,7 +223,7 @@ const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
       actionRef={actionRef}
       headerTitle='文章列表'
       search={false}
-      params={query}
+      params={omitSelectAllValue(query)}
       columns={columns}
       rowKey='id'
       rowSelection={{

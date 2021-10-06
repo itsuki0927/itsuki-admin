@@ -1,5 +1,6 @@
 import { articleOrigins } from '@/constants/article/origin'
 import { articleOpens } from '@/constants/article/public'
+import { SELECT_ALL_VALUE } from '@/constants/common'
 import { publishStates } from '@/constants/publish'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { queryCategoryList } from '@/services/ant-design-pro/category'
@@ -8,9 +9,6 @@ import { getSelectOptionsByState } from '@/transforms/option'
 import compose from '@/utils/compose'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form'
-import { omitBy } from 'lodash'
-
-const SELECT_ALL_VALUE = -101
 
 type ArticleQueryProps = {
   onFinish: (values: ArticleSearchRequest) => void
@@ -35,9 +33,9 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
         style={{ marginBottom: -24 }}
         defaultCollapsed={false}
         onFinish={(values) => {
-          return compose(resolve, onFinish, omitBy)(values, (v: any) => v === SELECT_ALL_VALUE)
+          return compose(resolve, onFinish)(values)
         }}
-        onReset={() => compose(onFinish, omitBy)(initialValues, (v: any) => v === SELECT_ALL_VALUE)}
+        onReset={() => onFinish(initialValues)}
       >
         <ProFormText name='name' label='关键字' />
         <ProFormSelect
