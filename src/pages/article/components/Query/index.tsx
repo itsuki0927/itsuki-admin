@@ -39,7 +39,7 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
         }}
         onReset={() => compose(onFinish, omitBy)(initialValues, (v: any) => v === SELECT_ALL_VALUE)}
       >
-        <ProFormText name='name' label='应用名称' />
+        <ProFormText name='name' label='关键字' />
         <ProFormSelect
           name='publish'
           label='发布状态'
