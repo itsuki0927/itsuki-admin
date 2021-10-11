@@ -3,6 +3,9 @@ import { omitBy } from 'lodash'
 // 选中全部
 export const SELECT_ALL_VALUE = -101
 
+// 无父类
+export const NO_PARENT_VALUE = 0
+
 /**
  * 移除所有值为SELECT_ALL_VALUE属性,组成一个新对象
  *

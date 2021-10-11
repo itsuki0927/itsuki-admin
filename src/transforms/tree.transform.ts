@@ -1,3 +1,4 @@
+import { NO_PARENT_VALUE } from '@/constants/common'
 import type { DataNode } from 'rc-tree/lib/interface'
 
 type ConvertTreeData = {
@@ -22,7 +23,7 @@ type TreeData<T> = {
 export function convertToTreeData<T extends ConvertTreeData>(data: T[]) {
   const [parentData, childData] = data.reduce<[T[], T[]]>(
     (acc, v) => {
-      const idx = v.parentId === -1 ? 0 : 1
+      const idx = v.parentId === NO_PARENT_VALUE ? 0 : 1
       acc[idx].push(v)
       return acc
     },

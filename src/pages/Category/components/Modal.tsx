@@ -1,3 +1,4 @@
+import { NO_PARENT_VALUE } from '@/constants/common'
 import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
@@ -43,6 +44,7 @@ const CategoryModal = ({
       key={category?.id}
       onFinish={(values) => onFinish(values).then(() => restFormRef.current?.resetFields())}
       modalProps={{
+        centered: true,
         onCancel: () => restFormRef.current?.resetFields(),
       }}
     >
@@ -84,7 +86,7 @@ const CategoryModal = ({
             {
               label: '无',
               key: 'null',
-              value: -1,
+              value: NO_PARENT_VALUE,
             },
             ...tree,
           ]}
