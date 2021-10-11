@@ -1,5 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
+import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
@@ -32,6 +33,7 @@ export type ArticleSearchRequest = BaseSearchRequest<{
   publish?: PublishState
   open?: ArticleOpen
   origin?: ArticleOrigin
+  banner?: ArticleBanner
   tag?: number
   category?: number
 }>
@@ -53,12 +55,20 @@ export type ArticlePatchRequest = {
   state: PublishState
 }
 
+/**
+ * 文章Patch请求类
+ */
+export type ArticleMetaPatchRequest = {
+  meta: string
+  value?: number
+}
+
 /** 创建文章 POST /article */
 export const createArticle = (data: ArticleActionRequest) =>
   request<API.Article>('/article', { method: 'POST', data })
 
 /** 查询文章列表 GET /article */
-export const queryArticleList = (params?: any) =>
+export const queryArticleList = (params?: ArticleSearchRequest) =>
   request<BaseSearchRequest<API.Article>>('/article', { method: 'GET', params })
 
 /** 查询文章 GET /article/:id */
@@ -75,3 +85,7 @@ export const deleteArticle = (id: number) => request<number>(`/article/${id}`, {
 /** 更新文章 PATCH /article */
 export const patchArticle = (data: ArticlePatchRequest) =>
   request<number>('/article', { method: 'PATCH', data })
+
+/** 更新文章 PATCH /article/:id */
+export const patchArticleMeta = (id: number, data: ArticleMetaPatchRequest) =>
+  request<number>(`/article/${id}`, { method: 'PATCH', data })

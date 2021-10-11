@@ -1,3 +1,4 @@
+import { articleBanners } from '@/constants/article/banner'
 import { articleOrigins } from '@/constants/article/origin'
 import { ArticleOpen, articleOpens } from '@/constants/article/public'
 import { publishStates } from '@/constants/publish'
@@ -8,6 +9,13 @@ import { ProFormDependency, ProFormSelect, ProFormText } from '@ant-design/pro-f
 const Options = () => {
   return (
     <ProCard title='发布选项' headerBordered>
+      <ProFormSelect
+        rules={[{ required: true, message: '请选择是否为轮播图' }]}
+        options={getSelectOptionsByState(articleBanners)}
+        labelAlign='left'
+        label='轮播状态'
+        name='banner'
+      />
       <ProFormSelect
         fieldProps={{
           onChange: (value) => {

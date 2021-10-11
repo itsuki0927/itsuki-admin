@@ -52,6 +52,13 @@ const CategoryList = () => {
     setTemp(undefined)
   }
 
+  const reset = (msg: string) => {
+    handleReload()
+    message.success(msg)
+    setTemp(undefined)
+    setVisible(false)
+  }
+
   const handleUpdate =
     ({ expand, ...rest }: API.Category) =>
     () => {
@@ -70,9 +77,7 @@ const CategoryList = () => {
     }
     // 有ID 表示更新
     return updateCategory(temp?.id!, values).then(() => {
-      handleReload()
-      message.success('更新成功')
-      setVisible(false)
+      reset('更新成功')
     })
   }
 
@@ -81,11 +86,8 @@ const CategoryList = () => {
       // eslint-disable-next-line no-param-reassign
       values.expand = JSON.stringify(values.expand)
     }
-    // 有ID 表示更新
     return createCategory(values).then(() => {
-      handleReload()
-      message.success('创建成功')
-      setVisible(false)
+      reset('创建成功')
     })
   }
 

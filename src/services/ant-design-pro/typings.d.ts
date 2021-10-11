@@ -1,5 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
+import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
@@ -26,6 +27,7 @@ declare namespace API {
     open: ArticleOpen
     publish: PublishState
     origin: ArticleOrigin
+    banner: ArticleBanner
     reading: number
     liking: number
     commenting: number

@@ -2,7 +2,11 @@ import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
-import type { ArticlePatchRequest, ArticleSearchRequest } from '@/services/ant-design-pro/article'
+import type {
+  ArticleMetaPatchRequest,
+  ArticlePatchRequest,
+  ArticleSearchRequest,
+} from '@/services/ant-design-pro/article'
 import { queryArticleList } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
@@ -15,21 +19,26 @@ import {
   FolderOpenOutlined,
   HeartOutlined,
   LinkOutlined,
+  RetweetOutlined,
   RollbackOutlined,
+  SwapOutlined,
   TagOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
+import { TableDropdown } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Button, Card, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef } from 'react'
 import { history, Link } from 'umi'
+import { ab } from '@/constants/article/banner'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
   onPatch: (data: ArticlePatchRequest) => Promise<number>
+  onMetaPatch: (id: number, data: ArticleMetaPatchRequest) => Promise<number>
 }
 
-const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
+const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
   const actionRef = useRef<ActionType | undefined>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
@@ -39,6 +48,22 @@ const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
       centered: true,
       onOk() {
         onPatch({ ids, state }).then(() => {
+          actionRef.current?.reload()
+          if (cb) {
+            cb()
+          }
+        })
+      },
+    })
+  }
+
+  const handleBannerChange = (id: number, value: number, cb?: () => void) => {
+    Modal.confirm({
+      title: `确定要将该文章 ${value === 1 ? '加入轮播图' : '移除轮播图'} 吗?`,
+      content: '此操作不能撤销!!!',
+      centered: true,
+      onOk() {
+        onMetaPatch(id, { meta: 'banner', value }).then(() => {
           actionRef.current?.reload()
           if (cb) {
             cb()
@@ -150,13 +175,17 @@ const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
     {
       title: '状态',
       width: 120,
-      render: (_, { publish: propPublish, open: propOpen, origin: propOrigin }) => {
+      render: (
+        _,
+        { publish: propPublish, open: propOpen, origin: propOrigin, banner: propBanner }
+      ) => {
         const publish = ps(propPublish!)
         const open = ap(propOpen!)
         const origin = ao(propOrigin!)
+        const banner = ab(propBanner!)
         return (
           <Space direction='vertical'>
-            {[publish, open, origin].map((s) => (
+            {[publish, open, origin, banner].map((s) => (
               <Tag icon={s.icon} color={s.color} key={s.id}>
                 {s.name}
               </Tag>
@@ -208,6 +237,27 @@ const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
               onClick={() => handleStateChange([article.id], PublishState.Draft)}
             >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
+            </Button>
+          )}
+          {article.banner === 1 ? (
+            <Button
+              size='small'
+              type='text'
+              block
+              icon={<SwapOutlined />}
+              onClick={() => handleBannerChange(article.id, 0)}
+            >
+              移除轮播
+            </Button>
+          ) : (
+            <Button
+              size='small'
+              type='text'
+              block
+              icon={<RetweetOutlined />}
+              onClick={() => handleBannerChange(article.id, 1)}
+            >
+              加入轮播
             </Button>
           )}
           <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
@@ -284,6 +334,15 @@ const ArticleTable = ({ query, onPatch }: ArticleTableProps) => {
             >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
+            <TableDropdown
+              menus={[
+                { name: '加入轮播', key: 'joinBanner' },
+                {
+                  name: '移除轮播',
+                  key: 'removeBanner',
+                },
+              ]}
+            />
           </Space>
         )
       }}
