@@ -8,11 +8,13 @@ export interface ImageUploaderModalProps {
   visible?: boolean
   onClose?: () => void
   onOk?: (value: string) => void
+  prefix: string
 }
 export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   initValue,
   visible,
   onClose,
+  prefix,
 }) => {
   const value = useRef(initValue || '')
 
@@ -40,6 +42,7 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
       }
     >
       <ImageUploader
+        prefix={prefix}
         value={value.current}
         onChange={(newValue) => {
           value.current = newValue

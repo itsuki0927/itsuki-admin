@@ -256,6 +256,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
             {language === UEditorLanguage.Markdown && (
               <>
                 <ImageUploaderModal
+                  prefix='article-cover'
                   visible={uploaderModalVisible}
                   onClose={() => setUploaderModalVisible(false)}
                 />

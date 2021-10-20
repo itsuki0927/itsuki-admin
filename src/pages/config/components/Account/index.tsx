@@ -73,7 +73,7 @@ const BasicView = () => {
         wrapperCol={{ span: 6 }}
         rules={[{ required: true, message: '请输入昵称' }]}
       >
-        <ImageUploader disabledMarkdown />
+        <ImageUploader prefix='avatar' disabledMarkdown />
       </Form.Item>
       <ProFormText
         width='lg'

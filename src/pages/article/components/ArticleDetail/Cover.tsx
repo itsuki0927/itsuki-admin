@@ -6,7 +6,7 @@ const Cover = () => {
   return (
     <ProCard title='文章封面' headerBordered>
       <Form.Item name='cover' style={{ marginBottom: 0 }}>
-        <ImageUploader />
+        <ImageUploader prefix='article' />
       </Form.Item>
     </ProCard>
   )

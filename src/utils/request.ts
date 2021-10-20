@@ -48,7 +48,7 @@ const errorHandler = (error: { response: Response; data: any; request: any; mess
 }
 
 const request: RequestConfig = {
-  prefix: `${BASE_PATH}/api/${VERSION}`,
+  prefix: `${BASE_PATH}/${VERSION}`,
   timeout: 10000,
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],

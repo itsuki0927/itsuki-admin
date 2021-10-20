@@ -20,6 +20,7 @@ type ImageUploaderProps = {
   onChange?: (value: string) => void
   disabledInput?: boolean
   disabledMarkdown?: boolean
+  prefix: string
 }
 
 const ImageUploader = ({
@@ -27,6 +28,7 @@ const ImageUploader = ({
   onChange,
   disabledInput,
   disabledMarkdown,
+  prefix,
 }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -64,6 +66,7 @@ const ImageUploader = ({
   const uploadFile = (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
+    formData.append('prefix', prefix)
     setUploading(true)
     request('/upload/file', {
       method: 'POST',
