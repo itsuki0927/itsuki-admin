@@ -5,7 +5,7 @@ import { Form } from 'antd'
 const Cover = () => {
   return (
     <ProCard title='文章封面' headerBordered>
-      <Form.Item name='cover' normalize={(str) => `https://resources.fivewoods.xyz/${str}`}>
+      <Form.Item name='cover'>
         <ImageUploader prefix='article' />
       </Form.Item>
     </ProCard>
