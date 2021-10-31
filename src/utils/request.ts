@@ -1,4 +1,4 @@
-import { API_URL } from '@/config'
+import { API_URL, API_VERSION } from '@/config'
 import { notification } from 'antd'
 import type { RequestConfig } from 'umi'
 import { getToken } from './auth'
@@ -49,7 +49,7 @@ const errorHandler = (error: { response: Response; data: any; request: any; mess
 }
 
 const request: RequestConfig = {
-  prefix: `${API_URL}/v1`,
+  prefix: `${API_URL}/${API_VERSION}`,
   timeout: 10000,
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],
