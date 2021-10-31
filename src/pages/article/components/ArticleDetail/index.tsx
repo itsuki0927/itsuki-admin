@@ -17,6 +17,7 @@ const ArticleDetail = ({ onFinish, initialValues }: ArticleDetailProps) => {
   return (
     <ProForm<ArticleActionRequest>
       onFinish={onFinish}
+      style={{ overflow: 'hidden' }}
       initialValues={initialValues}
       submitter={{
         submitButtonProps: {
@@ -25,21 +26,15 @@ const ArticleDetail = ({ onFinish, initialValues }: ArticleDetailProps) => {
         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
       }}
     >
-      <ProCard ghost gutter={8}>
+      <ProCard colSpan={{ md: 17 }} ghost gutter={36}>
         <ProCard title='基本信息' headerBordered>
           <Main />
         </ProCard>
 
-        <ProCard colSpan='30%' ghost direction='column' gutter={16}>
-          <ProCard ghost style={{ marginBottom: -12 }}>
-            <Category />
-          </ProCard>
-          <ProCard ghost style={{ marginBottom: 12 }}>
-            <Cover />
-          </ProCard>
-          <ProCard ghost>
-            <Options />
-          </ProCard>
+        <ProCard colSpan={{ md: 7 }} ghost direction='column' gutter={24}>
+          <Category />
+          <Cover />
+          <Options />
         </ProCard>
       </ProCard>
     </ProForm>

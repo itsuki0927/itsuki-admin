@@ -16,7 +16,16 @@ const Category = ({ value, onChange }: CategoryProps) => {
   const { data, loading, refresh } = useRequest(() => queryCategoryList())
 
   return (
-    <ProCard title='分类目录' headerBordered loading={loading}>
+    <ProCard
+      title='分类目录'
+      headerBordered
+      loading={loading}
+      extra={
+        <Button icon={<ReloadOutlined />} type='dashed' size='small' onClick={() => refresh()}>
+          刷新列表
+        </Button>
+      }
+    >
       {!data || !data.length ? (
         <Typography.Text type='secondary'>无分类</Typography.Text>
       ) : (
@@ -45,10 +54,6 @@ const Category = ({ value, onChange }: CategoryProps) => {
           }}
         />
       )}
-      <Divider />
-      <Button icon={<ReloadOutlined />} type='dashed' size='small' onClick={() => refresh()}>
-        刷新列表
-      </Button>
     </ProCard>
   )
 }
@@ -59,13 +64,8 @@ const CategorySelect = () => {
       name='categoryIds'
       rules={[
         {
-          message: '至少应该选择一个分类',
-          validator(_, value: string[]) {
-            if (value?.length) {
-              return Promise.resolve()
-            }
-            return Promise.reject()
-          },
+          message: '至少选择一个分类',
+          required: true,
         },
       ]}
     >

@@ -52,7 +52,7 @@ const Tag = ({ onChange, value: propValue }: TagProps) => {
 
 const TagSelect = () => {
   return (
-    <Form.Item name='tagIds' label='标签'>
+    <Form.Item name='tagIds' label='标签' rules={[{ required: true, message: '至少选择一个标签' }]}>
       <Tag />
     </Form.Item>
   )
