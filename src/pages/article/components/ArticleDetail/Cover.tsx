@@ -4,11 +4,11 @@ import { Form } from 'antd'
 
 const Cover = () => {
   return (
-    <ProCard title='文章封面' headerBordered>
-      <Form.Item name='cover'>
+    <Form.Item name='cover'>
+      <ProCard title='文章封面' headerBordered>
         <ImageUploader prefix='article' />
-      </Form.Item>
-    </ProCard>
+      </ProCard>
+    </Form.Item>
   )
 }
 

@@ -1,4 +1,5 @@
 import { markdownToHTML } from '@/transforms/markdown.transform'
+import { saveFile } from '@/utils'
 import storage from '@/utils/storage'
 import {
   CloudUploadOutlined,
@@ -63,6 +64,8 @@ export interface UniversalEditorProps {
   language?: UEditorLanguage
   style?: React.CSSProperties
 }
+
+const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString()
 export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   const placeholder = props.placeholder || '请输入内容...'
   const propValue = props.value || ''
@@ -77,11 +80,12 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   )
 
   const handleSaveContent = () => {
-    // const time = timestampToYMD(Date.now())
-    // const time = '2423'
+    const time = timestampToYMD(Date.now())
     // const fileExt = fileExtMap.get(language)
-    // const fileName = `${cacheID}-${time}.${fileExt}`
-    // saveFile(propValue, fileName)
+    const fileExt = 'md'
+    const fileName = `${cacheID}-${time}.${fileExt}`
+    const content = ueditor.current?.getValue() ?? propValue ?? ''
+    saveFile(content, fileName)
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +190,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   // preview change
   useEffect(() => {
     handleResizeWidth()
-  }, [handleResizeWidth, isPreview])
+  }, [handleResizeWidth, fullscreen, isPreview])
 
   // language change
   useEffect(() => {

@@ -61,6 +61,7 @@ const EditArticle = () => {
     >
       <ArticleDetail
         initialValues={data}
+        onSave={(values) => updateArticle(data?.id!, values)}
         onFinish={(values) => {
           return updateArticle(data?.id!, values).then(() => {
             message.success('更新成功')
