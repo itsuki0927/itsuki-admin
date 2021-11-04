@@ -7,7 +7,6 @@ const CreateArticle = () => {
   return (
     <PageContainer>
       <ArticleDetail
-        onSave={createArticle}
         onFinish={(value) => {
           return createArticle(value).then(() => {
             message.success('发布成功')
