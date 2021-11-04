@@ -48,6 +48,11 @@ const Options = () => {
             name='password'
             labelAlign='left'
             label='文章密码'
+            rules={
+              open === ArticleOpen.Password
+                ? [{ required: true, message: '请输入文章密码' }]
+                : undefined
+            }
             disabled={open !== ArticleOpen.Password}
           />
         )}

@@ -33,7 +33,7 @@ const Main = () => {
         rules={[{ required: true, message: '请输入文章内容' }]}
         label='文章内容'
       >
-        <MarkdownEditor />
+        <MarkdownEditor formStatus />
       </Form.Item>
     </ProCard>
   )

@@ -2,6 +2,7 @@ import { queryTagList } from '@/services/ant-design-pro/tag'
 import { CheckOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
 import { Button, Divider, Form, Space, Spin, Typography } from 'antd'
 import { useRequest } from 'umi'
+import styles from './style.module.less'
 
 type TagProps = {
   value?: number[]
@@ -19,12 +20,12 @@ const Tag = ({ onChange, value: propValue }: TagProps) => {
   }
 
   return (
-    <Space>
+    <Space className={styles.tag}>
       {!data || !data.length ? (
         <Typography.Text>暂无标签</Typography.Text>
       ) : (
         <Spin spinning={loading}>
-          <Space>
+          <Space size={12}>
             {data.map((item) => {
               const check = value.includes(item.id)
               return (
