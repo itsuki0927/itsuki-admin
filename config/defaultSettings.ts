@@ -6,7 +6,7 @@ const Settings: LayoutSettings & {
 } = {
   title: 'Blog Admin',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://resources.fivewoods.xyz/logo.png',
   iconfontUrl: '',
   navTheme: 'light',
   primaryColor: '#1890ff',
