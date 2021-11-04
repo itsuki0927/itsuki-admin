@@ -1,3 +1,4 @@
+import { ArticleOpen } from '@/constants/article/public'
 import { useInterval } from '@/hooks'
 import type { ArticleActionRequest } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
@@ -18,13 +19,32 @@ type ArticleDetailProps = {
   initialValues?: API.Article
 }
 
+const keys = [
+  'title',
+  'description',
+  'keywords',
+  'tagIds',
+  'content',
+  'categoryIds',
+  'banner',
+  'publish',
+  'origin',
+  'open',
+] as const
+
+const validateSecretArticle = (values: any) =>
+  values.open === ArticleOpen.Password &&
+  [...keys, 'password'].every((k) => values[k] !== undefined)
+
+const validatePublicArticle = (values: any) => keys.every((k) => values[k] !== undefined)
+
 const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) => {
   const formRef = useRef<ProFormInstance>()
 
-  const handleSave = () => {
+  const handleAutoSave = () => {
     if (onSave) {
-      const content = formRef.current?.getFieldValue('content')
-      if (content) {
+      const values = formRef.current?.getFieldsValue()
+      if (validateSecretArticle(values) || validatePublicArticle(values)) {
         formRef.current?.validateFieldsReturnFormatValue!().then((val) => {
           onSave(val).then(() => {
             message.success('自动保存成功')
@@ -34,7 +54,8 @@ const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) 
     }
   }
 
-  useInterval(handleSave, 10000)
+  // 15秒自动保存
+  useInterval(handleAutoSave, 15000)
 
   return (
     <ProForm<ArticleActionRequest>

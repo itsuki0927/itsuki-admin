@@ -1,11 +1,11 @@
+import { queryCategoryList } from '@/services/ant-design-pro/category'
+import type { API } from '@/services/ant-design-pro/typings'
+import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree.transform'
 import { ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { Button, Divider, Form, Space, Tree, Typography } from 'antd'
-import { queryCategoryList } from '@/services/ant-design-pro/category'
 import { useRequest } from 'umi'
-import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree.transform'
 import styles from './style.module.less'
-import type { API } from '@/services/ant-design-pro/typings'
 
 type CategoryProps = {
   value?: number[]
