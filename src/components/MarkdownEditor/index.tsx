@@ -20,11 +20,17 @@ import styles from './style.module.less'
 
 export enum UEditorLanguage {
   Markdown = 'markdown',
+  JavaScript = 'javascript',
+  TypeScript = 'typescript',
+  Css = 'css',
 }
-// const fileExtMap = new Map([
-//   [UEditorLanguage.Markdown, 'md'],
-//   [UEditorLanguage.Json, 'json'],
-// ])
+
+const fileExtMap = new Map([
+  [UEditorLanguage.Markdown, 'md'],
+  [UEditorLanguage.JavaScript, 'js'],
+  [UEditorLanguage.TypeScript, 'ts'],
+  [UEditorLanguage.Css, 'css'],
+])
 
 const TOOLBAR_HEIGHT = 48
 const SINGLE_LINE_HEIGHT = 24
@@ -81,8 +87,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
 
   const handleSaveContent = () => {
     const time = timestampToYMD(Date.now())
-    // const fileExt = fileExtMap.get(language)
-    const fileExt = 'md'
+    const fileExt = fileExtMap.get(language)
     const fileName = `${cacheID}-${time}.${fileExt}`
     const content = ueditor.current?.getValue() ?? propValue ?? ''
     saveFile(content, fileName)
@@ -287,6 +292,18 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
                 {
                   label: 'Markdown',
                   value: UEditorLanguage.Markdown,
+                },
+                {
+                  label: 'JavaScript',
+                  value: UEditorLanguage.JavaScript,
+                },
+                {
+                  label: 'TypeScript',
+                  value: UEditorLanguage.TypeScript,
+                },
+                {
+                  label: 'Css',
+                  value: UEditorLanguage.Css,
                 },
               ]}
             />
