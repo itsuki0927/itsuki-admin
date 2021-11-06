@@ -69,9 +69,12 @@ export interface UniversalEditorProps {
   formStatus?: boolean
   language?: UEditorLanguage
   style?: React.CSSProperties
+
+  size?: 'small' | 'default'
 }
 
 const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString()
+
 export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   const placeholder = props.placeholder || '请输入内容...'
   const propValue = props.value || ''
@@ -245,7 +248,8 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
       className={classnames(
         styles.universalEditor,
         props.formStatus && styles.formStatus,
-        fullscreen && styles.fullScreen
+        fullscreen && styles.fullScreen,
+        props.size === 'small' && styles.small
       )}
     >
       {!props.disabledToolbar && (

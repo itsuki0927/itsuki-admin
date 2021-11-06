@@ -9,11 +9,21 @@
 }
 
 @toolbar-height: 48px;
+@toolbar-height-sm: 32px;
 
 .universalEditor {
   width: 100%;
   border: 1px solid @border-color-base;
   border-radius: @border-radius-base;
+
+  &.small {
+    .toolbar {
+      height: @toolbar-height-sm;
+    }
+    .container {
+      height: calc(100vh - @toolbar-height-sm);
+    }
+  }
 
   &.fullScreen {
     position: fixed;
