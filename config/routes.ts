@@ -30,6 +30,12 @@ export default [
   { path: '/comment', name: '评论管理', icon: 'message', component: './comment/list' },
   { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },
   { path: '/category', name: '分类管理', icon: 'folder-open', component: './category/list' },
+  {
+    path: '/snippet',
+    name: '片段管理',
+    icon: 'smile',
+    routes: [{ path: '/snippet/create', name: '创建片段', component: './snippet/create' }],
+  },
   { path: '/settings', name: '系统设置', icon: 'setting', component: './config/index' },
   { path: '/', redirect: '/welcome' },
   { component: './404' },
