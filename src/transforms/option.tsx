@@ -10,15 +10,18 @@ type StateType = {
   icon: JSX.Element
   color: string
 }
-export const getSelectOptionsByState = (state: StateType[]) =>
+
+const defaultRenderLabel = (s: StateType) => (
+  <Space>
+    {s.icon}
+    {s.name}
+  </Space>
+)
+
+export const getSelectOptionsByState = (state: StateType[], renderLabel = defaultRenderLabel) =>
   state.map((s) => {
     return {
       value: s.id,
-      label: (
-        <Space>
-          {s.icon}
-          {s.name}
-        </Space>
-      ),
+      label: renderLabel(s),
     }
   })
