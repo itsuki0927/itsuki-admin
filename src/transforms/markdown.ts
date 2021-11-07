@@ -1,5 +1,5 @@
+import highlight from '@/utils/highlight'
 import marked from 'marked'
-import hljs from 'highlight.js'
 
 const renderer = new marked.Renderer()
 
@@ -26,9 +26,14 @@ marked.setOptions({
   sanitize: false,
   smartLists: true,
   smartypants: false,
-  highlight(code) {
-    return hljs.highlightAuto(code).value
+  highlight(code, language) {
+    return highlight.getLanguage(language)
+      ? highlight.highlight(code, { language }).value
+      : highlight.highlightAuto(code).value
   },
 })
+
+export const genMarkdownString = (code: string | undefined, language = 'js') =>
+  code ? '```' + language + '\n' + code + '\n```' : ''
 
 export const markdownToHTML = marked

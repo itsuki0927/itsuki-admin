@@ -1,4 +1,3 @@
-import { markdownToHTML } from '@/transforms/markdown.transform'
 import { saveFile } from '@/utils'
 import storage from '@/utils/storage'
 import {
@@ -13,6 +12,7 @@ import classnames from 'classnames'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
+import CodeBlock from '../CodeBlock'
 import ImageUploaderModal from '../ImageUploader/Modal'
 import ScreenFull from '../Screenfull'
 import { editor, KeyCode, KeyMod } from './monaco'
@@ -328,12 +328,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
           />
           <CSSTransition in={isPreview} timeout={200} unmountOnExit={true} classNames='fade-fast'>
             <div className={classnames(styles.preview)}>
-              <div
-                className={styles.markdown}
-                dangerouslySetInnerHTML={{
-                  __html: markdownToHTML(propValue),
-                }}
-              />
+              <CodeBlock value={propValue} className={styles.markdown} />
             </div>
           </CSSTransition>
         </div>

@@ -1,3 +1,4 @@
+import CodeBlock from '@/components/CodeBlock'
 import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
 import { ps, PublishState, publishStates } from '@/constants/publish'
 import { rs } from '@/constants/ranks'
@@ -5,7 +6,7 @@ import { patchSnippet, querySnippetList } from '@/services/ant-design-pro/snippe
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
-import { markdownToHTML } from '@/transforms/markdown.transform'
+import { genMarkdownString } from '@/transforms/markdown'
 import { getSelectOptionsByState } from '@/transforms/option'
 import {
   CheckOutlined,
@@ -18,10 +19,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Avatar, Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef, useState } from 'react'
-import { Link, history } from 'umi'
-
-const genCodeMarkdownString = (code: string | undefined, language = 'js') =>
-  code ? '```' + language + '\n' + code + '\n```' : ''
+import { history, Link } from 'umi'
 
 const SnippetTable = () => {
   const [visible, setVisible] = useState(false)
@@ -316,11 +314,7 @@ const SnippetTable = () => {
       >
         <Typography>
           <Typography.Paragraph>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: markdownToHTML(genCodeMarkdownString(temp?.code)),
-              }}
-            />
+            <CodeBlock value={genMarkdownString(temp?.code)} />
           </Typography.Paragraph>
         </Typography>
       </Modal>

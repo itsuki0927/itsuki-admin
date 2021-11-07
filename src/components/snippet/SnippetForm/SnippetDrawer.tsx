@@ -1,10 +1,8 @@
+import CodeBlock from '@/components/CodeBlock'
 import { rs } from '@/constants/ranks'
 import type { API } from '@/services/ant-design-pro/typings'
-import { markdownToHTML } from '@/transforms/markdown.transform'
+import { genMarkdownString } from '@/transforms/markdown'
 import { Drawer, Space, Tag, Typography } from 'antd'
-
-const genCodeMarkdownString = (code: string | undefined, language = 'js') =>
-  code ? '```' + language + '\n' + code + '\n```' : ''
 
 interface SnippetDrawerProps {
   visible: boolean
@@ -28,15 +26,15 @@ const SnippetDrawer = ({ data, visible, onClose }: SnippetDrawerProps) => {
           </Space>
         </Typography.Title>
         <Typography.Paragraph>{data?.description}</Typography.Paragraph>
-        <div dangerouslySetInnerHTML={{ __html: markdownToHTML(data?.skill ?? '') }} />
-        <div
-          dangerouslySetInnerHTML={{ __html: markdownToHTML(genCodeMarkdownString(data?.code)) }}
-        />
-        <div
-          dangerouslySetInnerHTML={{
-            __html: markdownToHTML(genCodeMarkdownString(data?.example)),
-          }}
-        />
+        <CodeBlock value={data?.skill ?? ''} />
+
+        {/* 代码 */}
+        <Typography.Title level={5}>Code</Typography.Title>
+        <CodeBlock value={genMarkdownString(data?.code)} />
+
+        {/* 示例 */}
+        <Typography.Title level={5}>Example</Typography.Title>
+        <CodeBlock value={genMarkdownString(data?.example)} />
       </Typography>
     </Drawer>
   )
