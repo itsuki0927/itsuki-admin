@@ -73,7 +73,7 @@ const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
               rules={[{ required: true, message: '请输入code' }]}
               style={{ marginBottom: 0 }}
             >
-              <UniversalEditor formStatus language={UEditorLanguage.JavaScript} />
+              <UniversalEditor key='code' formStatus language={UEditorLanguage.JavaScript} />
             </Form.Item>
           </ProCard>
 
@@ -115,6 +115,7 @@ const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
                 <UniversalEditor
                   formStatus
                   style={{ maxHeight: 350, overflow: 'hidden' }}
+                  key='skill'
                   disabledMinimap
                 />
               </Form.Item>
@@ -130,6 +131,7 @@ const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
                   formStatus
                   style={{ maxHeight: 350, overflow: 'hidden' }}
                   disabledMinimap
+                  key='example'
                   language={UEditorLanguage.JavaScript}
                 />
               </Form.Item>
