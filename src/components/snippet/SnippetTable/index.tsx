@@ -1,13 +1,14 @@
 import CodeBlock from '@/components/CodeBlock'
 import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
 import { ps, PublishState, publishStates } from '@/constants/publish'
-import { rs } from '@/constants/ranks'
+import { ranksStates, rs } from '@/constants/ranks'
 import { patchSnippet, querySnippetList } from '@/services/ant-design-pro/snippet'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
 import { genMarkdownString } from '@/transforms/markdown'
 import { getSelectOptionsByState } from '@/transforms/option'
+import { getBlogSnippetUrl } from '@/transforms/url'
 import {
   CheckOutlined,
   DeleteOutlined,
@@ -169,51 +170,72 @@ const SnippetTable = () => {
       },
     },
     {
+      title: '难度',
+      hideInTable: true,
+      valueType: 'select',
+      dataIndex: 'ranks',
+      fieldProps: {
+        options: [
+          { label: '全部来源', value: SELECT_ALL_VALUE },
+          ...getSelectOptionsByState(ranksStates, (item) => (
+            <Tag color={item.color}>{item.name}</Tag>
+          )),
+        ],
+      },
+    },
+    {
       title: '操作',
       valueType: 'option',
       width: 110,
-      render: (_, article) => (
+      render: (_, { id, status }) => (
         <Space direction='vertical'>
-          <Link to={`/snippet/edit/${article.id}`}>
+          <Link to={`/snippet/edit/${id}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
               片段详情
             </Button>
           </Link>
-          {article.status === PublishState.Draft && (
+          {status === PublishState.Draft && (
             <Button
               size='small'
               type='text'
               block
               icon={<CheckOutlined />}
-              onClick={() => handlePatchSnippet([article.id], PublishState.Published)}
+              onClick={() => handlePatchSnippet([id], PublishState.Published)}
             >
               <Typography.Text type='success'>直接发布</Typography.Text>
             </Button>
           )}
-          {article.status === PublishState.Published && (
+          {status === PublishState.Published && (
             <Button
               size='small'
               type='text'
               block
               danger
               icon={<DeleteOutlined />}
-              onClick={() => handlePatchSnippet([article.id], PublishState.Recycle)}
+              onClick={() => handlePatchSnippet([id], PublishState.Recycle)}
             >
               移回收站
             </Button>
           )}
-          {article.status === PublishState.Recycle && (
+          {status === PublishState.Recycle && (
             <Button
               size='small'
               type='text'
               block
               icon={<RollbackOutlined />}
-              onClick={() => handlePatchSnippet([article.id], PublishState.Draft)}
+              onClick={() => handlePatchSnippet([id], PublishState.Draft)}
             >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
           )}
-          <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
+          <Button
+            size='small'
+            block
+            type='link'
+            target='_blank'
+            icon={<LinkOutlined />}
+            href={getBlogSnippetUrl(id)}
+          >
             宿主页面
           </Button>
         </Space>
