@@ -1,4 +1,6 @@
 import { NO_PARENT_VALUE } from '@/constants/common'
+import type { CommentTree } from '@/services/ant-design-pro/comment'
+import type { API } from '@/services/ant-design-pro/typings'
 import type { DataNode } from 'rc-tree/lib/interface'
 
 type ConvertTreeData = {
@@ -58,3 +60,18 @@ export function getAntdTreeByTree<T extends TreeData<T>>(tree: T[], currentCateg
   }
   return toAntdTree(tree)
 }
+
+const buildCommentTree = (data: API.Comment[], parentId: number) => {
+  const parents = data.filter((v) => v.parentId === parentId) as CommentTree[]
+
+  return parents.map((item) => {
+    item.children = buildCommentTree(data, item.id)
+    return item
+  })
+}
+
+/**
+ * comment数组转化为comment tree
+ */
+export const convertToCommentTreeData = (data: API.Comment[]) =>
+  buildCommentTree(data, NO_PARENT_VALUE)

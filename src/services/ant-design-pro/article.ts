@@ -71,6 +71,10 @@ export const createArticle = (data: ArticleActionRequest) =>
 export const queryArticleList = (params?: ArticleSearchRequest) =>
   request<BaseSearchRequest<API.Article>>('/article', { method: 'GET', params })
 
+/** 查询文章下的评论列表 GET /article/:articleId/comments */
+export const queryArticleCommentList = (articleId: string | number) =>
+  request<API.Comment[]>(`/article/${articleId}/comments`, { method: 'GET' })
+
 /** 查询文章 GET /article/:id */
 export const queryArticleById = (id: number) =>
   request<ArticleDetailResponse>(`/article/${id}`, { method: 'GET' })

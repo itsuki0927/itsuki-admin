@@ -4,7 +4,11 @@ import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-for
 import { Form } from 'antd'
 import TagSelect from './Tag'
 
-const Main = () => {
+interface MainProps {
+  cacheID?: string
+}
+
+const Main = ({ cacheID }: MainProps) => {
   return (
     <ProCard ghost>
       <ProFormText
@@ -33,7 +37,7 @@ const Main = () => {
         rules={[{ required: true, message: '请输入文章内容' }]}
         label='文章内容'
       >
-        <MarkdownEditor formStatus />
+        <MarkdownEditor formStatus cacheID={cacheID} />
       </Form.Item>
     </ProCard>
   )

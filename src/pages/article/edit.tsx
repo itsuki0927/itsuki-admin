@@ -1,4 +1,10 @@
-import { deleteArticle, queryArticleById, updateArticle } from '@/services/ant-design-pro/article'
+import {
+  deleteArticle,
+  queryArticleById,
+  queryArticleCommentList,
+  updateArticle,
+} from '@/services/ant-design-pro/article'
+import { convertToCommentTreeData } from '@/transforms/tree'
 import { getBlogArticleUrl } from '@/transforms/url'
 import {
   CommentOutlined,
@@ -9,11 +15,27 @@ import {
 } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
 import { Badge, Button, message, Modal, Space } from 'antd'
+import { useState } from 'react'
 import { history, useParams, useRequest } from 'umi'
 import ArticleDetail from './components/ArticleDetail'
+import ArticleComment from './components/Comment'
 
 const EditArticle = () => {
   const { id } = useParams<{ id: string }>()
+  const articleCacheID = window.location.pathname
+  const [commentVisible, setCommentVisible] = useState(false)
+
+  const {
+    loading: commentLoading,
+    data: comments,
+    refresh: refreshComments,
+  } = useRequest(() =>
+    queryArticleCommentList(id).then((data) => {
+      const treeData = convertToCommentTreeData(data)
+      return { data: treeData }
+    })
+  )
+
   const { loading, data } = useRequest(() =>
     queryArticleById(+id).then((result) => {
       result.keywords = result.keywords?.split('、') as any
@@ -51,7 +73,7 @@ const EditArticle = () => {
             删除文章
           </Button>
           <Badge count={data?.commenting}>
-            <Button size='small' icon={<CommentOutlined />}>
+            <Button size='small' icon={<CommentOutlined />} onClick={() => setCommentVisible(true)}>
               文章评论
             </Button>
           </Badge>
@@ -72,15 +94,26 @@ const EditArticle = () => {
         </Space>
       }
     >
-      <ArticleDetail
-        initialValues={data}
-        onSave={(values) => updateArticle(data?.id!, values)}
-        onFinish={(values) => {
-          return updateArticle(data?.id!, values).then(() => {
-            message.success('更新成功')
-            return true
-          })
-        }}
+      {data ? (
+        <ArticleDetail
+          cacheID={articleCacheID}
+          request={() => Promise.resolve(data)}
+          onFinish={(values) => {
+            return updateArticle(data?.id!, values).then(() => {
+              message.success('更新成功')
+              return true
+            })
+          }}
+        />
+      ) : null}
+
+      <ArticleComment
+        onRefresh={() => refreshComments()}
+        loading={commentLoading}
+        count={comments?.length}
+        comments={comments}
+        visible={commentVisible}
+        onClose={() => setCommentVisible(false)}
       />
     </PageContainer>
   )

@@ -35,9 +35,17 @@ export type CommentPatchRequest = {
   status: CommentState
 }
 
-/** 查询文章列表 GET /comment */
+export type CommentTree = API.Comment & {
+  children?: CommentTree[]
+}
+
+/** 查询评论列表 GET /comment */
 export const queryCommentList = (params?: CommentSearchRequest) =>
   request<SearchResponse<API.Comment>>('/comment', { method: 'GET', params })
+
+/** 查询评论 GET /comment/:id */
+export const queryComment = (id: number | string) =>
+  request<API.Comment>(`/comment/${id}`, { method: 'GET' })
 
 /** 更新文章 PUT /comment/:id */
 export const updateComment = (id: number, data: CommentUpdateRequest) =>

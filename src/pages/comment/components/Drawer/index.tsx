@@ -1,6 +1,7 @@
 import MarkdownEditor from '@/components/MarkdownEditor'
 import { commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
 import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
+import { queryComment } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date.transform'
 import { getGravatarUrl } from '@/transforms/gravatar'
@@ -16,6 +17,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-form'
 import { Avatar, Button, Divider, Form, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 
 type CommentDrawerProps = {
   comment?: API.Comment
@@ -25,6 +27,19 @@ type CommentDrawerProps = {
 }
 
 const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
+  const [parentComment, setParentComment] = useState<API.Comment | undefined>()
+
+  const fetchParentComment = (parentId: number) =>
+    queryComment(parentId).then((data) => {
+      setParentComment(data)
+    })
+
+  useEffect(() => {
+    if (comment?.parentId) {
+      fetchParentComment(comment.parentId)
+    }
+  }, [comment])
+
   return (
     <DrawerForm<CommentUpdateRequest>
       key={comment?.id}
@@ -127,8 +142,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         <Form.Item label='父级评论'>
           <p style={{ marginBottom: 0 }}>#{comment?.parentId}</p>
           <Typography.Paragraph>
-            父级评论内容占位符
-            {/* <blockquote>{parentComment.value?.content}</blockquote> */}
+            <blockquote>{parentComment?.content}</blockquote>
           </Typography.Paragraph>
         </Form.Item>
       )}

@@ -6,7 +6,7 @@ import {
   updateCategory,
 } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
-import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree.transform'
+import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
 import compose from '@/utils/compose'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'

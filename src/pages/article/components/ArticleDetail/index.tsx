@@ -1,6 +1,6 @@
 import { ArticleOpen } from '@/constants/article/public'
 import { useInterval } from '@/hooks'
-import type { ArticleActionRequest } from '@/services/ant-design-pro/article'
+import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import ProCard from '@ant-design/pro-card'
 import type { ProFormInstance } from '@ant-design/pro-form'
@@ -16,7 +16,8 @@ import Options from './Options'
 type ArticleDetailProps = {
   onFinish: (values: ArticleActionRequest) => Promise<boolean>
   onSave?: (values: ArticleActionRequest) => Promise<API.Article>
-  initialValues?: API.Article
+  request?: () => Promise<ArticleDetailResponse>
+  cacheID?: string
 }
 
 const keys = [
@@ -38,7 +39,7 @@ const validateSecretArticle = (values: any) =>
 
 const validatePublicArticle = (values: any) => keys.every((k) => values[k] !== undefined)
 
-const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) => {
+const ArticleDetail = ({ onFinish, onSave, request, cacheID }: ArticleDetailProps) => {
   const formRef = useRef<ProFormInstance>()
 
   const handleAutoSave = () => {
@@ -59,10 +60,10 @@ const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) 
 
   return (
     <ProForm<ArticleActionRequest>
+      request={request}
       formRef={formRef}
       onFinish={onFinish}
       style={{ overflow: 'hidden' }}
-      initialValues={initialValues}
       submitter={{
         submitButtonProps: {
           style: { width: 150 },
@@ -72,7 +73,7 @@ const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) 
     >
       <ProCard colSpan={{ md: 17 }} ghost gutter={24}>
         <ProCard title='基本信息' headerBordered>
-          <Main />
+          <Main cacheID={cacheID} />
         </ProCard>
 
         <ProCard colSpan={{ md: 7 }} ghost>

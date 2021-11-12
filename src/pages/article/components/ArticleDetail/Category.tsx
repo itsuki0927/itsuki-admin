@@ -1,6 +1,6 @@
 import { queryCategoryList } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
-import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree.transform'
+import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
 import { ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { Button, Divider, Form, Space, Tree, Typography } from 'antd'
