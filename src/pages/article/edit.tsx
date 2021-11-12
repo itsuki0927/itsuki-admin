@@ -1,5 +1,12 @@
 import { deleteArticle, queryArticleById, updateArticle } from '@/services/ant-design-pro/article'
-import { CommentOutlined, DeleteOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons'
+import { getBlogArticleUrl } from '@/transforms/url'
+import {
+  CommentOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  LikeOutlined,
+  RocketOutlined,
+} from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'
 import { Badge, Button, message, Modal, Space } from 'antd'
 import { history, useParams, useRequest } from 'umi'
@@ -55,6 +62,12 @@ const EditArticle = () => {
             <Button size='small' disabled icon={<EyeOutlined />}>
               {data?.reading}阅读
             </Button>
+            <Button
+              size='small'
+              target='_blank'
+              icon={<RocketOutlined />}
+              href={getBlogArticleUrl(id)}
+            />
           </Button.Group>
         </Space>
       }
