@@ -1,3 +1,5 @@
+import { getUEditorCache } from '@/components/MarkdownEditor'
+import type { ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import {
   deleteArticle,
   queryArticleById,
@@ -36,7 +38,7 @@ const EditArticle = () => {
     })
   )
 
-  const { loading, data } = useRequest(() =>
+  const { loading, data, mutate } = useRequest(() =>
     queryArticleById(+id).then((result) => {
       result.keywords = result.keywords?.split('、') as any
       result.tagIds = result.tags?.map((v) => v.id)
@@ -55,6 +57,41 @@ const EditArticle = () => {
           history.replace('/article/list')
         })
       },
+    })
+  }
+
+  const handleRequest = () => {
+    return new Promise<ArticleDetailResponse>((resolve) => {
+      const localeContent = getUEditorCache(articleCacheID)
+      if (!!localeContent && localeContent !== data?.content) {
+        Modal.confirm({
+          title: '本地缓存存在未保存的文章，是否要覆盖远程数据？',
+          content: '如果覆盖错了，就自己刷新吧！',
+          okText: '本地覆盖远程',
+          cancelText: '使用远程数据',
+          centered: true,
+          okButtonProps: {
+            danger: true,
+          },
+          onOk() {
+            const mutateData = {
+              ...data!,
+              content: localeContent,
+            }
+            mutate(mutateData)
+            // TODO: 会弹出两个弹出框
+            Modal.destroyAll()
+            resolve(mutateData)
+          },
+          onCancel() {
+            // TODO: 会弹出两个弹出框
+            Modal.destroyAll()
+            resolve(data!)
+          },
+        })
+      } else {
+        resolve(data!)
+      }
     })
   }
 
@@ -97,7 +134,7 @@ const EditArticle = () => {
       {data ? (
         <ArticleDetail
           cacheID={articleCacheID}
-          request={() => Promise.resolve(data)}
+          request={handleRequest}
           onFinish={(values) => {
             return updateArticle(data?.id!, values).then(() => {
               message.success('更新成功')
