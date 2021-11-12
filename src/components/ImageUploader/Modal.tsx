@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react'
-import { Modal, Space, Button } from 'antd'
 import { FileImageOutlined } from '@ant-design/icons'
+import { Button, Modal, Space } from 'antd'
+import React, { useEffect, useState } from 'react'
 import ImageUploader from './index'
 
 export interface ImageUploaderModalProps {
   initValue?: string
   visible?: boolean
-  onClose?: () => void
-  onOk?: (value: string) => void
+  onClose?: (value: string) => void
   prefix: string
 }
 export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
@@ -16,11 +15,11 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   onClose,
   prefix,
 }) => {
-  const value = useRef(initValue || '')
+  const [value, setValue] = useState(initValue || '')
 
   useEffect(() => {
     if (!visible) {
-      value.current = ''
+      setValue('')
     }
   }, [visible])
 
@@ -36,16 +35,16 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
         </Space>
       }
       footer={
-        <Button block={true} type='link' onClick={onClose}>
+        <Button block={true} type='link' onClick={() => onClose?.(value)}>
           OK
         </Button>
       }
     >
       <ImageUploader
         prefix={prefix}
-        value={value.current}
+        value={value}
         onChange={(newValue) => {
-          value.current = newValue
+          setValue(newValue)
         }}
       />
     </Modal>
