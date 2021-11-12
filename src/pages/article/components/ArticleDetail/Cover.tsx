@@ -5,7 +5,7 @@ import { Form } from 'antd'
 const WrapperCover = (props: any) => {
   return (
     <ProCard title='文章封面' headerBordered>
-      <ImageUploader prefix='article' {...props} />
+      <ImageUploader prefix='article-cover' {...props} />
     </ProCard>
   )
 }
