@@ -54,8 +54,8 @@ const ArticleDetail = ({ onFinish, onSave, initialValues }: ArticleDetailProps) 
     }
   }
 
-  // 15秒自动保存
-  useInterval(handleAutoSave, 15000)
+  // 30秒自动保存
+  useInterval(handleAutoSave, 30 * 1000)
 
   return (
     <ProForm<ArticleActionRequest>
