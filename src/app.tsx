@@ -1,4 +1,4 @@
-import { Footer, HeaderContent, RightContent } from '@/components/layout'
+import { Footer, HeaderContent, RightContent, MainContent } from '@/components/layout'
 import { queryCurrentAdmin } from '@/services/ant-design-pro/admin'
 import type { API } from '@/services/ant-design-pro/typings'
 import requestConfig from '@/utils/request'
@@ -64,6 +64,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.nickname,
     },
+    childrenRender: (children) => <MainContent>{children}</MainContent>,
     rightContentRender: () => <RightContent />,
     headerContentRender: (props) => <HeaderContent {...props} />,
     footerRender: () => <Footer />,
