@@ -1,10 +1,44 @@
 import { Space } from 'antd'
-import { QuestionCircleOutlined } from '@ant-design/icons'
-import React from 'react'
-import { useModel } from 'umi'
-import Avatar from './AvatarDropdown'
+import { Link, useModel } from 'umi'
 import HeaderSearch from '../HeaderSearch'
+import Avatar from './AvatarDropdown'
 import styles from './index.less'
+
+const renderItem = (title: string, url: string) => ({
+  value: title,
+  label: <Link to={url}>{title}</Link>,
+})
+
+const options = [
+  {
+    label: <Link to='/welcome'>Welcome</Link>,
+    value: 'welcome',
+  },
+  {
+    label: '文章管理',
+    options: [renderItem('文章列表', '/article/list'), renderItem('新撰文章', '/article/create')],
+  },
+  {
+    label: '片段管理',
+    options: [renderItem('片段列表', '/snippet/list'), renderItem('新撰片段', '/snippet/create')],
+  },
+  {
+    label: <Link to='/comment'>评论管理</Link>,
+    value: '评论管理',
+  },
+  {
+    label: <Link to='/tag'>标签管理</Link>,
+    value: '标签管理',
+  },
+  {
+    label: <Link to='/category'>分类管理</Link>,
+    value: '分类管理',
+  },
+  {
+    label: <Link to='/settings'>系统设置</Link>,
+    value: '系统设置',
+  },
+]
 
 export type SiderTheme = 'light' | 'dark'
 
@@ -27,36 +61,8 @@ const GlobalHeaderRight: React.FC = () => {
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
         placeholder='站内搜索'
-        defaultValue='umi ui'
-        options={[
-          {
-            label: <a href='https://umijs.org/zh/guide/umi-ui.html'>umi ui</a>,
-            value: 'umi ui',
-          },
-          {
-            label: <a href='next.ant.design'>Ant Design</a>,
-            value: 'Ant Design',
-          },
-          {
-            label: <a href='https://protable.ant.design/'>Pro Table</a>,
-            value: 'Pro Table',
-          },
-          {
-            label: <a href='https://prolayout.ant.design/'>Pro Layout</a>,
-            value: 'Pro Layout',
-          },
-        ]} // onSearch={value => {
-        //   console.log('input', value);
-        // }}
+        options={options}
       />
-      <span
-        className={styles.action}
-        onClick={() => {
-          window.open('https://pro.ant.design/docs/getting-started')
-        }}
-      >
-        <QuestionCircleOutlined />
-      </span>
       <Avatar menu />
     </Space>
   )
