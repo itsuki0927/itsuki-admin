@@ -1,5 +1,5 @@
 import { ArticleComment, ArticleForm } from '@/components/article'
-import { getUEditorCache } from '@/components/common/MarkdownEditor'
+import { getUEditorCache } from '@/components/common/UniversalEditor'
 import type { ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import {
   deleteArticle,

@@ -1,4 +1,4 @@
-import UniversalEditor, { UEditorLanguage } from '@/components/common/MarkdownEditor'
+import UniversalEditor, { UEditorLanguage } from '@/components/common/UniversalEditor'
 import { publishStates } from '@/constants/publish'
 import { ranksStates } from '@/constants/ranks'
 import type { SnippetActionRequest } from '@/services/ant-design-pro/snippet'

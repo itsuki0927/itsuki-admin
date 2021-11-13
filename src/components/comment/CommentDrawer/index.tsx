@@ -1,4 +1,4 @@
-import { MarkdownEditor } from '@/components/common'
+import { UniversalEditor } from '@/components/common'
 import { commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
 import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
 import { queryComment } from '@/services/ant-design-pro/comment'
@@ -157,7 +157,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         label='评论内容'
         rules={[{ required: true, message: '请输入评论内容' }]}
       >
-        <MarkdownEditor
+        <UniversalEditor
           disabledMinimap={true}
           disabledCacheDraft={true}
           minRows={14}

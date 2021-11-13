@@ -1,4 +1,4 @@
-import { MarkdownEditor } from '@/components/common'
+import { UniversalEditor } from '@/components/common'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form'
 import { Form } from 'antd'
@@ -37,7 +37,7 @@ const Main = ({ cacheID }: MainProps) => {
         rules={[{ required: true, message: '请输入文章内容' }]}
         label='文章内容'
       >
-        <MarkdownEditor formStatus cacheID={cacheID} />
+        <UniversalEditor formStatus cacheID={cacheID} />
       </Form.Item>
     </ProCard>
   )
