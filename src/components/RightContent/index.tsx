@@ -11,8 +11,8 @@ const renderItem = (title: string, url: string) => ({
 
 const options = [
   {
-    label: <Link to='/welcome'>Welcome</Link>,
-    value: 'welcome',
+    label: <Link to='/dashboard'>Dashboard</Link>,
+    value: 'Dashboard',
   },
   {
     label: '文章管理',

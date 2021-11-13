@@ -1,4 +1,5 @@
 export default [
+  { path: '/dashboard', name: 'Dashboard', icon: 'dashboard', component: './dashboard' },
   {
     path: '/user',
     layout: false,
@@ -10,7 +11,6 @@ export default [
       { component: './404' },
     ],
   },
-  { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
   {
     path: '/article',
     name: '文章管理',
@@ -46,6 +46,6 @@ export default [
   { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },
   { path: '/category', name: '分类管理', icon: 'folder-open', component: './category/list' },
   { path: '/settings', name: '系统设置', icon: 'setting', component: './config/index' },
-  { path: '/', redirect: '/welcome' },
+  { path: '/', redirect: '/dashboard' },
   { component: './404' },
 ]
