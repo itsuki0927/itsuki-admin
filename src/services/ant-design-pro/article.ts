@@ -63,6 +63,20 @@ export type ArticleMetaPatchRequest = {
   value?: number
 }
 
+type ArticleSummary = {
+  publish: number
+  value: number
+  title: string
+  status: string
+}
+
+export type ArticleSummaryResponse = {
+  total: ArticleSummary
+  draft: ArticleSummary
+  recycle: ArticleSummary
+  published: ArticleSummary
+}
+
 /** 创建文章 POST /article */
 export const createArticle = (data: ArticleActionRequest) =>
   request<API.Article>('/article', { method: 'POST', data })
@@ -78,6 +92,10 @@ export const queryArticleCommentList = (articleId: string | number) =>
 /** 查询文章 GET /article/:id */
 export const queryArticleById = (id: number) =>
   request<ArticleDetailResponse>(`/article/${id}`, { method: 'GET' })
+
+/** 查询文章统计 GET /article/summary */
+export const queryArticleSummary = () =>
+  request<ArticleSummaryResponse>('/article/summary', { method: 'GET' })
 
 /** 更新文章 PUT /article/:id */
 export const updateArticle = (id: number, data: ArticleActionRequest) =>
