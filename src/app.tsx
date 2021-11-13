@@ -1,12 +1,12 @@
 import RightContent from '@/components/RightContent'
-import { BookOutlined, LinkOutlined } from '@ant-design/icons'
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
 import type { RunTimeLayoutConfig } from 'umi'
-import { history, Link } from 'umi'
-import { isDev } from './environment'
+import { history } from 'umi'
+import Footer from './components/Footer'
+import HeaderContent from './components/HeaderContent'
 import { queryCurrentAdmin } from './services/ant-design-pro/admin'
-import type API from './services/ant-design-pro/typings'
+import type { API } from './services/ant-design-pro/typings'
 import requestConfig from './utils/request'
 
 const loginPath = '/user/login'
@@ -27,7 +27,6 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const data = await queryCurrentAdmin()
-      console.log('fetchUserInfo:', data)
       return data
     } catch (error) {
       history.push(loginPath)
@@ -49,36 +48,28 @@ export async function getInitialState(): Promise<{
   }
 }
 
+const handlePageChange = (initialState: any) => {
+  const { location } = history
+  // 如果没有登录，重定向到 login
+  if (!initialState?.currentUser && location.pathname !== loginPath) {
+    history.push(loginPath)
+  }
+}
+
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    rightContentRender: () => <RightContent />,
+    siderWidth: 180,
+    collapsedButtonRender: false,
     disableContentMargin: false,
+    menuHeaderRender: undefined,
     waterMarkProps: {
       content: initialState?.currentUser?.nickname,
     },
-    // footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history
-      // 如果没有登录，重定向到 login
-      console.log('onPageChange:', initialState?.currentUser)
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath)
-      }
-    },
-    links: isDev
-      ? [
-          <Link to='/umi/plugin/openapi' target='_blank'>
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-          <Link to='/~docs'>
-            <BookOutlined />
-            <span>业务组件文档</span>
-          </Link>,
-        ]
-      : [],
-    menuHeaderRender: undefined,
+    rightContentRender: () => <RightContent />,
+    headerContentRender: (props) => <HeaderContent {...props} />,
+    footerRender: () => <Footer />,
+    onPageChange: () => handlePageChange(initialState),
     // 自定义 403 页面
     unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
