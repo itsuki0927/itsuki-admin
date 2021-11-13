@@ -1,3 +1,4 @@
+import { TagModal } from '@/components/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
@@ -7,7 +8,6 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Button, message, Modal, Table } from 'antd'
 import { useRef, useState } from 'react'
-import TagModal from './TagModal'
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)

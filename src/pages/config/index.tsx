@@ -1,3 +1,4 @@
+import { AccountSettings, BaseSettings } from '@/components/settings'
 import useQuery from '@/hooks/useQuery'
 import { SettingOutlined, UserOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
@@ -5,8 +6,6 @@ import { GridContent, PageContainer } from '@ant-design/pro-layout'
 import { Menu } from 'antd'
 import { createRef, useEffect, useState } from 'react'
 import { history } from 'umi'
-import AccountView from './components/Account'
-import BaseView from './components/Base'
 import styles from './style.less'
 
 const { Item } = Menu
@@ -77,9 +76,9 @@ const SystemSettings = () => {
   const renderChildren = () => {
     switch (selectKey) {
       case 'base':
-        return <BaseView />
+        return <BaseSettings />
       case 'account':
-        return <AccountView />
+        return <AccountSettings />
       default:
         return null
     }

@@ -1,11 +1,9 @@
+import { ArticleQuery, ArticleTable } from '@/components/article'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
-import { patchArticleMeta } from '@/services/ant-design-pro/article'
-import { patchArticle } from '@/services/ant-design-pro/article'
+import { patchArticle, patchArticleMeta } from '@/services/ant-design-pro/article'
 import { PageContainer } from '@ant-design/pro-layout'
-import { useState } from 'react'
-import ArticleTable from './components/Table'
-import ArticleQuery from './components/Query'
 import { message } from 'antd'
+import { useState } from 'react'
 
 const ArticleList = () => {
   const [query, setQuery] = useState<ArticleSearchRequest | undefined>()

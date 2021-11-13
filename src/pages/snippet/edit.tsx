@@ -1,4 +1,4 @@
-import SnippetForm from '@/components/snippet/SnippetForm'
+import { SnippetForm } from '@/components/snippet'
 import { deleteSnippet, querySnippetById, updateSnippet } from '@/services/ant-design-pro/snippet'
 import { DeleteOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-layout'

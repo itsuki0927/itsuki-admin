@@ -1,10 +1,9 @@
+import { CommentDrawer, CommentTable } from '@/components/comment'
 import { patchComment, removeComment, updateComment } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { PageContainer } from '@ant-design/pro-layout'
 import { message } from 'antd'
 import { useState } from 'react'
-import CommentDrawer from './components/Drawer'
-import CommentTable from './components/Table'
 
 const CommentList = () => {
   const [detail, setDetail] = useState<API.Comment | undefined>()

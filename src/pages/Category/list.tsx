@@ -1,3 +1,4 @@
+import { CategoryModal } from '@/components/category'
 import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import {
   createCategory,
@@ -13,8 +14,7 @@ import ProCard from '@ant-design/pro-card'
 import { PageContainer } from '@ant-design/pro-layout'
 import { Button, Divider, Empty, message, Modal, Space, Tree, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import CategoryModal from './components/Modal'
-import styles from './style.module.less'
+import styles from './index.less'
 
 const convertToAntdData = compose(getAntdTreeByTree, convertToTreeData)
 

@@ -1,58 +1,80 @@
-import React from 'react'
+import { CoffeeOutlined, CommentOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons'
+import { StatisticCard } from '@ant-design/pro-card'
 import { PageContainer } from '@ant-design/pro-layout'
-import { Card, Alert, Typography } from 'antd'
+import { Space } from 'antd'
+import React from 'react'
 import styles from './index.less'
-
-const CodePreview: React.FC = ({ children }) => (
-  <pre className={styles.pre}>
-    <code>
-      <Typography.Text copyable>{children}</Typography.Text>
-    </code>
-  </pre>
-)
 
 export default (): React.ReactNode => {
   return (
     <PageContainer>
-      <Card>
-        <Alert
-          message={'更快更强的重型组件，已经发布。'}
-          type='success'
-          showIcon
-          banner
-          style={{
-            margin: -12,
-            marginBottom: 24,
-          }}
-        />
-        <Typography.Text strong>
-          高级表格{' '}
-          <a
-            href='https://procomponents.ant.design/components/table'
-            rel='noopener noreferrer'
-            target='__blank'
-          >
-            欢迎使用
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-        <Typography.Text
-          strong
-          style={{
-            marginBottom: 12,
-          }}
-        >
-          高级布局{' '}
-          <a
-            href='https://procomponents.ant.design/components/layout'
-            rel='noopener noreferrer'
-            target='__blank'
-          >
-            欢迎使用
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
-      </Card>
+      <Space direction='vertical' size={24} style={{ width: '100%' }}>
+        <StatisticCard.Group direction={'row'}>
+          <StatisticCard
+            statistic={{
+              title: '今日阅读',
+              value: 2176,
+              icon: <EyeOutlined className={styles.icon} />,
+            }}
+          />
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: '全站文章',
+              value: 475,
+              icon: <CoffeeOutlined className={styles.icon} />,
+            }}
+          />
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: '全站标签',
+              value: 87,
+              icon: <TagOutlined className={styles.icon} />,
+            }}
+          />
+          <StatisticCard.Divider />
+          <StatisticCard
+            statistic={{
+              title: '全站评论',
+              value: 1754,
+              icon: <CommentOutlined className={styles.icon} />,
+            }}
+          />
+        </StatisticCard.Group>
+
+        <StatisticCard.Group direction='row'>
+          <StatisticCard
+            statistic={{
+              title: '全部',
+              tip: '帮助文字',
+              value: 10,
+              status: 'default',
+            }}
+          />
+          <StatisticCard
+            statistic={{
+              title: '草稿',
+              value: 3,
+              status: 'processing',
+            }}
+          />
+          <StatisticCard
+            statistic={{
+              title: '回收站',
+              value: 2,
+              status: 'error',
+            }}
+          />
+          <StatisticCard
+            statistic={{
+              title: '已发布',
+              value: 4,
+              status: 'success',
+            }}
+          />
+        </StatisticCard.Group>
+      </Space>
     </PageContainer>
   )
 }

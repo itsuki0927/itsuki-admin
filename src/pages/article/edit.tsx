@@ -1,4 +1,5 @@
-import { getUEditorCache } from '@/components/MarkdownEditor'
+import { ArticleComment, ArticleForm } from '@/components/article'
+import { getUEditorCache } from '@/components/common/MarkdownEditor'
 import type { ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import {
   deleteArticle,
@@ -19,8 +20,6 @@ import { PageContainer } from '@ant-design/pro-layout'
 import { Badge, Button, message, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { history, useParams, useRequest } from 'umi'
-import ArticleDetail from './components/ArticleDetail'
-import ArticleComment from './components/Comment'
 
 const EditArticle = () => {
   const { id } = useParams<{ id: string }>()
@@ -132,7 +131,7 @@ const EditArticle = () => {
       }
     >
       {data ? (
-        <ArticleDetail
+        <ArticleForm
           cacheID={articleCacheID}
           request={handleRequest}
           onFinish={(values) => {

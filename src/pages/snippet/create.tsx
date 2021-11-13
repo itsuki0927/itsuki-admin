@@ -1,4 +1,4 @@
-import SnippetForm from '@/components/snippet/SnippetForm'
+import { SnippetForm } from '@/components/snippet'
 import { createSnippet } from '@/services/ant-design-pro/snippet'
 import { PageContainer } from '@ant-design/pro-layout'
 import { message } from 'antd'

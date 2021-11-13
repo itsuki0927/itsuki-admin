@@ -1,4 +1,4 @@
-import SnippetTable from '@/components/snippet/SnippetTable'
+import { SnippetTable } from '@/components/snippet'
 import { PageContainer } from '@ant-design/pro-layout'
 
 const SnippetList = () => {

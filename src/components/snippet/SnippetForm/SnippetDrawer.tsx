@@ -1,4 +1,4 @@
-import CodeBlock from '@/components/CodeBlock'
+import { CodeBlock } from '@/components/common'
 import { rs } from '@/constants/ranks'
 import type { API } from '@/services/ant-design-pro/typings'
 import { genMarkdownString } from '@/transforms/markdown'
