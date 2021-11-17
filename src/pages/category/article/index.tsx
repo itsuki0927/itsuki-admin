@@ -18,7 +18,7 @@ import styles from './index.less'
 
 const convertToAntdData = compose(getAntdTreeByTree, convertToTreeData)
 
-const CategoryList = () => {
+const ArticleCategoryList = () => {
   const [visible, setVisible] = useState(false)
   const [categoryList, setCategoryList] = useState<API.Category[]>([])
   const [loading, setLoading] = useState(false)
@@ -186,4 +186,4 @@ const CategoryList = () => {
   )
 }
 
-export default CategoryList
+export default ArticleCategoryList

@@ -42,9 +42,22 @@ export default [
       },
     ],
   },
+  {
+    path: '/category',
+    name: '分类管理',
+    icon: 'folder-open',
+    routes: [
+      { path: '/category', redirect: '/category/article' },
+      {
+        path: '/category/article',
+        name: '文章分类',
+        icon: 'smile',
+        component: './category/article',
+      },
+    ],
+  },
   { path: '/comment', name: '评论管理', icon: 'message', component: './comment/list' },
   { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },
-  { path: '/category', name: '分类管理', icon: 'folder-open', component: './category/list' },
   { path: '/settings', name: '系统设置', icon: 'setting', component: './config/index' },
   { path: '/', redirect: '/dashboard' },
   { component: './404' },
