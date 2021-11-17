@@ -4,7 +4,7 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
 import { useRef } from 'react'
-import Category from './Category'
+import ArticleCategorySelect from './ArticleCategorySelect'
 import Cover from './Cover'
 import Main from './Main'
 import Options from './Options'
@@ -37,7 +37,7 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
         </ProCard>
 
         <ProCard colSpan={{ md: 7 }} ghost>
-          <Category />
+          <ArticleCategorySelect />
           <Cover />
           <Options />
         </ProCard>

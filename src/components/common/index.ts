@@ -1,3 +1,4 @@
+export { default as CategorySelect } from './CategorySelect'
 export { default as CodeBlock } from './CodeBlock'
 export { default as Container } from './Container'
 export { default as ImageUploader } from './ImageUploader'
