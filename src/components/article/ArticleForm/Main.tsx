@@ -2,7 +2,7 @@ import { UniversalEditor } from '@/components/common'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form'
 import { Form } from 'antd'
-import TagSelect from './TagSelect'
+import ArticleTagSelect from './ArticleTagSelect'
 
 interface MainProps {
   cacheID?: string
@@ -31,7 +31,13 @@ const Main = ({ cacheID }: MainProps) => {
         label='关键字'
         mode='tags'
       />
-      <TagSelect />
+      <Form.Item
+        name='tagIds'
+        label='标签'
+        rules={[{ required: true, message: '至少选择一个标签' }]}
+      >
+        <ArticleTagSelect />
+      </Form.Item>
       <Form.Item
         name='content'
         rules={[{ required: true, message: '请输入文章内容' }]}
