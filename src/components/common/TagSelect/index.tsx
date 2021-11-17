@@ -7,7 +7,7 @@ interface TagItem {
   label: number
 }
 
-interface TagSelectProps {
+export interface TagSelectProps {
   tags?: TagItem[]
   loading?: boolean
   onRefresh?: () => void

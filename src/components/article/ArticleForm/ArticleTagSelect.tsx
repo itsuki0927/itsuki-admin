@@ -1,13 +1,9 @@
 import { TagSelect } from '@/components/common'
+import type { TagSelectProps } from '@/components/common/TagSelect'
 import { queryTagList } from '@/services/ant-design-pro/tag'
 import { useRequest } from 'umi'
 
-interface ArticleTagSelectProps {
-  value?: number[]
-  onChange?: (value: number[]) => void
-}
-
-const ArticleTagSelect = (props: ArticleTagSelectProps) => {
+const ArticleTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => {
   const { data, loading, refresh } = useRequest(() => queryTagList())
   const tags = data?.map((item) => ({ value: item.id, label: item.name }))
 
