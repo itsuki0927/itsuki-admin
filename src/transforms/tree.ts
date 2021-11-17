@@ -4,16 +4,14 @@ import type { API } from '@/services/ant-design-pro/typings'
 import type { DataNode } from 'rc-tree/lib/interface'
 
 type ConvertTreeData = {
-  parentId?: number
-  id?: number
+  parentId: number
+  id: number
   [key: string]: any
 }
 
-type TreeData<T> = {
+type TreeData<T = ConvertTreeData> = ConvertTreeData & {
   children?: T[]
   name?: string
-  id?: number
-  [key: string]: any
 }
 
 /**
@@ -22,22 +20,17 @@ type TreeData<T> = {
  * @param data 数组
  * @returns 树
  */
-export function convertToTreeData<T extends ConvertTreeData>(data: T[]) {
-  const [parentData, childData] = data.reduce<[T[], T[]]>(
-    (acc, v) => {
-      const idx = v.parentId === NO_PARENT_VALUE ? 0 : 1
-      acc[idx].push(v)
-      return acc
-    },
-    [[], []]
-  )
+export function convertToTreeData<T extends ConvertTreeData>(dataSources: T[]) {
+  function buildConvertToTreeData(data: T[], parentId: number): TreeData<T>[] {
+    const parentData = data.filter((v) => v.parentId === parentId) as TreeData<T>[]
 
-  const returnedData = parentData.map((item) => {
-    const children = childData.filter((v) => v.parentId === item.id)
-    return { ...item, children }
-  })
+    return parentData.map((item) => {
+      const children = buildConvertToTreeData(data, item.id)
+      return { ...item, children }
+    }) as TreeData<T>[]
+  }
 
-  return returnedData as TreeData<T>[]
+  return buildConvertToTreeData(dataSources, NO_PARENT_VALUE)
 }
 
 /**
