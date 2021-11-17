@@ -4,11 +4,11 @@ import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-for
 import { Form } from 'antd'
 import ArticleTagSelect from './ArticleTagSelect'
 
-interface MainProps {
+interface ArticleContentProps {
   cacheID?: string
 }
 
-const Main = ({ cacheID }: MainProps) => {
+const ArticleContent = ({ cacheID }: ArticleContentProps) => {
   return (
     <ProCard ghost>
       <ProFormText
@@ -49,4 +49,4 @@ const Main = ({ cacheID }: MainProps) => {
   )
 }
 
-export default Main
+export default ArticleContent

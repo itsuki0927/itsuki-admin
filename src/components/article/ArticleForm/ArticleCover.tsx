@@ -10,7 +10,7 @@ const WrapperCover = (props: any) => {
   )
 }
 
-const Cover = () => {
+const ArticleCover = () => {
   return (
     <Form.Item name='cover' rules={[{ message: '请上传封面', required: true }]}>
       <WrapperCover />
@@ -18,4 +18,4 @@ const Cover = () => {
   )
 }
 
-export default Cover
+export default ArticleCover

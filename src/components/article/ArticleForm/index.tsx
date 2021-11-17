@@ -5,9 +5,9 @@ import ProForm from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
 import { useRef } from 'react'
 import ArticleCategorySelect from './ArticleCategorySelect'
-import Cover from './Cover'
-import Main from './Main'
-import Options from './Options'
+import ArticleCover from './ArticleCover'
+import ArticleContent from './ArticleContent'
+import ArticleOptions from './ArticleOptions'
 
 type ArticleFormProps = {
   onFinish: (values: ArticleActionRequest) => Promise<boolean>
@@ -33,13 +33,13 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
     >
       <ProCard colSpan={{ md: 17 }} ghost gutter={24}>
         <ProCard title='基本信息' headerBordered>
-          <Main cacheID={cacheID} />
+          <ArticleContent cacheID={cacheID} />
         </ProCard>
 
         <ProCard colSpan={{ md: 7 }} ghost>
           <ArticleCategorySelect />
-          <Cover />
-          <Options />
+          <ArticleCover />
+          <ArticleOptions />
         </ProCard>
       </ProCard>
     </ProForm>

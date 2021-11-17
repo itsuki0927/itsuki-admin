@@ -6,7 +6,7 @@ import { getSelectOptionsByState } from '@/transforms/option'
 import ProCard from '@ant-design/pro-card'
 import { ProFormDependency, ProFormSelect, ProFormText } from '@ant-design/pro-form'
 
-const Options = () => {
+const ArticleOptions = () => {
   return (
     <ProCard title='发布选项' headerBordered>
       <ProFormSelect
@@ -61,4 +61,4 @@ const Options = () => {
   )
 }
 
-export default Options
+export default ArticleOptions
