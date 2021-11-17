@@ -1,4 +1,5 @@
 import { CategoryModal } from '@/components/category'
+import { Container } from '@/components/common'
 import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import {
   createCategory,
@@ -11,7 +12,6 @@ import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
 import compose from '@/utils/compose'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
-import { PageContainer } from '@ant-design/pro-layout'
 import { Button, Divider, Empty, message, Modal, Space, Tree, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import styles from './index.less'
@@ -96,7 +96,7 @@ const CategoryList = () => {
   }, [])
 
   return (
-    <PageContainer>
+    <Container>
       <ProCard
         loading={loading}
         className={styles.category}
@@ -182,7 +182,7 @@ const CategoryList = () => {
           onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
         />
       </ProCard>
-    </PageContainer>
+    </Container>
   )
 }
 

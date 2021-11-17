@@ -1,4 +1,5 @@
 import { ArticleComment, ArticleForm } from '@/components/article'
+import { Container } from '@/components/common'
 import { getUEditorCache } from '@/components/common/UniversalEditor'
 import type { ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import {
@@ -16,7 +17,6 @@ import {
   LikeOutlined,
   RocketOutlined,
 } from '@ant-design/icons'
-import { PageContainer } from '@ant-design/pro-layout'
 import { Badge, Button, message, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { history, useParams, useRequest } from 'umi'
@@ -95,7 +95,7 @@ const EditArticle = () => {
   }
 
   return (
-    <PageContainer
+    <Container
       loading={loading}
       extra={
         <Space>
@@ -151,7 +151,7 @@ const EditArticle = () => {
         visible={commentVisible}
         onClose={() => setCommentVisible(false)}
       />
-    </PageContainer>
+    </Container>
   )
 }
 

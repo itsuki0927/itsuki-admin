@@ -1,8 +1,9 @@
+import { Container } from '@/components/common'
 import { AccountSettings, BaseSettings } from '@/components/settings'
 import useQuery from '@/hooks/useQuery'
 import { SettingOutlined, UserOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
-import { GridContent, PageContainer } from '@ant-design/pro-layout'
+import { GridContent } from '@ant-design/pro-layout'
 import { Menu } from 'antd'
 import { createRef, useEffect, useState } from 'react'
 import { history } from 'umi'
@@ -85,7 +86,7 @@ const SystemSettings = () => {
   }
 
   return (
-    <PageContainer>
+    <Container>
       <ProCard title='系统设置' headerBordered>
         <GridContent>
           <div
@@ -115,7 +116,7 @@ const SystemSettings = () => {
           </div>
         </GridContent>
       </ProCard>
-    </PageContainer>
+    </Container>
   )
 }
 

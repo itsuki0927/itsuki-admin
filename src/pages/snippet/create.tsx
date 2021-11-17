@@ -1,11 +1,11 @@
+import { Container } from '@/components/common'
 import { SnippetForm } from '@/components/snippet'
 import { createSnippet } from '@/services/ant-design-pro/snippet'
-import { PageContainer } from '@ant-design/pro-layout'
 import { message } from 'antd'
 
 const SnippetCreate = () => {
   return (
-    <PageContainer>
+    <Container>
       <SnippetForm
         key='createSnippet'
         onFinish={(values) => {
@@ -15,7 +15,7 @@ const SnippetCreate = () => {
           })
         }}
       />
-    </PageContainer>
+    </Container>
   )
 }
 

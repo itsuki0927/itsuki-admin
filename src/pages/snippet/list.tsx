@@ -1,11 +1,11 @@
+import { Container } from '@/components/common'
 import { SnippetTable } from '@/components/snippet'
-import { PageContainer } from '@ant-design/pro-layout'
 
 const SnippetList = () => {
   return (
-    <PageContainer>
+    <Container>
       <SnippetTable />
-    </PageContainer>
+    </Container>
   )
 }
 

@@ -1,7 +1,7 @@
 import { CommentDrawer, CommentTable } from '@/components/comment'
+import { Container } from '@/components/common'
 import { patchComment, removeComment, updateComment } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
-import { PageContainer } from '@ant-design/pro-layout'
 import { message } from 'antd'
 import { useState } from 'react'
 
@@ -11,7 +11,7 @@ const CommentList = () => {
   const [refresh, setRefresh] = useState(false)
 
   return (
-    <PageContainer>
+    <Container>
       <CommentTable
         refresh={refresh}
         onDetail={(comment) => {
@@ -45,7 +45,7 @@ const CommentList = () => {
           })
         }}
       />
-    </PageContainer>
+    </Container>
   )
 }
 

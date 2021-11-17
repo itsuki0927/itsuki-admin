@@ -1,11 +1,11 @@
 import { ArticleForm } from '@/components/article'
+import { Container } from '@/components/common'
 import { createArticle } from '@/services/ant-design-pro/article'
-import { PageContainer } from '@ant-design/pro-layout'
 import { message } from 'antd'
 
 const CreateArticle = () => {
   return (
-    <PageContainer>
+    <Container>
       <ArticleForm
         onFinish={(value) => {
           return createArticle(value).then(() => {
@@ -14,7 +14,7 @@ const CreateArticle = () => {
           })
         }}
       />
-    </PageContainer>
+    </Container>
   )
 }
 

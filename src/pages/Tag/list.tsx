@@ -1,9 +1,9 @@
+import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
-import { PageContainer } from '@ant-design/pro-layout'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Button, message, Modal, Table } from 'antd'
@@ -99,7 +99,7 @@ const TagList = () => {
   ]
 
   return (
-    <PageContainer>
+    <Container>
       <ProTable
         headerTitle='标签管理'
         columns={columns}
@@ -143,7 +143,7 @@ const TagList = () => {
         onChange={setVisible}
         onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
       />
-    </PageContainer>
+    </Container>
   )
 }
 

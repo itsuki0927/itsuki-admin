@@ -1,7 +1,7 @@
+import { Container } from '@/components/common'
 import { SnippetForm } from '@/components/snippet'
 import { deleteSnippet, querySnippetById, updateSnippet } from '@/services/ant-design-pro/snippet'
 import { DeleteOutlined } from '@ant-design/icons'
-import { PageContainer } from '@ant-design/pro-layout'
 import { Button, message, Modal, Space } from 'antd'
 import { history, useParams, useRequest } from 'umi'
 
@@ -27,7 +27,7 @@ const SnippetEdit = () => {
   }
 
   return (
-    <PageContainer
+    <Container
       loading={loading}
       extra={
         <Space>
@@ -53,7 +53,7 @@ const SnippetEdit = () => {
           })
         }}
       />
-    </PageContainer>
+    </Container>
   )
 }
 
