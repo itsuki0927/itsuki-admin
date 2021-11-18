@@ -63,7 +63,7 @@
     "lodash": "^4.17.11",
     "marked": "^3.0.4",
     "moment": "^2.25.3",
-    "monaco-editor": "^0.28.1",
+    "monaco-editor": "^0.30.1",
     "omit.js": "^2.0.2",
     "react": "^17.0.0",
     "react-dev-inspector": "^1.1.1",
