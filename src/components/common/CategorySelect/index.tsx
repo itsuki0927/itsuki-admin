@@ -1,7 +1,9 @@
 import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
 import { ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
+import type { TreeProps } from 'antd'
 import { Button, Divider, Space, Tree, Typography } from 'antd'
+import type { ReactNode } from 'react'
 import styles from './index.less'
 
 type CategoryItem = {
@@ -10,18 +12,29 @@ type CategoryItem = {
   name: string
   path: string
 }
-interface CategorySelectProps {
+
+export interface CategorySelectProps {
   data?: CategoryItem[]
   loading?: boolean
   onRefresh?: () => void
   value?: number[]
   onChange?: (value: number[]) => void
+  treeProps?: TreeProps
+  title?: ReactNode
 }
 
-const CategorySelect = ({ value, onChange, loading, data, onRefresh }: CategorySelectProps) => {
+const CategorySelect = ({
+  value,
+  onChange,
+  loading,
+  data,
+  onRefresh,
+  treeProps,
+  title = '分类目录',
+}: CategorySelectProps) => {
   return (
     <ProCard
-      title='分类目录'
+      title={title}
       headerBordered
       loading={loading}
       extra={
@@ -56,6 +69,7 @@ const CategorySelect = ({ value, onChange, loading, data, onRefresh }: CategoryS
               </Space>
             )
           }}
+          {...treeProps}
         />
       )}
     </ProCard>
