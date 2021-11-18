@@ -28,6 +28,10 @@ export type SnippetPatchRequest = {
   status: PublishState
 }
 
+export type SnippetDetailResponse = API.Snippet & {
+  categoryIds: number[]
+}
+
 /** 创建片段 POST /snippet */
 export const createSnippet = (data: SnippetActionRequest) =>
   request<number>(`/snippet`, { method: 'POST', data })
@@ -42,7 +46,7 @@ export const querySnippetList = (params?: SnippetSearchRequest) =>
 
 /** 获取片段 GET /snippet/:id */
 export const querySnippetById = (id: number | string) =>
-  request<API.Snippet>(`/snippet/${id}`, { method: 'GET' })
+  request<SnippetDetailResponse>(`/snippet/${id}`, { method: 'GET' })
 
 /** 上传片段 DELETE /snippet/:id */
 export const deleteSnippet = (id: number | string) =>

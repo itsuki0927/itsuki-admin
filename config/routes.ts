@@ -51,8 +51,12 @@ export default [
       {
         path: '/category/article',
         name: '文章分类',
-        icon: 'smile',
         component: './category/article',
+      },
+      {
+        path: '/category/snippet',
+        name: '片段分类',
+        component: './category/snippet',
       },
     ],
   },

@@ -54,6 +54,16 @@ declare namespace API {
     expand?: string
   }>
 
+  type SnippetCategory = IdentifiableEntity<{
+    name: string
+    description: string
+    path: string
+    count: number
+    sort: number
+    parentId: number
+    expand?: string
+  }>
+
   type SystemSettings = IdentifiableEntity<{
     liking: number
     title: string
@@ -99,5 +109,6 @@ declare namespace API {
     website: string
     avatar: string
     email: string
+    categories: SnippetCategory[]
   }>
 }
