@@ -9,6 +9,7 @@ const SnippetEdit = () => {
   const { id } = useParams<{ id: string }>()
   const { loading, data: initialValues } = useRequest(() =>
     querySnippetById(id).then((data) => {
+      data.categoryIds = data.categories.map((item) => item.id)
       return { data }
     })
   )
