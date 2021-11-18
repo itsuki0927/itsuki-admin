@@ -45,6 +45,7 @@ const SnippetEdit = () => {
       }
     >
       <SnippetForm
+        isEdit
         key='editSnippet'
         initialValues={initialValues}
         onFinish={(values) => {

@@ -17,9 +17,10 @@ import SnippetTagSelect from './SnippetTagSelect'
 interface SnippetFormProps {
   onFinish: (data: SnippetActionRequest) => Promise<boolean>
   initialValues?: API.Snippet
+  isEdit?: boolean
 }
 
-const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
+const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
   const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([])
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Snippet>()
@@ -41,6 +42,19 @@ const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
     }
   }
 
+  const renderSubmitter = ({ step, dom }: { step: number; dom: JSX.Element[] }) => {
+    return (
+      <FooterToolbar>
+        {(isEdit || step === 3) && (
+          <Button type='ghost' onClick={handlePreview} icon={<EyeOutlined />}>
+            预览片段
+          </Button>
+        )}
+        {dom}
+      </FooterToolbar>
+    )
+  }
+
   return (
     <>
       <StepsForm
@@ -52,16 +66,7 @@ const SnippetForm = ({ onFinish, initialValues }: SnippetFormProps) => {
           submitButtonProps: {
             style: { width: 150 },
           },
-          render: ({ step }, dom) => (
-            <FooterToolbar>
-              {step === 3 && (
-                <Button type='ghost' onClick={handlePreview} icon={<EyeOutlined />}>
-                  预览片段
-                </Button>
-              )}
-              {dom}
-            </FooterToolbar>
-          ),
+          render: ({ step }, dom) => renderSubmitter({ step, dom }),
         }}
         formProps={{
           validateMessages: {
