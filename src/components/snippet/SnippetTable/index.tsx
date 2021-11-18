@@ -15,6 +15,7 @@ import {
   EditOutlined,
   LinkOutlined,
   RollbackOutlined,
+  TagOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
@@ -50,13 +51,13 @@ const SnippetTable = () => {
       title: '名称',
       dataIndex: 'name',
       key: 'keyword',
-      width: 300,
+      width: 250,
       render: (_, { name, description }) => {
         return (
           <Card
             size='small'
             bordered={false}
-            style={{ maxWidth: 300 }}
+            style={{ maxWidth: 250 }}
             bodyStyle={{
               minHeight: '100px',
               backdropFilter: 'blur(2px)',
@@ -99,6 +100,22 @@ const SnippetTable = () => {
               {entity.code}
             </Typography.Paragraph>
           </Typography>
+        )
+      },
+    },
+    {
+      title: '分类',
+      search: false,
+      width: 50,
+      render: (_, entity) => {
+        return (
+          <Space direction='vertical'>
+            {entity.categories.map((tag) => (
+              <Tag icon={<TagOutlined />} key={tag.id}>
+                {tag.name}
+              </Tag>
+            ))}
+          </Space>
         )
       },
     },
