@@ -1,4 +1,4 @@
-import UniversalEditor, { UEditorLanguage } from '@/components/common/UniversalEditor'
+import { UniversalEditor } from '@/components/common'
 import { publishStates } from '@/constants/publish'
 import { ranksStates } from '@/constants/ranks'
 import type { SnippetActionRequest } from '@/services/ant-design-pro/snippet'
@@ -20,6 +20,7 @@ interface SnippetFormProps {
   isEdit?: boolean
 }
 
+// TODO: 编辑状态下重置所有值
 const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
   const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([])
   const [visible, setVisible] = useState(false)
@@ -112,7 +113,7 @@ const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
         <StepsForm.StepForm title='内容'>
           <ProCard title='内容' headerBordered>
             <Form.Item name='code' rules={[{ required: true, message: '请输入code' }]}>
-              <UniversalEditor key='code' formStatus language={UEditorLanguage.JavaScript} />
+              <UniversalEditor formStatus key='code' />
             </Form.Item>
           </ProCard>
         </StepsForm.StepForm>
@@ -125,26 +126,18 @@ const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
           </ProCard>
         </StepsForm.StepForm>
 
-        <StepsForm.StepForm title='其他设置'>
+        <StepsForm.StepForm title='技巧'>
           <ProCard title='技巧' headerBordered style={{ marginBottom: 24 }}>
             <Form.Item name='skill' rules={[{ required: true, message: '请输入技巧' }]}>
-              <UniversalEditor
-                formStatus
-                style={{ maxHeight: 400, overflow: 'hidden' }}
-                key='skill'
-                disabledMinimap
-              />
+              <UniversalEditor formStatus key='skill' />
             </Form.Item>
           </ProCard>
+        </StepsForm.StepForm>
+
+        <StepsForm.StepForm title='示例'>
           <ProCard title='示例' headerBordered>
             <Form.Item name='example' rules={[{ required: true, message: '请输入示例' }]}>
-              <UniversalEditor
-                formStatus
-                style={{ maxHeight: 400, overflow: 'hidden' }}
-                disabledMinimap
-                key='example'
-                language={UEditorLanguage.JavaScript}
-              />
+              <UniversalEditor formStatus key='example' />
             </Form.Item>
           </ProCard>
         </StepsForm.StepForm>

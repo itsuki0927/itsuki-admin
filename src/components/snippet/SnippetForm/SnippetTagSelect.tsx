@@ -6,17 +6,7 @@ import { useRequest } from 'umi'
 const SnippetTagSelect = (props: Pick<CategorySelectProps, 'value' | 'onChange'>) => {
   const { data, loading, refresh } = useRequest(() => querySnippetCategoryList())
 
-  return (
-    <CategorySelect
-      data={data}
-      loading={loading}
-      onRefresh={refresh}
-      {...props}
-      treeProps={{
-        checkStrictly: false,
-      }}
-    />
-  )
+  return <CategorySelect data={data} loading={loading} onRefresh={refresh} {...props} />
 }
 
 export default SnippetTagSelect
