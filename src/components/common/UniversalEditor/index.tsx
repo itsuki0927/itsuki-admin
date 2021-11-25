@@ -7,15 +7,17 @@ import {
   EyeOutlined,
   LoadingOutlined,
 } from '@ant-design/icons'
+import Editor from '@monaco-editor/react'
 import { Button, Select, Space, Spin, Typography } from 'antd'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
+import { KeyMod, KeyCode } from 'monaco-editor'
+import type { editor } from 'monaco-editor'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import CodeBlock from '../CodeBlock'
 import ImageUploaderModal from '../ImageUploader/Modal'
 import ScreenFull from '../Screenfull'
-import { editor, KeyCode, KeyMod } from './monaco'
 import styles from './index.less'
 
 export enum UEditorLanguage {
@@ -23,6 +25,7 @@ export enum UEditorLanguage {
   JavaScript = 'javascript',
   TypeScript = 'typescript',
   Css = 'css',
+  Json = 'json',
 }
 
 const fileExtMap = new Map([
@@ -30,6 +33,7 @@ const fileExtMap = new Map([
   [UEditorLanguage.JavaScript, 'js'],
   [UEditorLanguage.TypeScript, 'ts'],
   [UEditorLanguage.Css, 'css'],
+  [UEditorLanguage.Json, 'json'],
 ])
 
 const TOOLBAR_HEIGHT = 48
@@ -69,38 +73,48 @@ export interface UniversalEditorProps {
   formStatus?: boolean
   language?: UEditorLanguage
   style?: React.CSSProperties
-
   size?: 'small' | 'default'
+  uploadPrefix?: string
 }
 
 const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString()
 
-export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
-  const placeholder = props.placeholder || '请输入内容...'
-  const propValue = props.value || ''
+export const UniversalEditor: React.FC<UniversalEditorProps> = ({
+  placeholder = '请输入内容',
+  value = '',
+  onChange,
+  disabled,
+  disabledMinimap,
+  disabledToolbar,
+  disabledCacheDraft,
+  formStatus,
+  style,
+  size,
+  loading,
+  uploadPrefix,
+  ...props
+}) => {
   const cacheID = props.cacheID || window.location.pathname
   const [fullscreen, setFullscreen] = useState(false)
   const [isPreview, setPreview] = useState(false)
   const [uploaderModalVisible, setUploaderModalVisible] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const ueditor = useRef<editor.IStandaloneCodeEditor>()
-  const [language, setLanguage] = useState<UEditorLanguage>(
-    props.language || UEditorLanguage.Markdown
-  )
+  const [language, setLanguage] = useState(props.language ?? UEditorLanguage.JavaScript)
+  const editorRef = useRef<editor.IStandaloneCodeEditor>()
 
-  const handleSaveContent = () => {
+  const handleSaveContent = useCallback(() => {
     const time = timestampToYMD(Date.now())
     const fileExt = fileExtMap.get(language)
     const fileName = `${cacheID}-${time}.${fileExt}`
-    const content = ueditor.current?.getValue() ?? propValue ?? ''
+    const content = editorRef.current?.getValue() ?? value ?? ''
     saveFile(content, fileName)
-  }
+  }, [cacheID, language, value])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleResizeWidth = () => {
     const widthRatio = isPreview ? 0.5 : 1
-    const layoutInfo = ueditor.current?.getLayoutInfo()!
-    ueditor.current?.layout({
+    const layoutInfo = editorRef.current?.getLayoutInfo()!
+    editorRef.current?.layout({
       width: fullscreen
         ? window.innerWidth * widthRatio
         : containerRef.current!.clientWidth * widthRatio,
@@ -109,11 +123,11 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
   }
 
   const handleResizeHeight = useCallback(() => {
-    if (!ueditor.current) {
+    if (!editorRef.current) {
       return false
     }
 
-    const layoutInfo = ueditor.current.getLayoutInfo()!
+    const layoutInfo = editorRef.current.getLayoutInfo()!
     let targetHeight: number = 0
 
     if (fullscreen) {
@@ -122,8 +136,8 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
       // 非全屏，则计算高度
       const maxHeight = (props.maxRows ?? MAX_ROWS) * SINGLE_LINE_HEIGHT
       const minHeight = (props.minRows ?? MIN_ROWS) * SINGLE_LINE_HEIGHT
-      const contentHeight = ueditor.current.getContentHeight()!
-      const lineCount = ueditor.current.getModel()?.getLineCount() || 1
+      const contentHeight = editorRef.current.getContentHeight()!
+      const lineCount = editorRef.current.getModel()?.getLineCount() || 1
       if (contentHeight) {
         if (contentHeight > maxHeight) {
           targetHeight = maxHeight
@@ -139,120 +153,58 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
     }
 
     if (layoutInfo.height !== targetHeight) {
-      ueditor.current.layout({
+      editorRef.current.layout({
         width: layoutInfo.width,
         height: targetHeight,
       })
     }
   }, [fullscreen, props.maxRows, props.minRows])
 
-  const createEditor = () => {
-    const editorInstance = editor.create(containerRef.current!, {
-      value: propValue,
-      language,
-      theme: 'vs',
-      tabSize: 2,
-      fontSize: 14,
-      lineHeight: SINGLE_LINE_HEIGHT,
-      smoothScrolling: true,
-      readOnly: Boolean(props.disabled),
-      minimap: {
-        enabled: !props.disabledMinimap,
-      },
-      // 性能不好，非完全受控 > 不使用
-      // automaticLayout: true,
-      // 文件夹
-      folding: true,
-      // 禁用右键菜单
-      contextmenu: false,
-      // 选中区域直角
-      roundedSelection: false,
-      // 底部不留空
-      scrollBeyondLastLine: false,
-      // 根据已有单词自动提示
-      wordBasedSuggestions: true,
-      // 回车命中选中词
-      acceptSuggestionOnEnter: 'on',
-      scrollbar: {
-        // MARK: updateOptions 对 scrollbar.alwaysConsumeMouseWheel 暂时是无效的
-        // https://github.com/microsoft/vscode/pull/127788
-        // 滚动事件可冒泡至外层
-        alwaysConsumeMouseWheel: false,
-      },
-    })
+  const handleMount = (editorInstance: editor.IStandaloneCodeEditor) =>
+    (editorRef.current = editorInstance)
 
-    // Command + S = save content
-    // eslint-disable-next-line no-bitwise
-    editorInstance.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_S, handleSaveContent)
-    // Esc = exit fullscreen
-    editorInstance.addCommand(KeyCode.Escape, () => setFullscreen(false))
-    return editorInstance
-  }
+  // 绑定键位 effect
+  useEffect(() => {
+    if (editorRef.current) {
+      // Command + S = save content
+      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, handleSaveContent)
+      // Esc = exit fullscreen
+      editorRef.current.addCommand(KeyCode.Escape, () => setFullscreen(false))
+    }
+  }, [handleSaveContent])
 
-  // fullscreen change
-  // useWatch(
-  //   () => general.state.fullscreen,
-  //   () => handleResizeHeight()
-  // )
+  // 设置缓存 effect
+  useEffect(() => {
+    if (!disabledCacheDraft) {
+      setUEditorCache(cacheID, value)
+    }
+  }, [disabledCacheDraft, value, cacheID])
 
-  // preview change
+  // resize height effect
+  useEffect(() => {
+    const sizeDisposer = editorRef.current?.onDidContentSizeChange(handleResizeHeight)
+
+    return () => {
+      sizeDisposer?.dispose()
+    }
+  }, [handleResizeHeight, value])
+
+  // preview change effect
   useEffect(() => {
     handleResizeWidth()
   }, [handleResizeWidth, fullscreen, isPreview])
 
-  // language change
-  useEffect(() => {
-    const model = ueditor.current?.getModel()
-    if (model && language) {
-      editor.setModelLanguage(model, language)
-    }
-  }, [language])
-
-  // disbaled change
-  useEffect(() => {
-    ueditor.current?.updateOptions({ readOnly: props.disabled })
-  }, [props.disabled])
-
-  // prop value change
-  useEffect(() => {
-    if (props.value !== ueditor.current?.getValue()) {
-      ueditor.current?.setValue(props.value || '')
-    }
-  }, [props.value])
-
-  useEffect(() => {
-    ueditor.current = createEditor()
-    // content height change
-    const sizeDisposer = ueditor.current.onDidContentSizeChange(handleResizeHeight)
-    // editor value change
-    const modelDisposer = ueditor.current.onDidChangeModelContent(() => {
-      const newValue = ueditor.current!.getValue()
-      if (!props.disabledCacheDraft) {
-        setUEditorCache(cacheID, newValue)
-      }
-      if (newValue !== props.value) {
-        props.onChange?.(newValue)
-      }
-    })
-
-    return () => {
-      sizeDisposer.dispose()
-      modelDisposer.dispose()
-      ueditor.current?.dispose?.()
-    }
-  }, [])
-
   return (
     <div
-      style={props.style}
+      style={style}
       className={classnames(
         styles.universalEditor,
-        props.formStatus && styles.formStatus,
+        formStatus && styles.formStatus,
         fullscreen && styles.fullScreen,
-        props.size === 'small' && styles.small
+        size === 'small' && styles.small
       )}
     >
-      {!props.disabledToolbar && (
+      {!disabledToolbar && (
         <div className={styles.toolbar}>
           <Space className={styles.left}>
             <Typography.Text type='secondary' strong={true} className={styles.logo}>
@@ -260,7 +212,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
             </Typography.Text>
             <Button
               size='small'
-              disabled={props.disabled}
+              disabled={disabled}
               icon={<DownloadOutlined />}
               onClick={handleSaveContent}
             />
@@ -269,7 +221,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
             {language === UEditorLanguage.Markdown && (
               <>
                 <ImageUploaderModal
-                  prefix='article'
+                  prefix={uploadPrefix ?? 'article'}
                   visible={uploaderModalVisible}
                   onClose={() => setUploaderModalVisible(false)}
                 />
@@ -280,7 +232,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
                 />
                 <Button
                   size='small'
-                  disabled={props.disabled}
+                  disabled={disabled}
                   icon={isPreview ? <EyeInvisibleOutlined /> : <EyeOutlined />}
                   onClick={() => setPreview(!isPreview)}
                 />
@@ -290,7 +242,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
               size='small'
               value={language}
               onChange={setLanguage}
-              disabled={props.disabled}
+              disabled={disabled}
               className={styles.language}
               options={[
                 {
@@ -309,26 +261,63 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = (props) => {
                   label: 'Css',
                   value: UEditorLanguage.Css,
                 },
+                {
+                  label: 'Json',
+                  value: UEditorLanguage.Json,
+                },
               ]}
             />
             <ScreenFull value={fullscreen} onChange={setFullscreen} />
           </Space>
         </div>
       )}
-      <Spin
-        spinning={Boolean(props.loading)}
-        indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
-      >
-        <div className={styles.container}>
-          <div
-            id='container'
-            ref={containerRef}
-            className={classnames(styles.editor, !props.value && styles.placeholder)}
-            placeholder={placeholder}
+      <Spin spinning={!!loading} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}>
+        <div className={styles.container} ref={containerRef}>
+          <Editor
+            language={language}
+            value={value}
+            onChange={onChange}
+            className={classnames(styles.editor, !value && styles.placeholder)}
+            height={fullscreen ? '100vh' : '80vh'}
+            loading={<Spin />}
+            options={{
+              automaticLayout: true,
+              theme: 'vs',
+              tabSize: 2,
+              fontSize: 14,
+              lineHeight: SINGLE_LINE_HEIGHT,
+              smoothScrolling: true,
+              readOnly: disabled,
+              minimap: {
+                enabled: !disabledMinimap,
+              },
+              // 文件夹
+              folding: true,
+              // 禁用右键菜单
+              contextmenu: false,
+              // 选中区域直角
+              roundedSelection: false,
+              // 底部不留空
+              scrollBeyondLastLine: false,
+              // 根据已有单词自动提示
+              wordBasedSuggestions: true,
+              // 回车命中选中词
+              acceptSuggestionOnEnter: 'on',
+              scrollbar: {
+                // MARK: updateOptions 对 scrollbar.alwaysConsumeMouseWheel 暂时是无效的
+                // https://github.com/microsoft/vscode/pull/127788
+                // 滚动事件可冒泡至外层
+                alwaysConsumeMouseWheel: false,
+              },
+            }}
+            overrideServices={{
+              placeholder,
+            }}
+            onMount={handleMount}
           />
           <CSSTransition in={isPreview} timeout={200} unmountOnExit={true} classNames='fade-fast'>
             <div className={classnames(styles.preview)}>
-              <CodeBlock value={propValue} className={styles.markdown} />
+              <CodeBlock value={value} className={styles.markdown} />
             </div>
           </CSSTransition>
         </div>
