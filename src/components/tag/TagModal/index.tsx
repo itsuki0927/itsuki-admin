@@ -20,11 +20,10 @@ type TagModalProps = {
 }
 
 const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) => {
-  const restFormRef = useRef<ProFormInstance>()
+  const restFormRef = useRef<ProFormInstance<TagActionRequest>>()
   return (
     <ModalForm<TagActionRequest>
-      // TODO: 先拿any顶一会
-      formRef={restFormRef as any}
+      formRef={restFormRef}
       visible={visible}
       title={title}
       onVisibleChange={onChange}
