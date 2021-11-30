@@ -21,10 +21,43 @@ import { Badge, Button, message, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { history, useParams, useRequest } from 'umi'
 
+const handleDiffContent =
+  (articleCacheID: string) =>
+  (result: ArticleDetailResponse): Promise<{ data: ArticleDetailResponse }> => {
+    return new Promise((resolve) => {
+      const localeContent = getUEditorCache(articleCacheID)
+      if (result && !!localeContent && localeContent !== result.content) {
+        Modal.confirm({
+          title: '本地缓存存在未保存的文章，是否要覆盖远程数据？',
+          content: '如果覆盖错了，就自己刷新吧！',
+          okText: '本地覆盖远程',
+          cancelText: '使用远程数据',
+          centered: true,
+          okButtonProps: {
+            danger: true,
+          },
+          onOk() {
+            const mutateData = {
+              ...result,
+              content: localeContent,
+            }
+            resolve({ data: mutateData })
+          },
+          onCancel() {
+            resolve({ data: result })
+          },
+        })
+      } else {
+        resolve({ data: result })
+      }
+    })
+  }
+
 const EditArticle = () => {
   const { id } = useParams<{ id: string }>()
   const articleCacheID = window.location.pathname
   const [commentVisible, setCommentVisible] = useState(false)
+  const diffContent = handleDiffContent(articleCacheID)
 
   const {
     loading: commentLoading,
@@ -37,13 +70,15 @@ const EditArticle = () => {
     })
   )
 
-  const { loading, data, mutate } = useRequest(() =>
-    queryArticleById(+id).then((result) => {
-      result.keywords = result.keywords?.split('、') as any
-      result.tagIds = result.tags?.map((v) => v.id)
-      result.categoryIds = result.categories?.map((v) => v.id)
-      return { data: result }
-    })
+  const { loading, data } = useRequest<{ data: ArticleDetailResponse }>(() =>
+    queryArticleById(+id)
+      .then((result) => {
+        result.keywords = result.keywords?.split('、') as any
+        result.tagIds = result.tags?.map((v) => v.id)
+        result.categoryIds = result.categories?.map((v) => v.id)
+        return result
+      })
+      .then(diffContent)
   )
 
   const handleRemove = () => {
@@ -59,44 +94,12 @@ const EditArticle = () => {
     })
   }
 
-  const handleRequest = () => {
-    return new Promise<ArticleDetailResponse>((resolve) => {
-      const localeContent = getUEditorCache(articleCacheID)
-      if (!!localeContent && localeContent !== data?.content) {
-        Modal.confirm({
-          title: '本地缓存存在未保存的文章，是否要覆盖远程数据？',
-          content: '如果覆盖错了，就自己刷新吧！',
-          okText: '本地覆盖远程',
-          cancelText: '使用远程数据',
-          centered: true,
-          okButtonProps: {
-            danger: true,
-          },
-          onOk() {
-            const mutateData = {
-              ...data!,
-              content: localeContent,
-            }
-            mutate(mutateData)
-            // TODO: 会弹出两个弹出框
-            Modal.destroyAll()
-            resolve(mutateData)
-          },
-          onCancel() {
-            // TODO: 会弹出两个弹出框
-            Modal.destroyAll()
-            resolve(data!)
-          },
-        })
-      } else {
-        resolve(data!)
-      }
-    })
+  if (!data || loading) {
+    return <Container loading={!data || loading} />
   }
 
   return (
     <Container
-      loading={loading}
       extra={
         <Space>
           <Button
@@ -130,19 +133,16 @@ const EditArticle = () => {
         </Space>
       }
     >
-      {data ? (
-        <ArticleForm
-          cacheID={articleCacheID}
-          request={handleRequest}
-          onFinish={(values) => {
-            return updateArticle(data?.id!, values).then(() => {
-              message.success('更新成功')
-              return true
-            })
-          }}
-        />
-      ) : null}
-
+      <ArticleForm
+        cacheID={articleCacheID}
+        request={() => Promise.resolve(data)}
+        onFinish={(values) => {
+          return updateArticle(data.id, values).then(() => {
+            message.success('更新成功')
+            return true
+          })
+        }}
+      />
       <ArticleComment
         onRefresh={() => refreshComments()}
         loading={commentLoading}
