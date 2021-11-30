@@ -10,34 +10,26 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import { ProFormSelect, ProFormText, ProFormTextArea, StepsForm } from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
 import { Button, Form, message, Tag } from 'antd'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import SnippetDrawer from './SnippetDrawer'
 import SnippetTagSelect from './SnippetTagSelect'
 
 interface SnippetFormProps {
   onFinish: (data: SnippetActionRequest) => Promise<boolean>
-  initialValues?: API.Snippet
+  request?: () => Promise<API.Snippet>
   isEdit?: boolean
 }
 
-// TODO: 编辑状态下重置所有值
-const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
-  const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([])
+const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Snippet>()
   const formRef = useRef<ProFormInstance>()
-
-  useEffect(() => {
-    formMapRef.current.forEach((formInstanceRef) => {
-      formInstanceRef.current?.setFieldsValue(initialValues)
-    })
-  }, [initialValues])
 
   const handlePreview = async () => {
     try {
       const data = await formRef.current?.validateFieldsReturnFormatValue!()
       setVisible(true)
-      setTemp({ ...initialValues, ...data } as any)
+      setTemp(data)
     } catch (e) {
       message.warn('请输入必填字段')
     }
@@ -59,8 +51,6 @@ const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
   return (
     <>
       <StepsForm
-        formMapRef={formMapRef}
-        formRef={formRef}
         onFinish={onFinish}
         containerStyle={{ width: '100%' }}
         submitter={{
@@ -70,6 +60,7 @@ const SnippetForm = ({ onFinish, initialValues, isEdit }: SnippetFormProps) => {
           render: ({ step }, dom) => renderSubmitter({ step, dom }),
         }}
         formProps={{
+          request,
           validateMessages: {
             required: '此项为必填项',
           },

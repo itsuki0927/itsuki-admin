@@ -7,16 +7,16 @@ import { history, useParams, useRequest } from 'umi'
 
 const SnippetEdit = () => {
   const { id } = useParams<{ id: string }>()
-  const { loading, data: initialValues } = useRequest(() =>
-    querySnippetById(id).then((data) => {
-      data.categoryIds = data.categories.map((item) => item.id)
-      return { data }
+  const { loading, data, refresh } = useRequest(() =>
+    querySnippetById(id).then((result) => {
+      result.categoryIds = result.categories.map((item) => item.id)
+      return { data: result }
     })
   )
 
   const handleRemove = () => {
     Modal.confirm({
-      title: `你确定要删除片段: ${initialValues?.name}嘛?`,
+      title: `你确定要删除片段: ${data?.name}嘛?`,
       content: '此操作不能撤销!!!',
       onOk() {
         deleteSnippet(id).then(() => {
@@ -25,6 +25,10 @@ const SnippetEdit = () => {
         })
       },
     })
+  }
+
+  if (!data || loading) {
+    return <Container loading={!data || loading} />
   }
 
   return (
@@ -47,10 +51,11 @@ const SnippetEdit = () => {
       <SnippetForm
         isEdit
         key='editSnippet'
-        initialValues={initialValues}
+        request={() => Promise.resolve(data)}
         onFinish={(values) => {
           return updateSnippet(id, values).then(() => {
             message.success('更新成功')
+            refresh()
             return true
           })
         }}
