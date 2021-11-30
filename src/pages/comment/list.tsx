@@ -1,19 +1,20 @@
 import { CommentDrawer, CommentTable } from '@/components/comment'
+import type { CommentTableRef } from '@/components/comment/CommentTable'
 import { Container } from '@/components/common'
 import { patchComment, removeComment, updateComment } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { message } from 'antd'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 const CommentList = () => {
   const [detail, setDetail] = useState<API.Comment | undefined>()
   const [visible, setVisible] = useState(false)
-  const [refresh, setRefresh] = useState(false)
+  const actionRef = useRef<CommentTableRef>(null)
 
   return (
     <Container>
       <CommentTable
-        refresh={refresh}
+        ref={actionRef}
         onDetail={(comment) => {
           setDetail(comment)
           setVisible(true)
@@ -37,8 +38,11 @@ const CommentList = () => {
         visible={visible}
         onVisibleChange={setVisible}
         onFinish={(comment) => {
-          return updateComment(detail?.id!, comment).then(() => {
-            setRefresh((r) => !r)
+          if (!detail) {
+            return Promise.resolve(true)
+          }
+          return updateComment(detail.id, comment).then(() => {
+            actionRef.current?.refresh()
             setVisible(false)
             message.success('更新成功')
             return true
