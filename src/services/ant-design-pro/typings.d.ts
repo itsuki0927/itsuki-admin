@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
+import { ArticlePinned } from '@/constants/article/pinned'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
 import { IdentifiableEntity } from '@/helper/http.interface'
@@ -28,6 +29,7 @@ declare namespace API {
     publish: PublishState
     origin: ArticleOrigin
     banner: ArticleBanner
+    pinned: ArticlePinned
     reading: number
     liking: number
     commenting: number

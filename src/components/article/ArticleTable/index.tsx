@@ -1,4 +1,6 @@
+import { ab } from '@/constants/article/banner'
 import { ao } from '@/constants/article/origin'
+import { getArticlePinnedByMap } from '@/constants/article/pinned'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
@@ -19,18 +21,18 @@ import {
   FolderOpenOutlined,
   HeartOutlined,
   LinkOutlined,
+  PushpinOutlined,
   RetweetOutlined,
   RollbackOutlined,
   SwapOutlined,
   TagOutlined,
+  UngroupOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
-import { TableDropdown } from '@ant-design/pro-table'
-import ProTable from '@ant-design/pro-table'
+import ProTable, { TableDropdown } from '@ant-design/pro-table'
 import { Button, Card, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef } from 'react'
 import { history, Link } from 'umi'
-import { ab } from '@/constants/article/banner'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
@@ -64,6 +66,22 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       centered: true,
       onOk() {
         onMetaPatch(id, { meta: 'banner', value }).then(() => {
+          actionRef.current?.reload()
+          if (cb) {
+            cb()
+          }
+        })
+      },
+    })
+  }
+
+  const handlePinnedChange = (id: number, value: number, cb?: () => void) => {
+    Modal.confirm({
+      title: `确定要将该文章 ${value === 1 ? 'Pinned' : 'NoPinned'} 吗?`,
+      content: '此操作不能撤销!!!',
+      centered: true,
+      onOk() {
+        onMetaPatch(id, { meta: 'pinned', value }).then(() => {
           actionRef.current?.reload()
           if (cb) {
             cb()
@@ -177,15 +195,22 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       width: 120,
       render: (
         _,
-        { publish: propPublish, open: propOpen, origin: propOrigin, banner: propBanner }
+        {
+          publish: propPublish,
+          open: propOpen,
+          origin: propOrigin,
+          banner: propBanner,
+          pinned: pinnedProp,
+        }
       ) => {
         const publish = ps(propPublish!)
         const open = ap(propOpen!)
         const origin = ao(propOrigin!)
         const banner = ab(propBanner!)
+        const pinned = getArticlePinnedByMap(pinnedProp!)
         return (
           <Space direction='vertical'>
-            {[publish, open, origin, banner].map((s) => (
+            {[publish, open, origin, banner, pinned].map((s) => (
               <Tag icon={s.icon} color={s.color} key={s.id}>
                 {s.name}
               </Tag>
@@ -239,27 +264,24 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
           )}
-          {article.banner === 1 ? (
-            <Button
-              size='small'
-              type='text'
-              block
-              icon={<SwapOutlined />}
-              onClick={() => handleBannerChange(article.id, 0)}
-            >
-              移除轮播
-            </Button>
-          ) : (
-            <Button
-              size='small'
-              type='text'
-              block
-              icon={<RetweetOutlined />}
-              onClick={() => handleBannerChange(article.id, 1)}
-            >
-              加入轮播
-            </Button>
-          )}
+          <Button
+            size='small'
+            type='text'
+            block
+            icon={article.banner === 1 ? <SwapOutlined /> : <RetweetOutlined />}
+            onClick={() => handleBannerChange(article.id, article.banner === 1 ? 0 : 1)}
+          >
+            {article.banner === 1 ? '移除轮播' : '加入轮播'}
+          </Button>
+          <Button
+            size='small'
+            type='text'
+            block
+            icon={article.pinned === 1 ? <UngroupOutlined /> : <PushpinOutlined />}
+            onClick={() => handlePinnedChange(article.id, article.pinned === 1 ? 0 : 1)}
+          >
+            {article.pinned === 1 ? 'UnPinned' : 'Pinned'}
+          </Button>
           <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
             宿主页面
           </Button>
@@ -340,6 +362,11 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
                 {
                   name: '移除轮播',
                   key: 'removeBanner',
+                },
+                { name: 'Pinned', key: 'Pinned' },
+                {
+                  name: 'NoPinned',
+                  key: 'NoPinned',
                 },
               ]}
             />

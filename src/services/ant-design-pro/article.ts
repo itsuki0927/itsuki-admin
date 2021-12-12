@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
+import { ArticlePinned } from '@/constants/article/pinned'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
 import { BaseSearchRequest } from '@/helper/http.interface'
@@ -34,6 +35,7 @@ export type ArticleSearchRequest = BaseSearchRequest<{
   open?: ArticleOpen
   origin?: ArticleOrigin
   banner?: ArticleBanner
+  pinned?: ArticlePinned
   tag?: number
   category?: number
 }>

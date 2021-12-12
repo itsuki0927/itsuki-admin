@@ -1,5 +1,6 @@
 import { articleBanners } from '@/constants/article/banner'
 import { articleOrigins } from '@/constants/article/origin'
+import { articlePins } from '@/constants/article/pinned'
 import { articleOpens } from '@/constants/article/public'
 import { SELECT_ALL_VALUE } from '@/constants/common'
 import { publishStates } from '@/constants/publish'
@@ -22,6 +23,8 @@ const initialValues: ArticleSearchRequest = {
   origin: SELECT_ALL_VALUE,
   tag: SELECT_ALL_VALUE,
   category: SELECT_ALL_VALUE,
+  banner: SELECT_ALL_VALUE,
+  pinned: SELECT_ALL_VALUE,
 }
 
 const resolve = () => Promise.resolve(true)
@@ -72,6 +75,14 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
           options={[
             { label: '全部来源', value: SELECT_ALL_VALUE },
             ...getSelectOptionsByState(articleBanners),
+          ]}
+        />
+        <ProFormSelect
+          name='pinned'
+          label='Pinned状态'
+          options={[
+            { label: '全部来源', value: SELECT_ALL_VALUE },
+            ...getSelectOptionsByState(articlePins),
           ]}
         />
         <ProFormSelect
