@@ -70,7 +70,7 @@ const EditArticle = () => {
     })
   )
 
-  const { loading, data } = useRequest<{ data: ArticleDetailResponse }>(() =>
+  const { loading, data, refresh } = useRequest<{ data: ArticleDetailResponse }>(() =>
     queryArticleById(+id)
       .then((result) => {
         result.keywords = result.keywords?.split('、') as any
@@ -139,6 +139,7 @@ const EditArticle = () => {
         onFinish={(values) => {
           return updateArticle(data.id, values).then(() => {
             message.success('更新成功')
+            refresh()
             return true
           })
         }}

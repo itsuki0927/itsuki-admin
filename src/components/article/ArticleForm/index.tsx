@@ -1,9 +1,7 @@
 import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import ProCard from '@ant-design/pro-card'
-import type { ProFormInstance } from '@ant-design/pro-form'
 import { StepsForm } from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
-import { useRef } from 'react'
 import ArticleBasic from './ArticleBasic'
 import ArticleCategorySelect from './ArticleCategorySelect'
 import ArticleContent from './ArticleContent'
@@ -17,11 +15,8 @@ type ArticleFormProps = {
 }
 
 const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
-  const formRef = useRef<ProFormInstance>()
-
   return (
     <StepsForm
-      formRef={formRef}
       onFinish={onFinish}
       formProps={{
         request,
