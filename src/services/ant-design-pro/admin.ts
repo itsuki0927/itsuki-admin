@@ -17,9 +17,12 @@ export type AdminSaveRequest = {
   avatar: string
   nickname: string
   description: string
-  password?: string
-  newPassword?: string
-  confirm?: string
+}
+
+export type AdminUpdatePasswordRequest = {
+  password: string
+  newPassword: string
+  confirm: string
 }
 
 /** 获取当前的用户 GET /admin/current-admin */
@@ -35,9 +38,16 @@ export const login = (body: LoginParams) =>
     data: body,
   })
 
-/** 保存信息 POST /admin/save */
+/** 保存信息 PUT /admin/save */
 export const saveAdminInfo = (data: AdminSaveRequest) =>
-  request<API.Admin>('/admin/save', {
-    method: 'POST',
+  request<API.Admin>('/admin', {
+    method: 'PUT',
+    data,
+  })
+
+/** 更新密码 PUT /admin/password */
+export const updateAdminPassword = (data: AdminUpdatePasswordRequest) =>
+  request<API.Admin>('/admin/password', {
+    method: 'PUT',
     data,
   })
