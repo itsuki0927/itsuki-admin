@@ -22,14 +22,18 @@ interface SnippetFormProps {
 
 const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
   const [visible, setVisible] = useState(false)
-  const [temp, setTemp] = useState<API.Snippet>()
-  const formRef = useRef<ProFormInstance>()
+  const [previewData, setPreviewData] = useState<API.Snippet>()
+  const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([])
 
   const handlePreview = async () => {
     try {
-      const data = await formRef.current?.validateFieldsReturnFormatValue!()
+      const data = {} as API.Snippet
+      for (const ref of formMapRef.current) {
+        const formItemData = await ref.current?.validateFieldsReturnFormatValue!()
+        Object.assign(data, formItemData)
+      }
       setVisible(true)
-      setTemp(data)
+      setPreviewData(data)
     } catch (e) {
       message.warn('请输入必填字段')
     }
@@ -53,6 +57,7 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
       <StepsForm
         onFinish={onFinish}
         containerStyle={{ width: '100%' }}
+        formMapRef={formMapRef}
         submitter={{
           submitButtonProps: {
             style: { width: 150 },
@@ -134,7 +139,7 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
         </StepsForm.StepForm>
       </StepsForm>
 
-      <SnippetDrawer visible={visible} onClose={() => setVisible(false)} data={temp} />
+      <SnippetDrawer visible={visible} onClose={() => setVisible(false)} data={previewData} />
     </>
   )
 }
