@@ -1,5 +1,6 @@
 import { articleBanners } from '@/constants/article/banner'
 import { articleOrigins } from '@/constants/article/origin'
+import { articlePins } from '@/constants/article/pinned'
 import { ArticleOpen, articleOpens } from '@/constants/article/public'
 import { publishStates } from '@/constants/publish'
 import { getSelectOptionsByState } from '@/transforms/option'
@@ -15,6 +16,13 @@ const ArticleOptions = () => {
         labelAlign='left'
         label='轮播状态'
         name='banner'
+      />
+      <ProFormSelect
+        rules={[{ required: true, message: '请选择是否展示在首页' }]}
+        options={getSelectOptionsByState(articlePins)}
+        labelAlign='left'
+        label='Pinned'
+        name='pinned'
       />
       <ProFormSelect
         fieldProps={{
