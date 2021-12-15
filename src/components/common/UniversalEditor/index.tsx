@@ -75,6 +75,7 @@ export interface UniversalEditorProps {
   style?: React.CSSProperties
   size?: 'small' | 'default'
   uploadPrefix?: string
+  height?: number | string
 }
 
 const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString()
@@ -92,6 +93,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   size,
   loading,
   uploadPrefix,
+  height = '80vh',
   ...props
 }) => {
   const cacheID = props.cacheID || window.location.pathname
@@ -170,6 +172,10 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
       editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, handleSaveContent)
       // Esc = exit fullscreen
       editorRef.current.addCommand(KeyCode.Escape, () => setFullscreen(false))
+      //
+      editorRef.current.addCommand(KeyMod.Alt | KeyCode.KeyD, () => {
+        editorRef.current?.trigger('anyString', 'editor.action.formatDocument', '')
+      })
     }
   }, [handleSaveContent])
 
@@ -278,7 +284,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
             value={value}
             onChange={onChange}
             className={classnames(styles.editor, !value && styles.placeholder)}
-            height={fullscreen ? '100vh' : '80vh'}
+            height={fullscreen ? '100vh' : height}
             loading={<Spin />}
             options={{
               automaticLayout: true,

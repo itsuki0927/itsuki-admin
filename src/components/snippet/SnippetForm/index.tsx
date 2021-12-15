@@ -1,4 +1,5 @@
 import { UniversalEditor } from '@/components/common'
+import { UEditorLanguage } from '@/components/common/UniversalEditor'
 import { publishStates } from '@/constants/publish'
 import { ranksStates } from '@/constants/ranks'
 import type { SnippetActionRequest } from '@/services/ant-design-pro/snippet'
@@ -7,9 +8,9 @@ import { getSelectOptionsByState } from '@/transforms/option'
 import { EyeOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import type { ProFormInstance } from '@ant-design/pro-form'
-import { ProFormSelect, ProFormText, ProFormTextArea, StepsForm } from '@ant-design/pro-form'
+import ProForm, { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
-import { Button, Form, message, Tag } from 'antd'
+import { Button, Form, message, Space, Tag } from 'antd'
 import { useRef, useState } from 'react'
 import SnippetDrawer from './SnippetDrawer'
 import SnippetTagSelect from './SnippetTagSelect'
@@ -39,10 +40,10 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
     }
   }
 
-  const renderSubmitter = ({ step, dom }: { step: number; dom: JSX.Element[] }) => {
+  const renderSubmitter = ({ dom }: { dom: JSX.Element[] }) => {
     return (
       <FooterToolbar>
-        {(isEdit || step === 3) && (
+        {isEdit && (
           <Button type='ghost' onClick={handlePreview} icon={<EyeOutlined />}>
             预览片段
           </Button>
@@ -54,24 +55,20 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
 
   return (
     <>
-      <StepsForm
+      <ProForm
         onFinish={onFinish}
-        containerStyle={{ width: '100%' }}
-        formMapRef={formMapRef}
         submitter={{
           submitButtonProps: {
             style: { width: 150 },
           },
-          render: ({ step }, dom) => renderSubmitter({ step, dom }),
+          render: (_, dom) => renderSubmitter({ dom }),
         }}
-        formProps={{
-          request,
-          validateMessages: {
-            required: '此项为必填项',
-          },
+        validateMessages={{
+          required: '此项为必填项',
         }}
+        request={request}
       >
-        <StepsForm.StepForm title='基本信息'>
+        <Space direction='vertical' style={{ width: '100%' }} size={24}>
           <ProCard title='基本信息' headerBordered>
             <ProFormText
               name='name'
@@ -104,40 +101,35 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
               rules={[{ required: true, message: '请选择状态' }]}
             />
           </ProCard>
-        </StepsForm.StepForm>
 
-        <StepsForm.StepForm title='内容'>
+          <Form.Item name='categoryIds' rules={[{ required: true, message: '请选择标签' }]}>
+            <SnippetTagSelect />
+          </Form.Item>
+
           <ProCard title='内容' headerBordered>
             <Form.Item name='code' rules={[{ required: true, message: '请输入code' }]}>
-              <UniversalEditor formStatus key='code' />
+              <UniversalEditor formStatus key='code' height={500} />
             </Form.Item>
           </ProCard>
-        </StepsForm.StepForm>
 
-        <StepsForm.StepForm title='分类'>
-          <ProCard ghost>
-            <Form.Item name='categoryIds'>
-              <SnippetTagSelect />
-            </Form.Item>
-          </ProCard>
-        </StepsForm.StepForm>
-
-        <StepsForm.StepForm title='技巧'>
-          <ProCard title='技巧' headerBordered style={{ marginBottom: 24 }}>
+          <ProCard title='技巧' headerBordered>
             <Form.Item name='skill' rules={[{ required: true, message: '请输入技巧' }]}>
-              <UniversalEditor formStatus key='skill' />
+              <UniversalEditor
+                formStatus
+                key='skill'
+                height={300}
+                language={UEditorLanguage.Markdown}
+              />
             </Form.Item>
           </ProCard>
-        </StepsForm.StepForm>
 
-        <StepsForm.StepForm title='示例'>
           <ProCard title='示例' headerBordered>
             <Form.Item name='example' rules={[{ required: true, message: '请输入示例' }]}>
-              <UniversalEditor formStatus key='example' />
+              <UniversalEditor formStatus key='example' maxRows={20} height={300} />
             </Form.Item>
           </ProCard>
-        </StepsForm.StepForm>
-      </StepsForm>
+        </Space>
+      </ProForm>
 
       <SnippetDrawer visible={visible} onClose={() => setVisible(false)} data={previewData} />
     </>
