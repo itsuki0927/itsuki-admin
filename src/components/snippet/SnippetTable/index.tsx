@@ -5,7 +5,6 @@ import { ranksStates, rs } from '@/constants/ranks'
 import { patchSnippet, querySnippetList } from '@/services/ant-design-pro/snippet'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
-import { getGravatarUrl } from '@/transforms/gravatar'
 import { genMarkdownString } from '@/transforms/markdown'
 import { getSelectOptionsByState } from '@/transforms/option'
 import { getBlogSnippetUrl } from '@/transforms/url'
@@ -19,7 +18,7 @@ import {
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Avatar, Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
+import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef, useState } from 'react'
 import { history, Link } from 'umi'
 
@@ -46,7 +45,7 @@ const SnippetTable = () => {
   }
 
   const columns: ProColumns<API.Snippet>[] = [
-    { title: 'id', dataIndex: 'id', search: false },
+    { title: 'id', dataIndex: 'id', width: 50, search: false },
     {
       title: '名称',
       dataIndex: 'name',
@@ -118,35 +117,6 @@ const SnippetTable = () => {
           </Space>
         )
       },
-    },
-    {
-      title: '个人信息',
-      width: 240,
-      key: 'profile',
-      search: false,
-      render: (_, { email, author, website }) => (
-        <Space direction='vertical'>
-          <span>
-            头像：
-            <Avatar shape='square' size='small' src={getGravatarUrl(email)} />
-          </span>
-          <span>名字：{author}</span>
-          <span>
-            邮箱：
-            <Typography.Text copyable>{email || '-'}</Typography.Text>
-          </span>
-          <span>
-            网址：
-            {website ? (
-              <Typography.Link underline target='_blank' rel='noreferrer' href={website}>
-                点击打开
-              </Typography.Link>
-            ) : (
-              '-'
-            )}
-          </span>
-        </Space>
-      ),
     },
     {
       title: '更新周期',
