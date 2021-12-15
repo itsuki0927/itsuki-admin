@@ -18,21 +18,16 @@ import SnippetTagSelect from './SnippetTagSelect'
 interface SnippetFormProps {
   onFinish: (data: SnippetActionRequest) => Promise<boolean>
   request?: () => Promise<API.Snippet>
-  isEdit?: boolean
 }
 
-const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
+const SnippetForm = ({ onFinish, request }: SnippetFormProps) => {
   const [visible, setVisible] = useState(false)
   const [previewData, setPreviewData] = useState<API.Snippet>()
-  const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([])
+  const formRef = useRef<ProFormInstance<API.Snippet>>()
 
   const handlePreview = async () => {
     try {
-      const data = {} as API.Snippet
-      for (const ref of formMapRef.current) {
-        const formItemData = await ref.current?.validateFieldsReturnFormatValue!()
-        Object.assign(data, formItemData)
-      }
+      const data = await formRef.current?.validateFieldsReturnFormatValue!()
       setVisible(true)
       setPreviewData(data)
     } catch (e) {
@@ -40,14 +35,12 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
     }
   }
 
-  const renderSubmitter = ({ dom }: { dom: JSX.Element[] }) => {
+  const renderSubmitter = (dom: JSX.Element[]) => {
     return (
       <FooterToolbar>
-        {isEdit && (
-          <Button type='ghost' onClick={handlePreview} icon={<EyeOutlined />}>
-            预览片段
-          </Button>
-        )}
+        <Button type='ghost' onClick={handlePreview} icon={<EyeOutlined />}>
+          预览片段
+        </Button>
         {dom}
       </FooterToolbar>
     )
@@ -56,12 +49,13 @@ const SnippetForm = ({ onFinish, request, isEdit }: SnippetFormProps) => {
   return (
     <>
       <ProForm
+        formRef={formRef}
         onFinish={onFinish}
         submitter={{
           submitButtonProps: {
             style: { width: 150 },
           },
-          render: (_, dom) => renderSubmitter({ dom }),
+          render: (_, dom) => renderSubmitter(dom),
         }}
         validateMessages={{
           required: '此项为必填项',

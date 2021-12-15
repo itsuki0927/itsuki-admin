@@ -49,7 +49,6 @@ const SnippetEdit = () => {
       }
     >
       <SnippetForm
-        isEdit
         key='editSnippet'
         request={() => Promise.resolve(data)}
         onFinish={(values) => {
