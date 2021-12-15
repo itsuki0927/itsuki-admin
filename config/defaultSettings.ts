@@ -6,7 +6,7 @@ const Settings: LayoutSettings & {
 } = {
   title: 'Blog Admin',
   pwa: false,
-  logo: 'https://resources.fivewoods.xyz/logo.png',
+  logo: 'https://static.itsuki.cn/logo.png',
   iconfontUrl: '',
   navTheme: 'light',
   primaryColor: '#1890ff',

@@ -2,10 +2,10 @@ import { Environment, mode } from './environment'
 
 const apiMap = {
   [Environment.Development]: 'http://localhost:5555',
-  [Environment.Production]: 'https://api.fivewoods.xyz',
+  [Environment.Production]: 'https://api.itsuki.cn',
 } as const
 
-export const STATIC_URL = 'https://resources.fivewoods.xyz'
+export const STATIC_URL = 'https://static.itsuki.cn'
 
 export const API_URL = apiMap[mode!]
 
