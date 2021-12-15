@@ -9,6 +9,7 @@ import { useRequest } from 'umi'
 const BaseSettings = () => {
   const { data, loading } = useRequest(() =>
     querySystemSettings().then((temp) => {
+      temp.keywordsList = temp.keywords.split(',')
       return { data: temp }
     })
   )
@@ -22,11 +23,11 @@ const BaseSettings = () => {
   }
 
   return (
-    <ProForm
-      initialValues={data as any}
+    <ProForm<API.SystemSettings>
+      initialValues={data}
       submitter={{
         searchConfig: {
-          submitText: '保存',
+          submitText: '保存设置',
         },
         submitButtonProps: {
           icon: <CheckOutlined />,
@@ -40,13 +41,17 @@ const BaseSettings = () => {
       labelCol={{ span: 4 }}
       layout='horizontal'
       onFinish={(values) => {
-        return saveSystemSettings({ ...data, ...values } as API.SystemSettings).then(() => {
+        const params = { ...data, ...values }
+        params.keywords = params.keywordsList.join(',')
+        return saveSystemSettings(params).then(() => {
           message.success('保存成功')
           return true
         })
       }}
     >
-      <Form.Item label={<HeartOutlined />}>{data?.liking || '-'} 次</Form.Item>
+      <Form.Item label={<HeartOutlined />} name='liking'>
+        {data?.liking ?? '-'} 次
+      </Form.Item>
       <ProFormText
         width='lg'
         label='站点标题'
@@ -69,7 +74,7 @@ const BaseSettings = () => {
         width='lg'
         mode='tags'
         label='关键词'
-        name='keywords'
+        name='keywordsList'
         rules={[{ required: true, message: '请输入关键词' }]}
       />
       <ProFormText

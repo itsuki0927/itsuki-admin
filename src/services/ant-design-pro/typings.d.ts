@@ -75,6 +75,7 @@ declare namespace API {
     description: string
     domain: string
     record: string
+    keywordsList: string[]
     ipBlackList?: string[]
     emailBlackList?: string[]
     keywordBlackList?: string[]
