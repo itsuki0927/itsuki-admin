@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
-import { ArticlePinned } from '@/constants/article/pinned'
+import { PinnedState } from '@/constants/pinned'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
 import { IdentifiableEntity } from '@/helper/http.interface'
@@ -29,7 +29,7 @@ declare namespace API {
     publish: PublishState
     origin: ArticleOrigin
     banner: ArticleBanner
-    pinned: ArticlePinned
+    pinned: PinnedState
     reading: number
     liking: number
     commenting: number
@@ -112,6 +112,7 @@ declare namespace API {
     website: string
     avatar: string
     email: string
+    pinned: PinnedState
     categories: SnippetCategory[]
   }>
 }

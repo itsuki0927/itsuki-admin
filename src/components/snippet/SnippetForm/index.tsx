@@ -1,5 +1,6 @@
 import { UniversalEditor } from '@/components/common'
 import { UEditorLanguage } from '@/components/common/UniversalEditor'
+import { pinnedStates } from '@/constants/pinned'
 import { publishStates } from '@/constants/publish'
 import { ranksStates } from '@/constants/ranks'
 import type { SnippetActionRequest } from '@/services/ant-design-pro/snippet'
@@ -63,42 +64,53 @@ const SnippetForm = ({ onFinish, request }: SnippetFormProps) => {
         request={request}
       >
         <Space direction='vertical' style={{ width: '100%' }} size={24}>
-          <ProCard title='基本信息' headerBordered>
-            <ProFormText
-              name='name'
-              label='名称'
-              rules={[{ required: true, message: '请输入名称' }]}
-            />
-            <ProFormTextArea
-              name='description'
-              label='描述'
-              rules={[{ required: true, message: '请输入描述' }]}
-            />
-            <ProFormSelect
-              name='ranks'
-              label='难度'
-              request={async () =>
-                getSelectOptionsByState(ranksStates, (s) => (
-                  <Tag color={s.color} icon={s.icon}>
-                    {s.name}
-                  </Tag>
-                ))
-              }
-              placeholder='难度'
-              rules={[{ required: true, message: '请选择难度' }]}
-            />
-            <ProFormSelect
-              name='status'
-              label='状态'
-              request={async () => getSelectOptionsByState(publishStates)}
-              placeholder='状态'
-              rules={[{ required: true, message: '请选择状态' }]}
-            />
-          </ProCard>
+          <ProCard ghost gutter={24}>
+            <ProCard title='基本信息' headerBordered>
+              <ProFormText
+                name='name'
+                label='名称'
+                rules={[{ required: true, message: '请输入名称' }]}
+              />
+              <ProFormTextArea
+                name='description'
+                label='描述'
+                rules={[{ required: true, message: '请输入描述' }]}
+              />
+              <ProFormSelect
+                name='ranks'
+                label='难度'
+                request={async () =>
+                  getSelectOptionsByState(ranksStates, (s) => (
+                    <Tag color={s.color} icon={s.icon}>
+                      {s.name}
+                    </Tag>
+                  ))
+                }
+                placeholder='难度'
+                rules={[{ required: true, message: '请选择难度' }]}
+              />
+              <ProFormSelect
+                name='status'
+                label='状态'
+                request={async () => getSelectOptionsByState(publishStates)}
+                placeholder='状态'
+                rules={[{ required: true, message: '请选择状态' }]}
+              />
+              <ProFormSelect
+                name='pinned'
+                label='Pinned'
+                request={async () => getSelectOptionsByState(pinnedStates)}
+                placeholder='固定'
+                rules={[{ required: true, message: '请选择是否固定' }]}
+              />
+            </ProCard>
 
-          <Form.Item name='categoryIds' rules={[{ required: true, message: '请选择标签' }]}>
-            <SnippetTagSelect />
-          </Form.Item>
+            <ProCard ghost>
+              <Form.Item name='categoryIds' rules={[{ required: true, message: '请选择标签' }]}>
+                <SnippetTagSelect />
+              </Form.Item>
+            </ProCard>
+          </ProCard>
 
           <ProCard title='内容' headerBordered>
             <Form.Item name='code' rules={[{ required: true, message: '请输入code' }]}>

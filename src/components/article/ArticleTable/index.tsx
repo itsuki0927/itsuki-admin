@@ -1,6 +1,6 @@
 import { ab } from '@/constants/article/banner'
 import { ao } from '@/constants/article/origin'
-import { getArticlePinnedByMap } from '@/constants/article/pinned'
+import { getPinnedState } from '@/constants/pinned'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
@@ -77,7 +77,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
 
   const handlePinnedChange = (id: number, value: number, cb?: () => void) => {
     Modal.confirm({
-      title: `确定要将该文章 ${value === 1 ? 'Pinned' : 'NoPinned'} 吗?`,
+      title: `确定要将该文章 ${value === 1 ? 'Pinned' : 'UnPinned'} 吗?`,
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
@@ -207,7 +207,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
         const open = ap(propOpen!)
         const origin = ao(propOrigin!)
         const banner = ab(propBanner!)
-        const pinned = getArticlePinnedByMap(pinnedProp!)
+        const pinned = getPinnedState(pinnedProp!)
         return (
           <Space direction='vertical'>
             {[publish, open, origin, banner, pinned].map((s) => (
@@ -365,8 +365,8 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
                 },
                 { name: 'Pinned', key: 'Pinned' },
                 {
-                  name: 'NoPinned',
-                  key: 'NoPinned',
+                  name: 'UnPinned',
+                  key: 'UnPinned',
                 },
               ]}
             />

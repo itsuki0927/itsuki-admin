@@ -1,21 +1,21 @@
 import { PushpinOutlined, UngroupOutlined } from '@ant-design/icons'
 
 /** 文章Pinned */
-export enum ArticlePinned {
+export enum PinnedState {
   NO = 0, // 不显示
   YES = 1, // 显示
 }
 
-const articlePinnedMap = new Map(
+const pinnedStateMap = new Map(
   [
     {
-      id: ArticlePinned.NO,
+      id: PinnedState.NO,
       name: 'UnPinned',
       icon: <UngroupOutlined />,
       color: 'geekblue',
     },
     {
-      id: ArticlePinned.YES,
+      id: PinnedState.YES,
       name: 'Pinned',
       icon: <PushpinOutlined />,
       color: 'cyan',
@@ -23,6 +23,6 @@ const articlePinnedMap = new Map(
   ].map((item) => [item.id, item])
 )
 
-export const getArticlePinnedByMap = (state: ArticlePinned) => articlePinnedMap.get(state)!
+export const getPinnedState = (state: PinnedState) => pinnedStateMap.get(state)!
 
-export const articlePins = [...articlePinnedMap.values()]
+export const pinnedStates = [...pinnedStateMap.values()]

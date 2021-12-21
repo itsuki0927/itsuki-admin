@@ -1,8 +1,13 @@
 import { CodeBlock } from '@/components/common'
+import { PinnedState, getPinnedState } from '@/constants/pinned'
 import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
 import { ps, PublishState, publishStates } from '@/constants/publish'
 import { ranksStates, rs } from '@/constants/ranks'
-import { patchSnippet, querySnippetList } from '@/services/ant-design-pro/snippet'
+import {
+  patchSnippet,
+  patchSnippetPinned,
+  querySnippetList,
+} from '@/services/ant-design-pro/snippet'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
 import { genMarkdownString } from '@/transforms/markdown'
@@ -13,10 +18,13 @@ import {
   DeleteOutlined,
   EditOutlined,
   LinkOutlined,
+  PushpinOutlined,
   RollbackOutlined,
   TagOutlined,
+  UngroupOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
+import { TableDropdown } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef, useState } from 'react'
@@ -36,6 +44,22 @@ const SnippetTable = () => {
         patchSnippet({ ids, status }).then(() => {
           actionRef.current?.reload()
           message.success('更新成功')
+          if (cb) {
+            cb()
+          }
+        })
+      },
+    })
+  }
+
+  const handlePinnedChange = (ids: number[], pinned: PinnedState, cb?: () => void) => {
+    Modal.confirm({
+      title: `确定要将该文章 ${pinned === 1 ? 'Pinned' : 'UnPinned'} 吗?`,
+      content: '此操作不能撤销!!!',
+      centered: true,
+      onOk() {
+        patchSnippetPinned({ ids, pinned }).then(() => {
+          actionRef.current?.reload()
           if (cb) {
             cb()
           }
@@ -80,6 +104,16 @@ const SnippetTable = () => {
             />
           </Card>
         )
+      },
+    },
+    {
+      title: 'Pinned',
+      dataIndex: 'pinned',
+      hideInTable: true,
+      valueEnum: {
+        [SELECT_ALL_VALUE]: '全部',
+        [PinnedState.YES]: 'Pinned',
+        [PinnedState.NO]: 'UnPinned',
       },
     },
     {
@@ -142,12 +176,14 @@ const SnippetTable = () => {
           ...getSelectOptionsByState(publishStates),
         ],
       },
-      render: (_, { status: statusProp, ranks: ranksProp }) => {
+      render: (_, { status: statusProp, ranks: ranksProp, pinned: pinnedProp }) => {
         const status = ps(statusProp!)
         const ranks = rs(ranksProp!)
+        const pinned = getPinnedState(pinnedProp)
+
         return (
           <Space direction='vertical'>
-            {[status, ranks].map((s) => (
+            {[status, ranks, pinned].map((s) => (
               <Tag icon={s.icon} color={s.color} key={s.id}>
                 {s.name}
               </Tag>
@@ -174,7 +210,7 @@ const SnippetTable = () => {
       title: '操作',
       valueType: 'option',
       width: 110,
-      render: (_, { id, status }) => (
+      render: (_, { id, status, pinned }) => (
         <Space direction='vertical'>
           <Link to={`/snippet/edit/${id}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
@@ -215,6 +251,20 @@ const SnippetTable = () => {
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
           )}
+          <Button
+            size='small'
+            type='text'
+            block
+            icon={pinned === PinnedState.NO ? <UngroupOutlined /> : <PushpinOutlined />}
+            onClick={() =>
+              handlePinnedChange(
+                [id],
+                pinned === PinnedState.YES ? PinnedState.NO : PinnedState.YES
+              )
+            }
+          >
+            {pinned === 1 ? 'UnPinned' : 'Pinned'}
+          </Button>
           <Button
             size='small'
             block
@@ -290,6 +340,7 @@ const SnippetTable = () => {
               >
                 移回收站
               </Button>
+
               <Button
                 size='small'
                 type='text'
@@ -305,6 +356,23 @@ const SnippetTable = () => {
               >
                 <Typography.Text type='warning'>退至草稿</Typography.Text>
               </Button>
+
+              <TableDropdown
+                onSelect={(key) => {
+                  handlePinnedChange(
+                    selectedRowKeys as number[],
+                    key === 'Pinned' ? PinnedState.YES : PinnedState.NO,
+                    onCleanSelected
+                  )
+                }}
+                menus={[
+                  { name: 'Pinned', key: 'Pinned' },
+                  {
+                    name: 'UnPinned',
+                    key: 'UnPinned',
+                  },
+                ]}
+              />
             </Space>
           )
         }}

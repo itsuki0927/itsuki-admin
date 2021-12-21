@@ -1,5 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
+import { PinnedState } from '@/constants/pinned'
 import { PublishState } from '@/constants/publish'
 import { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
 import { request } from 'umi'
@@ -26,6 +27,11 @@ export type SnippetSearchRequest = BaseSearchRequest<{
 export type SnippetPatchRequest = {
   ids: number[]
   status: PublishState
+}
+
+export type SnippetPatchPinnedRequest = {
+  ids: number[]
+  pinned: PinnedState
 }
 
 export type SnippetDetailResponse = API.Snippet & {
@@ -55,3 +61,7 @@ export const deleteSnippet = (id: number | string) =>
 /** 更新片段 PATCH /snippet */
 export const patchSnippet = (data: SnippetPatchRequest) =>
   request<number>('/snippet', { method: 'PATCH', data })
+
+/** 更新片段 PATCH /snippet/pinned */
+export const patchSnippetPinned = (data: SnippetPatchPinnedRequest) =>
+  request<number>('/snippet/pinned', { method: 'PATCH', data })
