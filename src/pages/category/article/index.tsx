@@ -8,15 +8,11 @@ import {
   updateCategory,
 } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
-import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
-import compose from '@/utils/compose'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
-import { Button, Divider, Empty, message, Modal, Space, Tree, Typography } from 'antd'
+import { Button, Divider, Empty, message, Modal, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import styles from './index.less'
-
-const convertToAntdData = compose(getAntdTreeByTree, convertToTreeData)
 
 const ArticleCategoryList = () => {
   const [visible, setVisible] = useState(false)
@@ -114,67 +110,54 @@ const ArticleCategoryList = () => {
         {!categoryList.length ? (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
-          <Tree
-            className={styles.tree}
-            blockNode
-            autoExpandParent
-            defaultExpandAll
-            showLine
-            showIcon={false}
-            selectable={false}
-            checkable={false}
-            treeData={convertToAntdData(categoryList)}
-            titleRender={(nodeData) => {
-              const category = (nodeData as any).data
-              return (
-                <div className={styles.categoryNode}>
-                  <div className={styles.content}>
-                    <Space className={styles.title}>
-                      <Typography.Text strong={true}>{category.name}</Typography.Text>
-                      <Divider type='vertical' />
-                      <Typography.Text type='secondary'>{category.path}</Typography.Text>
-                      <Divider type='vertical' />
-                      <Typography.Text type='secondary'>{category.count} 篇</Typography.Text>
-                    </Space>
-                    <div>
-                      <Typography.Text type='secondary'>
-                        {category.description || '-'}
-                      </Typography.Text>
-                    </div>
-                  </div>
+          <div>
+            {categoryList.map((category) => (
+              <div className={styles.categoryNode}>
+                <div className={styles.content}>
+                  <Space className={styles.title}>
+                    <Typography.Text strong={true}>{category.name}</Typography.Text>
+                    <Divider type='vertical' />
+                    <Typography.Text type='secondary'>{category.path}</Typography.Text>
+                    <Divider type='vertical' />
+                    <Typography.Text type='secondary'>{category.count} 篇</Typography.Text>
+                  </Space>
                   <div>
-                    <Button
-                      size='small'
-                      type='text'
-                      icon={<EditOutlined />}
-                      onClick={handleUpdate(category)}
-                    >
-                      编辑
-                    </Button>
-                    <Divider type='vertical' />
-                    <Button
-                      size='small'
-                      type='text'
-                      danger={true}
-                      icon={<DeleteOutlined />}
-                      onClick={handleRemove(category)}
-                    >
-                      删除
-                    </Button>
-                    <Divider type='vertical' />
-                    <Button size='small' icon={<LinkOutlined />} type='link' target='_blank'>
-                      查看
-                    </Button>
+                    <Typography.Text type='secondary'>
+                      {category.description || '-'}
+                    </Typography.Text>
                   </div>
                 </div>
-              )
-            }}
-          />
+                <div>
+                  <Button
+                    size='small'
+                    type='text'
+                    icon={<EditOutlined />}
+                    onClick={handleUpdate(category)}
+                  >
+                    编辑
+                  </Button>
+                  <Divider type='vertical' />
+                  <Button
+                    size='small'
+                    type='text'
+                    danger={true}
+                    icon={<DeleteOutlined />}
+                    onClick={handleRemove(category)}
+                  >
+                    删除
+                  </Button>
+                  <Divider type='vertical' />
+                  <Button size='small' icon={<LinkOutlined />} type='link' target='_blank'>
+                    查看
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
         <CategoryModal
           title={temp ? '编辑分类' : '添加分类'}
           category={temp}
-          tree={getAntdTreeByTree(convertToTreeData(categoryList), temp?.id)}
           visible={visible}
           onChange={setVisible}
           onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}

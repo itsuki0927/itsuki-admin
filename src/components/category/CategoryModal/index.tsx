@@ -1,4 +1,3 @@
-import { NO_PARENT_VALUE } from '@/constants/common'
 import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
 import type { API } from '@/services/ant-design-pro/typings'
 import type { ProFormInstance } from '@ant-design/pro-form'
@@ -9,7 +8,7 @@ import ProForm, {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-form'
-import { Form, TreeSelect, Typography } from 'antd'
+import { Form, Typography } from 'antd'
 import { useRef } from 'react'
 
 type CategoryModalProps = {
@@ -18,17 +17,9 @@ type CategoryModalProps = {
   onFinish: (values: CategoryActionRequest) => Promise<boolean | void>
   category?: API.Category
   title: string
-  tree: any[]
 }
 
-const CategoryModal = ({
-  title,
-  visible,
-  onChange,
-  category,
-  onFinish,
-  tree,
-}: CategoryModalProps) => {
+const CategoryModal = ({ title, visible, onChange, category, onFinish }: CategoryModalProps) => {
   const restFormRef = useRef<ProFormInstance>()
   return (
     <ModalForm<CategoryActionRequest>
@@ -71,27 +62,6 @@ const CategoryModal = ({
         placeholder='请输入分类路径'
         extra='“别名” 是在 URL 中使用的别称，建议小写，字母、数字、连字符（-）'
       />
-      <Form.Item
-        rules={[{ required: true, message: '请选择父类' }]}
-        name='parentId'
-        label='父类'
-        extra='可以选择父级名称'
-      >
-        <TreeSelect
-          treeLine
-          allowClear
-          treeDefaultExpandAll
-          placeholder='请选择父类'
-          treeData={[
-            {
-              label: '无',
-              key: 'null',
-              value: NO_PARENT_VALUE,
-            },
-            ...tree,
-          ]}
-        />
-      </Form.Item>
       <ProFormTextArea
         rules={[{ required: true, message: '请输入分类描述' }]}
         label='分类描述'
