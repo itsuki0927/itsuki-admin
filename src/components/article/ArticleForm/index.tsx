@@ -1,7 +1,8 @@
 import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant-design-pro/article'
 import ProCard from '@ant-design/pro-card'
-import { StepsForm } from '@ant-design/pro-form'
+import ProForm from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
+import { CSSProperties } from 'react'
 import ArticleBasic from './ArticleBasic'
 import ArticleCategorySelect from './ArticleCategorySelect'
 import ArticleContent from './ArticleContent'
@@ -14,14 +15,13 @@ type ArticleFormProps = {
   cacheID?: string
 }
 
+const style: CSSProperties = { marginBottom: 24 }
+
 const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
   return (
-    <StepsForm
+    <ProForm
       onFinish={onFinish}
-      formProps={{
-        request,
-      }}
-      containerStyle={{ width: '100%' }}
+      request={request}
       submitter={{
         submitButtonProps: {
           style: { width: 150 },
@@ -29,26 +29,26 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
       }}
     >
-      <StepsForm.StepForm title='基本信息'>
+      <ProCard title='基本信息' style={style}>
         <ArticleBasic />
-      </StepsForm.StepForm>
+      </ProCard>
 
-      <StepsForm.StepForm title='文章内容'>
+      <ProCard title='文章内容' style={style}>
         <ArticleContent cacheID={cacheID} />
-      </StepsForm.StepForm>
+      </ProCard>
 
-      <StepsForm.StepForm title='其他设置'>
+      <ProCard title='其他设置' style={style}>
         <ProCard ghost gutter={24}>
-          <ProCard colSpan={12} ghost>
+          <ProCard headerBordered={false} colSpan={12} ghost>
             <ArticleCategorySelect />
             <ArticleCover />
           </ProCard>
-          <ProCard colSpan={12} ghost>
+          <ProCard headerBordered={false} colSpan={12} ghost>
             <ArticleOptions />
           </ProCard>
         </ProCard>
-      </StepsForm.StepForm>
-    </StepsForm>
+      </ProCard>
+    </ProForm>
   )
 }
 
