@@ -1,6 +1,5 @@
 import { ab } from '@/constants/article/banner'
 import { ao } from '@/constants/article/origin'
-import { getPinnedState } from '@/constants/pinned'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
@@ -21,12 +20,10 @@ import {
   FolderOpenOutlined,
   HeartOutlined,
   LinkOutlined,
-  PushpinOutlined,
   RetweetOutlined,
   RollbackOutlined,
   SwapOutlined,
   TagOutlined,
-  UngroupOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
@@ -66,22 +63,6 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       centered: true,
       onOk() {
         onMetaPatch(id, { meta: 'banner', value }).then(() => {
-          actionRef.current?.reload()
-          if (cb) {
-            cb()
-          }
-        })
-      },
-    })
-  }
-
-  const handlePinnedChange = (id: number, value: number, cb?: () => void) => {
-    Modal.confirm({
-      title: `确定要将该文章 ${value === 1 ? 'Pinned' : 'UnPinned'} 吗?`,
-      content: '此操作不能撤销!!!',
-      centered: true,
-      onOk() {
-        onMetaPatch(id, { meta: 'pinned', value }).then(() => {
           actionRef.current?.reload()
           if (cb) {
             cb()
@@ -195,22 +176,15 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       width: 120,
       render: (
         _,
-        {
-          publish: propPublish,
-          open: propOpen,
-          origin: propOrigin,
-          banner: propBanner,
-          pinned: pinnedProp,
-        }
+        { publish: propPublish, open: propOpen, origin: propOrigin, banner: propBanner }
       ) => {
         const publish = ps(propPublish!)
         const open = ap(propOpen!)
         const origin = ao(propOrigin!)
         const banner = ab(propBanner!)
-        const pinned = getPinnedState(pinnedProp!)
         return (
           <Space direction='vertical'>
-            {[publish, open, origin, banner, pinned].map((s) => (
+            {[publish, open, origin, banner].map((s) => (
               <Tag icon={s.icon} color={s.color} key={s.id}>
                 {s.name}
               </Tag>
@@ -272,15 +246,6 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
             onClick={() => handleBannerChange(article.id, article.banner === 1 ? 0 : 1)}
           >
             {article.banner === 1 ? '移除轮播' : '加入轮播'}
-          </Button>
-          <Button
-            size='small'
-            type='text'
-            block
-            icon={article.pinned === 1 ? <UngroupOutlined /> : <PushpinOutlined />}
-            onClick={() => handlePinnedChange(article.id, article.pinned === 1 ? 0 : 1)}
-          >
-            {article.pinned === 1 ? 'UnPinned' : 'Pinned'}
           </Button>
           <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
             宿主页面
@@ -362,11 +327,6 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
                 {
                   name: '移除轮播',
                   key: 'removeBanner',
-                },
-                { name: 'Pinned', key: 'Pinned' },
-                {
-                  name: 'UnPinned',
-                  key: 'UnPinned',
                 },
               ]}
             />
