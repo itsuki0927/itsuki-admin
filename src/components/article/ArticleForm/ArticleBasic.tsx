@@ -13,6 +13,12 @@ const ArticleBasic = () => {
         tooltip='最长为 24 位'
         placeholder='请输入文章标题'
       />
+      <ProFormText
+        rules={[{ required: true, message: '请输入文章路径' }]}
+        name='path'
+        label='文章路径'
+        placeholder='请输入文章路径'
+      />
       <ProFormTextArea
         rules={[{ required: true, message: '请输入文章描述' }]}
         name='description'
