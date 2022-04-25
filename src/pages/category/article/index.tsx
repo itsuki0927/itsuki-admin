@@ -70,25 +70,23 @@ const ArticleCategoryList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const confirmUpdate = (values: CategoryActionRequest) => {
+  const confirmUpdate = async (values: CategoryActionRequest) => {
     if (values.expand) {
       // eslint-disable-next-line no-param-reassign
       values.expand = JSON.stringify(values.expand)
     }
     // 有ID 表示更新
-    return updateCategory(temp?.id!, values).then(() => {
-      reset('更新成功')
-    })
+    await updateCategory(temp?.id!, values)
+    reset('更新成功')
   }
 
-  const confirmCreate = (values: CategoryActionRequest) => {
+  const confirmCreate = async (values: CategoryActionRequest) => {
     if (values.expand) {
       // eslint-disable-next-line no-param-reassign
       values.expand = JSON.stringify(values.expand)
     }
-    return createCategory(values).then(() => {
-      reset('创建成功')
-    })
+    await createCategory(values)
+    reset('创建成功')
   }
 
   useEffect(() => {

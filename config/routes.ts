@@ -28,37 +28,10 @@ export default [
     ],
   },
   {
-    path: '/snippet',
-    name: '片段管理',
-    icon: 'code',
-    routes: [
-      { path: '/snippet/list', name: '片段列表', component: './snippet/list' },
-      { path: '/snippet/create', name: '创建片段', component: './snippet/create' },
-      {
-        path: '/snippet/edit/:id',
-        name: '编辑片段',
-        component: './snippet/edit',
-        hideInMenu: true,
-      },
-    ],
-  },
-  {
     path: '/category',
-    name: '分类管理',
+    name: '文章分类',
     icon: 'folder-open',
-    routes: [
-      { path: '/category', redirect: '/category/article' },
-      {
-        path: '/category/article',
-        name: '文章分类',
-        component: './category/article',
-      },
-      {
-        path: '/category/snippet',
-        name: '片段分类',
-        component: './category/snippet',
-      },
-    ],
+    component: './category/article',
   },
   { path: '/comment', name: '评论管理', icon: 'message', component: './comment/list' },
   { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },

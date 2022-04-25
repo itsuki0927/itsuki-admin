@@ -7,7 +7,6 @@ import * as article from './article'
 import * as category from './category'
 import * as comment from './category'
 import * as settings from './settings'
-import * as snippet from './snippet'
 import * as tag from './tag'
 
 export default {
@@ -17,5 +16,4 @@ export default {
   category,
   settings,
   comment,
-  snippet,
 }
