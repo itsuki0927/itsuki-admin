@@ -30,7 +30,11 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
       }}
     >
       <ProCard title='基本信息' style={style}>
-        <ArticleBasic />
+        <ProCard>
+          <ArticleBasic />
+          <ArticleCategorySelect />
+        </ProCard>
+        <ArticleCover />
       </ProCard>
 
       <ProCard title='文章内容' style={style}>
@@ -38,15 +42,7 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
       </ProCard>
 
       <ProCard title='其他设置' style={style}>
-        <ProCard ghost gutter={24}>
-          <ProCard headerBordered={false} colSpan={12} ghost>
-            <ArticleCategorySelect />
-            <ArticleCover />
-          </ProCard>
-          <ProCard headerBordered={false} colSpan={12} ghost>
-            <ArticleOptions />
-          </ProCard>
-        </ProCard>
+        <ArticleOptions />
       </ProCard>
     </ProForm>
   )

@@ -34,7 +34,7 @@ declare namespace API {
     liking: number
     commenting: number
     tags: API.Tag[]
-    categories: API.Category[]
+    category: API.Category
   }>
 
   type Tag = IdentifiableEntity<{

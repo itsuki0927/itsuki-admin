@@ -2,7 +2,6 @@
 /* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner'
 import { ArticleOrigin } from '@/constants/article/origin'
-import { PinnedState } from '@/constants/pinned'
 import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
 import { BaseSearchRequest } from '@/helper/http.interface'
@@ -20,7 +19,7 @@ export type ArticleActionRequest = {
   publish: PublishState
   origin: ArticleOrigin
   open: ArticleOpen
-  categoryIds: number[]
+  categoryId: number
   tagIds: number[]
   cover?: string
   password?: string
@@ -35,7 +34,6 @@ export type ArticleSearchRequest = BaseSearchRequest<{
   open?: ArticleOpen
   origin?: ArticleOrigin
   banner?: ArticleBanner
-  pinned?: PinnedState
   tag?: number
   category?: number
 }>
@@ -45,8 +43,8 @@ export type ArticleSearchRequest = BaseSearchRequest<{
  */
 export type ArticleDetailResponse = API.Article & {
   tagIds: number[]
-  categoryIds: number[]
   keywords: string[]
+  categoryId: number
 }
 
 /**

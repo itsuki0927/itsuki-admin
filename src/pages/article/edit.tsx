@@ -75,7 +75,7 @@ const EditArticle = () => {
       .then((result) => {
         result.keywords = result.keywords?.split('、') as any
         result.tagIds = result.tags?.map((v) => v.id)
-        result.categoryIds = result.categories?.map((v) => v.id)
+        result.categoryId = result.category.id
         return result
       })
       .then(diffContent)

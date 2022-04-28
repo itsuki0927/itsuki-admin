@@ -8,10 +8,10 @@ const ArticleCategorySelect = () => {
 
   return (
     <Form.Item
-      name='categoryIds'
+      name='categoryId'
       rules={[
         {
-          message: '至少选择一个分类',
+          message: '请选择选择一个分类',
           required: true,
         },
       ]}

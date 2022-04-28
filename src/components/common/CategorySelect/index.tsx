@@ -1,10 +1,7 @@
-import { convertToTreeData, getAntdTreeByTree } from '@/transforms/tree'
 import { ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
-import type { TreeProps } from 'antd'
-import { Button, Divider, Space, Tree, Typography } from 'antd'
+import { Button, Divider, Space, Select, Typography } from 'antd'
 import type { ReactNode } from 'react'
-import styles from './index.less'
 
 type CategoryItem = {
   id: number
@@ -19,7 +16,6 @@ export interface CategorySelectProps {
   onRefresh?: () => void
   value?: number[]
   onChange?: (value: number[]) => void
-  treeProps?: TreeProps
   title?: ReactNode
 }
 
@@ -29,7 +25,6 @@ const CategorySelect = ({
   loading,
   data,
   onRefresh,
-  treeProps,
   title = '分类目录',
 }: CategorySelectProps) => {
   return (
@@ -46,31 +41,17 @@ const CategorySelect = ({
       {!data || !data.length ? (
         <Typography.Text type='secondary'>无分类</Typography.Text>
       ) : (
-        <Tree
-          className={styles.categorySelect}
-          treeData={getAntdTreeByTree(convertToTreeData(data || []))}
-          showLine
-          checkable
-          blockNode
-          defaultExpandAll
-          checkStrictly
-          checkedKeys={value}
-          onCheck={(omitValue) => {
-            const ids = Array.isArray(omitValue) ? omitValue : omitValue.checked
-            onChange?.(ids as number[])
-          }}
-          titleRender={(nodeData) => {
-            const category = (nodeData as any).data
-            return (
+        <Select placeholder='请选择文章分类' value={value} onChange={onChange}>
+          {data.map((category) => (
+            <Select.Option value={category.id}>
               <Space size='small'>
                 <Typography.Text strong={true}>{category.name}</Typography.Text>
                 <Divider type='vertical' />
                 {category.path}
               </Space>
-            )
-          }}
-          {...treeProps}
-        />
+            </Select.Option>
+          ))}
+        </Select>
       )}
     </ProCard>
   )
