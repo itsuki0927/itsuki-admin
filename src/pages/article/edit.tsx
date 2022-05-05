@@ -103,6 +103,7 @@ const EditArticle = () => {
       extra={
         <Space>
           <Button
+            key='delete'
             danger
             type='dashed'
             size='small'
@@ -111,12 +112,12 @@ const EditArticle = () => {
           >
             删除文章
           </Button>
-          <Badge count={data?.commenting}>
+          <Badge key='comments' count={data?.commenting}>
             <Button size='small' icon={<CommentOutlined />} onClick={() => setCommentVisible(true)}>
               文章评论
             </Button>
           </Badge>
-          <Button.Group>
+          <Button.Group key='meta'>
             <Button size='small' disabled icon={<LikeOutlined />}>
               {data?.liking}喜欢
             </Button>

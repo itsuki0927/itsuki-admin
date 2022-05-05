@@ -98,10 +98,10 @@ const ArticleCategoryList = () => {
         headerBordered
         extra={
           <Space>
-            <Button type='primary' icon={<EditOutlined />} onClick={handleCreate}>
+            <Button key='create' type='primary' icon={<EditOutlined />} onClick={handleCreate}>
               创建分类
             </Button>
-            <Button icon={<ReloadOutlined />} onClick={handleReload}>
+            <Button key='refresh' icon={<ReloadOutlined />} onClick={handleReload}>
               刷新分类
             </Button>
           </Space>

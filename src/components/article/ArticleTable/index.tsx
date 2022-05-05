@@ -280,6 +280,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
         return (
           <Space>
             <Button
+              key='publish'
               size='small'
               type='text'
               block
@@ -295,6 +296,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
               <Typography.Text type='success'>直接发布</Typography.Text>
             </Button>
             <Button
+              key='recycle'
               size='small'
               type='text'
               block
@@ -311,6 +313,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
               移回收站
             </Button>
             <Button
+              key='draft'
               size='small'
               type='text'
               block
@@ -322,6 +325,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
             <TableDropdown
+              key='other'
               menus={[
                 { name: '加入轮播', key: 'joinBanner' },
                 {
