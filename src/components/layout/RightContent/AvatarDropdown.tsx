@@ -28,7 +28,7 @@ const loginOut = async () => {
   }
 }
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState')
 
   const onMenuClick = useCallback(
@@ -67,26 +67,28 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }
 
   const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
-        <Menu.Item key='base'>
-          <SettingOutlined />
-          基本设置
-        </Menu.Item>
-      )}
-      {menu && (
-        <Menu.Item key='account'>
-          <UserOutlined />
-          个人设置
-        </Menu.Item>
-      )}
-      {menu && <Menu.Divider />}
-
-      <Menu.Item key='logout'>
-        <LogoutOutlined />
-        退出登录
-      </Menu.Item>
-    </Menu>
+    <Menu
+      className={styles.menu}
+      selectedKeys={[]}
+      onClick={onMenuClick}
+      items={[
+        { key: 'base', label: '基本设置', icon: <SettingOutlined /> },
+        {
+          key: 'account',
+          label: '个人设置',
+          icon: <UserOutlined />,
+        },
+        {
+          key: 'divider',
+          label: <Menu.Divider />,
+        },
+        {
+          key: 'logout',
+          label: '退出登录',
+          icon: <LogoutOutlined />,
+        },
+      ]}
+    ></Menu>
   )
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
