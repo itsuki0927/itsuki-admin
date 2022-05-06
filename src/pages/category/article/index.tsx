@@ -1,43 +1,55 @@
 import { CategoryModal } from '@/components/category'
 import { Container } from '@/components/common'
-import type { CategoryActionRequest } from '@/services/ant-design-pro/category'
+import type {
+  QueryCategoryResponse,
+  CreateCategoryResponse,
+  CategoryActionInput,
+  CategoryId,
+  UpdateCategoryResponse,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from '@/graphql/category'
 import {
-  createCategory,
-  queryCategoryList,
-  removeCategory,
-  updateCategory,
-} from '@/services/ant-design-pro/category'
+  CREATE_CATEGORY,
+  DELETE_CATEGORY,
+  QUERY_CATEGORY,
+  UPDATE_CATEGORY,
+} from '@/graphql/category'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
+import { useMutation, useQuery } from '@apollo/client'
 import { Button, Divider, Empty, message, Modal, Space, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './index.less'
 
 const ArticleCategoryList = () => {
   const [visible, setVisible] = useState(false)
-  const [categoryList, setCategoryList] = useState<API.Category[]>([])
-  const [loading, setLoading] = useState(false)
   const [temp, setTemp] = useState<API.Category | undefined>()
-
-  const handleReload = () => {
-    setLoading(true)
-    queryCategoryList().then(({ data }) => {
-      setTimeout(() => {
-        setLoading(false)
-        setCategoryList(data)
-      }, 500)
-    })
-  }
+  const { data, loading, updateQuery, refetch } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
+  const [createCategory] = useMutation<CreateCategoryResponse, CreateCategoryInput>(CREATE_CATEGORY)
+  const [updateCategory] = useMutation<UpdateCategoryResponse, UpdateCategoryInput>(UPDATE_CATEGORY)
+  const [deleteCategory] = useMutation<number, CategoryId>(DELETE_CATEGORY)
 
   const handleRemove = (entity: API.Category) => () => {
     Modal.confirm({
-      title: `确定删除标签 '${entity.name}'嘛?`,
-      content: '删除后不可恢复',
+      title: (
+        <p>
+          确定删除分类: <strong style={{ color: '#ff4d4f' }}>{entity.name}</strong> 嘛?
+        </p>
+      ),
+      content: '请不要轻易删除分类!!!',
+      okType: 'danger',
       onOk() {
-        removeCategory(entity.id!).then(() => {
+        deleteCategory({
+          variables: {
+            categoryId: entity.id,
+          },
+        }).then(() => {
           message.success('删除成功')
-          handleReload()
+          updateQuery((prevData) => ({
+            categories: prevData.categories.filter((v) => v.id !== entity.id),
+          }))
         })
       },
     })
@@ -49,7 +61,6 @@ const ArticleCategoryList = () => {
   }
 
   const reset = (msg: string) => {
-    handleReload()
     message.success(msg)
     setTemp(undefined)
     setVisible(false)
@@ -66,28 +77,46 @@ const ArticleCategoryList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const confirmUpdate = async (values: CategoryActionRequest) => {
-    if (values.expand) {
+  const confirmUpdate = async (input: CategoryActionInput) => {
+    if (input.expand) {
       // eslint-disable-next-line no-param-reassign
-      values.expand = JSON.stringify(values.expand)
+      input.expand = JSON.stringify(input.expand)
     }
     // 有ID 表示更新
-    await updateCategory(temp?.id!, values)
+    await updateCategory({
+      variables: {
+        categoryId: temp?.id!,
+        input,
+      },
+    })
+    updateQuery((prevData) => ({
+      categories: prevData.categories.map((item) => {
+        if (item.id === temp?.id) {
+          return { ...item, ...input }
+        }
+        return item
+      }),
+    }))
     reset('更新成功')
   }
 
-  const confirmCreate = async (values: CategoryActionRequest) => {
-    if (values.expand) {
+  const confirmCreate = async (input: CategoryActionInput) => {
+    if (input.expand) {
       // eslint-disable-next-line no-param-reassign
-      values.expand = JSON.stringify(values.expand)
+      input.expand = JSON.stringify(input.expand)
     }
-    await createCategory(values)
+    console.log('input', input)
+
+    const { data: newData } = await createCategory({
+      variables: {
+        input,
+      },
+    })
+    updateQuery((prevData) => ({
+      categories: prevData.categories.concat(newData?.createCategory!),
+    }))
     reset('创建成功')
   }
-
-  useEffect(() => {
-    handleReload()
-  }, [])
 
   return (
     <Container>
@@ -101,18 +130,18 @@ const ArticleCategoryList = () => {
             <Button key='create' type='primary' icon={<EditOutlined />} onClick={handleCreate}>
               创建分类
             </Button>
-            <Button key='refresh' icon={<ReloadOutlined />} onClick={handleReload}>
+            <Button key='refresh' icon={<ReloadOutlined />} onClick={() => refetch()}>
               刷新分类
             </Button>
           </Space>
         }
       >
-        {!categoryList.length ? (
+        {!data?.categories.length ? (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
           <div>
-            {categoryList.map((category) => (
-              <div className={styles.categoryNode}>
+            {data.categories.map((category) => (
+              <div key={category.id} className={styles.categoryNode}>
                 <div className={styles.content}>
                   <Space className={styles.title}>
                     <Typography.Text strong={true}>{category.name}</Typography.Text>
