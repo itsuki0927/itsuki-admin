@@ -2,7 +2,6 @@ import { ArticleComment, ArticleForm } from '@/components/article'
 import { Container } from '@/components/common'
 import { getUEditorCache } from '@/components/common/UniversalEditor'
 import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant-design-pro/article'
-import { deleteArticle } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { convertToCommentTreeData } from '@/transforms/tree'
 import { getBlogArticleUrl } from '@/transforms/url'
@@ -115,15 +114,23 @@ const QUERY_ARTICLE = gql`
   }
 `
 
+const DETELTE_ARTICLE = gql`
+  mutation deleteArticle($articleId: ID!) {
+    deleteArticle(articleId: $articleId)
+  }
+`
+
 const EditArticle = () => {
   const articleCacheID = window.location.pathname
   const diffContent = handleDiffContent(articleCacheID)
   const { id } = useParams<{ id: string }>()
+  const articleId = +id
   const [commentVisible, setCommentVisible] = useState(false)
   const [article, setArticle] = useState<ArticleDetailResponse | undefined>()
   const [updateArticle] = useMutation<API.Article, { id: number; input: ArticleActionRequest }>(
     UPDATE_ARTICLE
   )
+  const [deleteArticle] = useMutation<number, { articleId: number }>(DETELTE_ARTICLE)
   const { data, loading, updateQuery } = useQuery<{ article: ArticleDetailResponse }>(
     QUERY_ARTICLE,
     {
@@ -155,10 +162,20 @@ const EditArticle = () => {
 
   const handleRemove = () => {
     Modal.confirm({
-      title: `你确定要删除《${data?.article.title}》嘛?`,
+      title: (
+        <p>
+          你确定要删除文章: <strong style={{ color: '#ff4d4f' }}>《{data?.article.title}》</strong>
+          嘛?
+        </p>
+      ),
       content: '此操作不能撤销!!!',
+      okType: 'danger',
       onOk() {
-        deleteArticle(+id).then(() => {
+        deleteArticle({
+          variables: {
+            articleId,
+          },
+        }).then(() => {
           message.success('删除成功')
           history.replace('/article/list')
         })
@@ -191,7 +208,7 @@ const EditArticle = () => {
               onClick={() => {
                 fetchComments({
                   variables: {
-                    articleId: +id,
+                    articleId,
                   },
                 })
                 setCommentVisible(true)
@@ -240,7 +257,7 @@ const EditArticle = () => {
         onRefresh={() =>
           fetchComments({
             variables: {
-              articleId: +id,
+              articleId,
             },
           })
         }
