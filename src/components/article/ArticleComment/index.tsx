@@ -30,11 +30,11 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
                 &nbsp;
                 {comment.liking} 喜欢
               </Typography.Text>,
-              <Divider type='vertical' />,
+              <Divider key='divider1' type='vertical' />,
               <span key='browser'>{parserBrowser(comment.agent!)}</span>,
-              <Divider type='vertical' />,
+              <Divider key='divider2' type='vertical' />,
               <span key='os'>{parserOS(comment.agent!)}</span>,
-              <Divider type='vertical' />,
+              <Divider key='divider3' type='vertical' />,
               <span key='ip'>{comment.ip || '-'}</span>,
             ]}
             author={

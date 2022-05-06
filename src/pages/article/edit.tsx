@@ -14,12 +14,12 @@ import {
 } from '@ant-design/icons'
 import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { Badge, Button, message, Modal, Space } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { history, useParams } from 'umi'
 
 const handleDiffContent =
   (articleCacheID: string) =>
-  (result: ArticleDetailResponse): Promise<{ data: ArticleDetailResponse }> => {
+  (result: ArticleDetailResponse): Promise<ArticleDetailResponse> => {
     return new Promise((resolve) => {
       const localeContent = getUEditorCache(articleCacheID)
       if (result && !!localeContent && localeContent !== result.content) {
@@ -37,14 +37,14 @@ const handleDiffContent =
               ...result,
               content: localeContent,
             }
-            resolve({ data: mutateData })
+            resolve(mutateData)
           },
           onCancel() {
-            resolve({ data: result })
+            resolve(result)
           },
         })
       } else {
-        resolve({ data: result })
+        resolve(result)
       }
     })
   }
@@ -138,7 +138,14 @@ const EditArticle = () => {
         id: +id,
       },
       onCompleted: ({ article: articleProp }) => {
-        diffContent(articleProp)
+        diffContent(articleProp).then((result) => {
+          setArticle({
+            ...result,
+            categoryId: Number(result.categoryId),
+            keywords: result.keywords.split('、') as any,
+            tagIds: result.tags.map((v) => v.id),
+          })
+        })
       },
     }
   )
@@ -148,17 +155,6 @@ const EditArticle = () => {
     },
     { articleId: number }
   >(QUERY_COMMENT)
-
-  useEffect(() => {
-    if (data) {
-      setArticle({
-        ...data.article,
-        categoryId: Number(data.article.categoryId),
-        keywords: data.article.keywords.split('、') as any,
-        tagIds: data.article.tags.map((v) => v.id),
-      })
-    }
-  }, [data])
 
   const handleRemove = () => {
     Modal.confirm({
@@ -262,7 +258,7 @@ const EditArticle = () => {
           })
         }
         loading={commentLoading}
-        count={comments?.comments.length}
+        count={article?.commenting}
         comments={convertToCommentTreeData(comments?.comments ?? [])}
         visible={commentVisible}
         onClose={() => setCommentVisible(false)}
