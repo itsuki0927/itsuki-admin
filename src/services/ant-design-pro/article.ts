@@ -55,6 +55,11 @@ export type ArticlePatchRequest = {
   state: PublishState
 }
 
+export type ArticleBannerPatchRequest = {
+  ids: number[]
+  banner: ArticleBanner
+}
+
 /**
  * 文章Patch请求类
  */

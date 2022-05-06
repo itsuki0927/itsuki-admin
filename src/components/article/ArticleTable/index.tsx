@@ -1,14 +1,13 @@
-import { ab } from '@/constants/article/banner'
+import { ab, ArticleBanner } from '@/constants/article/banner'
 import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
 import type {
-  ArticleMetaPatchRequest,
+  ArticleBannerPatchRequest,
   ArticlePatchRequest,
   ArticleSearchRequest,
 } from '@/services/ant-design-pro/article'
-// import { queryArticleList } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
 import {
@@ -27,16 +26,26 @@ import {
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
-import { Button, Card, Modal, Space, Table, Tag, Typography } from 'antd'
+import { Button, Card, Modal, Space, Table, Tag, Typography, message } from 'antd'
 import { useRef } from 'react'
 import { history, Link } from 'umi'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
-  onPatch: (data: ArticlePatchRequest) => Promise<number>
-  onMetaPatch: (id: number, data: ArticleMetaPatchRequest) => Promise<number>
 }
+
+const UPDATE_ARTICLE_BANNER = gql`
+  mutation updateArticleBanner($ids: [ID]!, $banner: Int!) {
+    updateArticleBanner(ids: $ids, banner: $banner)
+  }
+`
+
+const UPDATE_ARTICLE_STATE = gql`
+  mutation patchArticleState($ids: [ID]!, $state: Int!) {
+    updateArticleState(ids: $ids, state: $state)
+  }
+`
 
 const QUERY_ARTICLE = gql`
   query findArticles($search: ArticleSearchRequest) {
@@ -48,13 +57,11 @@ const QUERY_ARTICLE = gql`
         description
         path
         keywords
-        content
         cover
         commenting
         author
         liking
         reading
-        password
         origin
         open
         banner
@@ -68,12 +75,14 @@ const QUERY_ARTICLE = gql`
   }
 `
 
-const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
-  const { data } = useQuery(QUERY_ARTICLE, {
+const ArticleTable = ({ query }: ArticleTableProps) => {
+  const { data, refetch } = useQuery(QUERY_ARTICLE, {
     variables: {
       search: omitSelectAllValue(query),
     },
   })
+  const [stateMutate] = useMutation<number, ArticlePatchRequest>(UPDATE_ARTICLE_STATE)
+  const [bannerMutate] = useMutation<number, ArticleBannerPatchRequest>(UPDATE_ARTICLE_BANNER)
   console.group('graphql data')
   console.log('graphql query', query)
   console.log('graphql data', data)
@@ -86,27 +95,39 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
-        onPatch({ ids, state }).then(() => {
-          actionRef.current?.reload()
-          if (cb) {
-            cb()
-          }
+        stateMutate({
+          variables: {
+            ids,
+            state,
+          },
+        }).then(() => {
+          refetch({
+            search: omitSelectAllValue(query),
+          })
+          message.success('变更成功')
+          cb?.()
         })
       },
     })
   }
 
-  const handleBannerChange = (id: number, value: number, cb?: () => void) => {
+  const handleBannerChange = (ids: number[], banner: ArticleBanner, cb?: () => void) => {
     Modal.confirm({
-      title: `确定要将该文章 ${value === 1 ? '加入轮播图' : '移除轮播图'} 吗?`,
+      title: `确定要将选中文章 ${banner === ArticleBanner.YES ? '加入轮播图' : '移除轮播图'} 吗?`,
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
-        onMetaPatch(id, { meta: 'banner', value }).then(() => {
-          actionRef.current?.reload()
-          if (cb) {
-            cb()
-          }
+        bannerMutate({
+          variables: {
+            ids,
+            banner,
+          },
+        }).then(() => {
+          refetch({
+            search: omitSelectAllValue(query),
+          })
+          message.success('变更成功')
+          cb?.()
         })
       },
     })
@@ -222,10 +243,12 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
         const open = ap(propOpen!)
         const origin = ao(propOrigin!)
         const banner = ab(propBanner!)
+        const list = [publish, open, origin, banner]
+
         return (
           <Space direction='vertical'>
-            {[publish, open, origin, banner].map((s) => (
-              <Tag icon={s.icon} color={s.color} key={s.id}>
+            {list.map((s) => (
+              <Tag icon={s.icon} color={s.color} key={`${s.name}-${s.id}`}>
                 {s.name}
               </Tag>
             ))}
@@ -282,10 +305,20 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
             size='small'
             type='text'
             block
-            icon={article.banner === 1 ? <SwapOutlined /> : <RetweetOutlined />}
-            onClick={() => handleBannerChange(article.id, article.banner === 1 ? 0 : 1)}
+            icon={article.banner === ArticleBanner.YES ? <SwapOutlined /> : <RetweetOutlined />}
+            onClick={() => {
+              const banner =
+                article.banner === ArticleBanner.YES ? ArticleBanner.NO : ArticleBanner.YES
+
+              if (article.publish !== PublishState.Published) {
+                message.warn('文章还未发布')
+                return
+              }
+
+              handleBannerChange([article.id], banner)
+            }}
           >
-            {article.banner === 1 ? '移除轮播' : '加入轮播'}
+            {article.banner === ArticleBanner.YES ? '移除轮播' : '加入轮播'}
           </Button>
           <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
             宿主页面
@@ -366,6 +399,13 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
             <TableDropdown
+              onSelect={(key) => {
+                handleBannerChange(
+                  selectedRowKeys as number[],
+                  key === 'joinBanner' ? ArticleBanner.YES : ArticleBanner.NO,
+                  onCleanSelected
+                )
+              }}
               key='other'
               menus={[
                 { name: '加入轮播', key: 'joinBanner' },
@@ -378,9 +418,6 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
           </Space>
         )
       }}
-      // request={(params, sort) => {
-      //   return queryArticleList({ ...params, ...sort })
-      // }}
       toolBarRender={() => [
         <Button key='create' type='primary' onClick={() => history.push('/article/create')}>
           撰写文章
