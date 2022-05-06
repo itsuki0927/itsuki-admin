@@ -23,7 +23,6 @@ const initialValues: ArticleSearchRequest = {
   tag: SELECT_ALL_VALUE,
   category: SELECT_ALL_VALUE,
   banner: SELECT_ALL_VALUE,
-  pinned: SELECT_ALL_VALUE,
 }
 
 const resolve = () => Promise.resolve(true)

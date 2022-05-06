@@ -4,8 +4,10 @@ import type { API } from '@/services/ant-design-pro/typings'
 import requestConfig from '@/utils/request'
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout'
 import { PageLoading } from '@ant-design/pro-layout'
+import { ApolloProvider } from '@apollo/client'
 import type { RunTimeLayoutConfig } from 'umi'
 import { history } from 'umi'
+import { client } from './graphql'
 
 const loginPath = '/user/login'
 
@@ -64,7 +66,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.nickname,
     },
-    childrenRender: (children) => <MainContent>{children}</MainContent>,
+    childrenRender: (children) => (
+      <ApolloProvider client={client}>
+        <MainContent>{children}</MainContent>
+      </ApolloProvider>
+    ),
     rightContentRender: () => <RightContent />,
     headerContentRender: (props) => <HeaderContent {...props} />,
     footerRender: () => <Footer />,

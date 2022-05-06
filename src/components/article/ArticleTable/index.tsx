@@ -8,7 +8,7 @@ import type {
   ArticlePatchRequest,
   ArticleSearchRequest,
 } from '@/services/ant-design-pro/article'
-import { queryArticleList } from '@/services/ant-design-pro/article'
+// import { queryArticleList } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
 import {
@@ -30,6 +30,7 @@ import ProTable, { TableDropdown } from '@ant-design/pro-table'
 import { Button, Card, Modal, Space, Table, Tag, Typography } from 'antd'
 import { useRef } from 'react'
 import { history, Link } from 'umi'
+import { gql, useQuery } from '@apollo/client'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
@@ -37,7 +38,46 @@ type ArticleTableProps = {
   onMetaPatch: (id: number, data: ArticleMetaPatchRequest) => Promise<number>
 }
 
+const QUERY_ARTICLE = gql`
+  query findArticles($search: ArticleSearchRequest) {
+    articles(search: $search) {
+      data {
+        id
+        title
+        publish
+        description
+        path
+        keywords
+        content
+        cover
+        commenting
+        author
+        liking
+        reading
+        password
+        origin
+        open
+        banner
+        tags {
+          id
+          name
+        }
+      }
+      total
+    }
+  }
+`
+
 const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
+  const { data } = useQuery(QUERY_ARTICLE, {
+    variables: {
+      search: omitSelectAllValue(query),
+    },
+  })
+  console.group('graphql data')
+  console.log('graphql query', query)
+  console.log('graphql data', data)
+  console.groupEnd()
   const actionRef = useRef<ActionType | undefined>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
@@ -117,16 +157,16 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
     {
       title: '归类',
       width: 130,
-      render: (_, { tags, categories }) => {
+      render: (_, { tags, category }) => {
         return (
           <Space direction='vertical'>
-            {categories?.map((category) => (
-              <Space size='small' key={category.id}>
+            {category && (
+              <Space size='small' key='category'>
                 <FolderOpenOutlined />
                 {category.name}
               </Space>
-            ))}
-            <Space size='small' wrap={true}>
+            )}
+            <Space size='small' wrap={true} key='tag'>
               {tags?.map((tag) => (
                 <Tag icon={<TagOutlined />} key={tag.id}>
                   {tag.name}
@@ -143,15 +183,15 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       render: (_, { reading, liking, commenting }) => {
         return (
           <Space direction='vertical'>
-            <Space size='small'>
+            <Space key='reading' size='small'>
               <EyeOutlined />
               浏览 {reading} 次
             </Space>
-            <Space size='small'>
+            <Space key='liking' size='small'>
               <HeartOutlined />
               喜欢 {liking} 次
             </Space>
-            <Space size='small'>
+            <Space key='commenting' size='small'>
               <CommentOutlined />
               评论 {commenting} 条
             </Space>
@@ -165,8 +205,8 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       render: (_, { createAt, updateAt }) => {
         return (
           <Space direction='vertical'>
-            <span>最早发布：{formatDate(createAt)}</span>
-            <span>最后更新：{formatDate(updateAt)}</span>
+            <span key='createAt'>最早发布：{formatDate(createAt)}</span>
+            <span key='updateAt'>最后更新：{formatDate(updateAt)}</span>
           </Space>
         )
       },
@@ -199,7 +239,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       width: 110,
       render: (_, article) => (
         <Space direction='vertical'>
-          <Link to={`/article/edit/${article.id}`}>
+          <Link key='article-edit' to={`/article/edit/${article.id}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
               文章详情
             </Button>
@@ -263,6 +303,7 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
       params={omitSelectAllValue(query)}
       columns={columns}
       rowKey='id'
+      dataSource={data?.articles?.data ?? []}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
       }}
@@ -337,11 +378,11 @@ const ArticleTable = ({ query, onPatch, onMetaPatch }: ArticleTableProps) => {
           </Space>
         )
       }}
-      request={(params, sort) => {
-        return queryArticleList({ ...params, ...sort })
-      }}
+      // request={(params, sort) => {
+      //   return queryArticleList({ ...params, ...sort })
+      // }}
       toolBarRender={() => [
-        <Button type='primary' onClick={() => history.push('/article/create')}>
+        <Button key='create' type='primary' onClick={() => history.push('/article/create')}>
           撰写文章
         </Button>,
       ]}

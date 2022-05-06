@@ -6,7 +6,7 @@ import { message } from 'antd'
 import { useState } from 'react'
 
 const ArticleList = () => {
-  const [query, setQuery] = useState<ArticleSearchRequest | undefined>()
+  const [query, setQuery] = useState<ArticleSearchRequest>({})
 
   return (
     <Container>
