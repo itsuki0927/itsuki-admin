@@ -55,10 +55,11 @@ export function getAntdTreeByTree<T extends TreeData<T>>(tree: T[], currentCateg
 }
 
 const buildCommentTree = (data: API.Comment[], parentId: number) => {
-  const parents = data.filter((v) => v.parentId === parentId) as CommentTree[]
+  const newData = JSON.parse(JSON.stringify(data)) as API.Comment[]
+  const parents = newData.filter((v) => v.parentId == parentId) as CommentTree[]
 
   return parents.map((item) => {
-    item.children = buildCommentTree(data, item.id)
+    item.children = buildCommentTree(newData, item.id)
     return item
   })
 }
