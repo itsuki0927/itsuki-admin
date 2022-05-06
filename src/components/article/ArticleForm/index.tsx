@@ -2,7 +2,7 @@ import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant
 import ProCard from '@ant-design/pro-card'
 import ProForm from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
-import { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import ArticleBasic from './ArticleBasic'
 import ArticleCategorySelect from './ArticleCategorySelect'
 import ArticleContent from './ArticleContent'
@@ -22,6 +22,10 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
     <ProForm
       onFinish={onFinish}
       request={request}
+      style={{
+        width: 850,
+        margin: '0 auto',
+      }}
       submitter={{
         submitButtonProps: {
           style: { width: 150 },
@@ -30,19 +34,17 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
       }}
     >
       <ProCard title='基本信息' style={style}>
-        <ProCard>
-          <ArticleBasic />
-          <ArticleCategorySelect />
-        </ProCard>
+        <ArticleBasic />
+        <ArticleCategorySelect />
         <ArticleCover />
-      </ProCard>
-
-      <ProCard title='文章内容' style={style}>
-        <ArticleContent cacheID={cacheID} />
       </ProCard>
 
       <ProCard title='其他设置' style={style}>
         <ArticleOptions />
+      </ProCard>
+
+      <ProCard title='文章内容' style={style}>
+        <ArticleContent cacheID={cacheID} />
       </ProCard>
     </ProForm>
   )

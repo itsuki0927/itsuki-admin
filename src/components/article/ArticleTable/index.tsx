@@ -24,10 +24,9 @@ import {
   SwapOutlined,
   TagOutlined,
 } from '@ant-design/icons'
-import type { ActionType, ProColumns } from '@ant-design/pro-table'
+import type { ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
 import { Button, Card, Modal, Space, Table, Tag, Typography, message } from 'antd'
-import { useRef } from 'react'
 import { history, Link } from 'umi'
 import { gql, useMutation, useQuery } from '@apollo/client'
 
@@ -87,7 +86,6 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
   console.log('graphql query', query)
   console.log('graphql data', data)
   console.groupEnd()
-  const actionRef = useRef<ActionType | undefined>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
     Modal.confirm({
@@ -330,7 +328,6 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
 
   return (
     <ProTable
-      actionRef={actionRef}
       headerTitle='文章列表'
       search={false}
       params={omitSelectAllValue(query)}
