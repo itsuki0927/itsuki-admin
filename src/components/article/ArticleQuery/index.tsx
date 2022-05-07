@@ -5,8 +5,8 @@ import { SELECT_ALL_VALUE } from '@/constants/common'
 import { publishStates } from '@/constants/publish'
 import type { QueryCategoryResponse } from '@/graphql/category'
 import { QUERY_CATEGORY } from '@/graphql/category'
+import { useAllTag } from '@/hooks/tag'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
-import { queryTagList } from '@/services/ant-design-pro/tag'
 import { getSelectOptionsByState } from '@/transforms/option'
 import compose from '@/utils/compose'
 import ProCard from '@ant-design/pro-card'
@@ -31,6 +31,7 @@ const resolve = () => Promise.resolve(true)
 
 const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
   const { data: categories } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
+  const { data: tags } = useAllTag()
 
   return (
     <ProCard style={{ marginBottom: 24 }}>
@@ -82,15 +83,9 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
         <ProFormSelect
           name='tag'
           label='标签'
-          request={() =>
-            queryTagList()
-              .then(({ data }) => {
-                return data.map((item) => ({ label: item.name, value: item.id }))
-              })
-              .then((data) => {
-                return [{ label: '全部标签', value: SELECT_ALL_VALUE }, ...data]
-              })
-          }
+          options={[{ label: '全部标签', value: SELECT_ALL_VALUE }].concat(
+            tags?.tags.data.map((item) => ({ label: item.name, value: item.id })) ?? []
+          )}
         />
         <ProFormSelect
           name='category'

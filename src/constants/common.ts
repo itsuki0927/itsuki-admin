@@ -1,5 +1,11 @@
 import omitBy from 'lodash/omitBy'
 
+export const DEFAULT_CURRENT = 1
+
+export const DEFAULT_PAGE_SIZE = 10
+
+export const MAX_PAGE_SIZE = 999
+
 // 选中全部
 export const SELECT_ALL_VALUE = -101
 

@@ -2,9 +2,9 @@ import { CheckOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
 import { Button, Divider, Space, Spin, Typography } from 'antd'
 import styles from './index.less'
 
-interface TagItem {
+export interface TagItem {
   value: number
-  label: number
+  label: string
 }
 
 export interface TagSelectProps {

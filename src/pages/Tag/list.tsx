@@ -1,45 +1,32 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import type {
-  CreateTagInput,
-  CreateTagResponse,
-  QueryTagResponse,
-  TagSearchRequest,
-  UpdateTagInput,
-  UpdateTagResponse,
-} from '@/graphql/tag'
-import { CREATE_TAG, DELETE_TAG, QUERY_TAG, UPDATE_TAG } from '@/graphql/tag'
-import type { ID } from '@/helper/http.interface'
+import { DEFAULT_CURRENT, MAX_PAGE_SIZE } from '@/constants/common'
+import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { useMutation, useQuery } from '@apollo/client'
 import { Button, message, Modal, Table } from 'antd'
 import { useState } from 'react'
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const { data, loading, updateQuery } = useQuery<QueryTagResponse, TagSearchRequest>(QUERY_TAG, {
-    variables: {
-      search: {
-        current: 1,
-        pageSize: 20,
-      },
-    },
+  const { data, loading, updateQuery } = useTag({
+    current: DEFAULT_CURRENT,
+    pageSize: MAX_PAGE_SIZE,
   })
-  const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
-  const [removeTag] = useMutation<void, ID>(DELETE_TAG)
-  const [updateTag] = useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG)
+  const [createTag] = useCreateTag()
+  const [deleteTag] = useDeleteTag()
+  const [updateTag] = useUpdateTag()
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
       onOk() {
-        removeTag({ variables: { id: entity.id } }).then(() => {
+        deleteTag({ variables: { id: entity.id } }).then(() => {
           message.success('删除成功')
           updateQuery((prevData) => {
             return {
@@ -158,9 +145,7 @@ const TagList = () => {
         search={false}
         rowKey='id'
         loading={loading}
-        // actionRef={actionRef}
         dataSource={data?.tags.data}
-        // request={(params, sort) => queryTagList({ ...params, ...sort })}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
         }}
