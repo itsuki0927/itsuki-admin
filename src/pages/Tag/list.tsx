@@ -1,6 +1,5 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import { DEFAULT_CURRENT, MAX_PAGE_SIZE } from '@/constants/common'
 import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
@@ -13,10 +12,7 @@ import { useState } from 'react'
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const { data, loading, updateQuery } = useTag({
-    current: DEFAULT_CURRENT,
-    pageSize: MAX_PAGE_SIZE,
-  })
+  const { data, loading, updateQuery, fetchMore } = useTag({})
   const [createTag] = useCreateTag()
   const [deleteTag] = useDeleteTag()
   const [updateTag] = useUpdateTag()
@@ -146,6 +142,19 @@ const TagList = () => {
         rowKey='id'
         loading={loading}
         dataSource={data?.tags.data}
+        pagination={{
+          total: data?.tags.total,
+          onChange: (current, pageSize) => {
+            fetchMore({
+              variables: {
+                search: {
+                  current,
+                  pageSize,
+                },
+              },
+            })
+          },
+        }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
         }}
@@ -163,7 +172,19 @@ const TagList = () => {
           </Button>
         )}
         options={{
-          search: { name: 'name' },
+          search: {
+            name: 'name',
+            onSearch: (name) => {
+              fetchMore({
+                variables: {
+                  search: {
+                    name,
+                  },
+                },
+              })
+              return true
+            },
+          },
           reload: false,
           density: false,
           setting: false,
