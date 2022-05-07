@@ -1,4 +1,4 @@
-import type { SearchRequest, SearchResponse } from '@/helper/http.interface'
+import type { ID, SearchRequest, SearchResponse } from '@/helper/http.interface'
 import type { CommentSearchRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { gql } from '@apollo/client'
@@ -8,6 +8,8 @@ export type QueryCommentsResponse = {
 }
 
 export type QueryCommentsSearch = SearchRequest<CommentSearchRequest>
+
+export type UpdateCommentStateInput = ID & { state: number }
 
 export const QUERY_COMMENT = gql`
   query findComments($search: CommentSearchRequest!) {
@@ -24,7 +26,7 @@ export const QUERY_COMMENT = gql`
         agent
         city
         province
-        status
+        state
         fix
         expand
         articleTitle
@@ -40,5 +42,11 @@ export const QUERY_COMMENT = gql`
 export const DELETE_COMMENT = gql`
   mutation deleteComment($id: ID!) {
     deleteComment(id: $id)
+  }
+`
+
+export const UPDATE_COMMENT_STATE = gql`
+  mutation updateCommentState($id: ID!, $state: Int!) {
+    updateCommentState(id: $id, state: $state)
   }
 `

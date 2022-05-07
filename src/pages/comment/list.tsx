@@ -1,7 +1,7 @@
 import { CommentDrawer, CommentTable } from '@/components/comment'
 import type { CommentTableRef } from '@/components/comment/CommentTable'
 import { Container } from '@/components/common'
-import { patchComment, updateComment } from '@/services/ant-design-pro/comment'
+import { updateComment } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { message } from 'antd'
 import { useRef, useState } from 'react'
@@ -19,12 +19,6 @@ const CommentList = () => {
           setDetail(comment)
           setVisible(true)
         }}
-        onStateChange={(data) =>
-          patchComment(data).then((res) => {
-            message.success('状态变更成功')
-            return res
-          })
-        }
       />
 
       <CommentDrawer

@@ -31,7 +31,7 @@ export type CommentUpdateRequest = {
  * 文章patch请求类
  */
 export type CommentPatchRequest = {
-  ids: number[]
+  id: number
   state: CommentState
 }
 
