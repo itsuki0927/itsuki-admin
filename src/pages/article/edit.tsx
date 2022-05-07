@@ -1,10 +1,8 @@
 import { ArticleComment, ArticleForm } from '@/components/article'
 import { Container } from '@/components/common'
-import { QUERY_COMMENT } from '@/graphql/comment'
-import type { SearchResponse } from '@/helper/http.interface'
+import { MAX_PAGE_SIZE } from '@/constants/common'
 import { useArticle, useDeleteArticle, useUpdateArticle } from '@/hooks/article'
-import type { CommentSearchRequest } from '@/services/ant-design-pro/comment'
-import type { API } from '@/services/ant-design-pro/typings'
+import { useComments } from '@/hooks/comment'
 import { convertToCommentTreeData } from '@/transforms/tree'
 import { getBlogArticleUrl } from '@/transforms/url'
 import {
@@ -14,7 +12,6 @@ import {
   LikeOutlined,
   RocketOutlined,
 } from '@ant-design/icons'
-import { useLazyQuery } from '@apollo/client'
 import { Badge, Button, message, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { history, useParams } from 'umi'
@@ -27,12 +24,18 @@ const EditArticle = () => {
   const [updateArticle] = useUpdateArticle()
   const [deleteArticle] = useDeleteArticle()
 
-  const [fetchComments, { data: comments, loading: commentLoading }] = useLazyQuery<
-    {
-      comments: SearchResponse<API.Comment>
-    },
-    { input: CommentSearchRequest }
-  >(QUERY_COMMENT)
+  const [fetchComments, { data: comments, loading: commentLoading }] = useComments()
+
+  const loadComments = () => {
+    fetchComments({
+      variables: {
+        search: {
+          articleId,
+          pageSize: MAX_PAGE_SIZE,
+        },
+      },
+    })
+  }
 
   const handleRemove = () => {
     Modal.confirm({
@@ -80,13 +83,7 @@ const EditArticle = () => {
               size='small'
               icon={<CommentOutlined />}
               onClick={() => {
-                fetchComments({
-                  variables: {
-                    input: {
-                      articleId,
-                    },
-                  },
-                })
+                loadComments()
                 setCommentVisible(true)
               }}
             >
@@ -130,15 +127,7 @@ const EditArticle = () => {
         }}
       />
       <ArticleComment
-        onRefresh={() =>
-          fetchComments({
-            variables: {
-              input: {
-                articleId,
-              },
-            },
-          })
-        }
+        onRefresh={loadComments}
         loading={commentLoading}
         count={article?.commenting}
         comments={convertToCommentTreeData(comments?.comments.data ?? [])}
