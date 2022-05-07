@@ -9,7 +9,7 @@ export type UpdateCategoryResponse = { updateCategory: API.Category }
 
 export type QueryCategoryResponse = { categories: API.Category[] }
 
-export type CategoryId = { categoryId: number }
+export type CategoryId = { id: number }
 
 export type CreateCategoryInput = { input: CategoryActionInput }
 
@@ -47,8 +47,8 @@ export const CREATE_CATEGORY = gql`
 `
 
 export const UPDATE_CATEGORY = gql`
-  mutation updateCategory($categoryId: ID!, $input: CategoryActionInput!) {
-    updateCategory(categoryId: $categoryId, input: $input) {
+  mutation updateCategory($id: ID!, $input: CategoryActionInput!) {
+    updateCategory(id: $id, input: $input) {
       name
       id
       path
@@ -61,7 +61,7 @@ export const UPDATE_CATEGORY = gql`
 `
 
 export const DELETE_CATEGORY = gql`
-  mutation deleteCategory($categoryId: ID!) {
-    deleteCategory(categoryId: $categoryId)
+  mutation deleteCategory($id: ID!) {
+    deleteCategory(id: $id)
   }
 `

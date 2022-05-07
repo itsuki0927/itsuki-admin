@@ -43,7 +43,7 @@ const ArticleCategoryList = () => {
       onOk() {
         deleteCategory({
           variables: {
-            categoryId: entity.id,
+            id: entity.id,
           },
         }).then(() => {
           message.success('删除成功')
@@ -85,7 +85,7 @@ const ArticleCategoryList = () => {
     // 有ID 表示更新
     await updateCategory({
       variables: {
-        categoryId: temp?.id!,
+        id: temp?.id!,
         input,
       },
     })
