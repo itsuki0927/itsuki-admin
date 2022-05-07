@@ -1,4 +1,4 @@
-import type { ID, SearchResponse } from '@/helper/http.interface'
+import type { ID, MutationRequest, SearchRequest, SearchResponse } from '@/helper/http.interface'
 import type {
   ArticleActionRequest,
   ArticleDetailResponse,
@@ -15,13 +15,9 @@ export type QueryArticleResponse = {
   article: ArticleDetailResponse
 }
 
-export type QueryArticleSearch = {
-  search: ArticleSearchRequest
-}
+export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>
 
-export type UpdateArticleInput = {
-  input: ArticleActionRequest
-} & ID
+export type UpdateArticleInput = MutationRequest<ArticleActionRequest> & ID
 
 export const UPDATE_ARTICLE_BANNER = gql`
   mutation updateArticleBanner($ids: [ID]!, $banner: Int!) {

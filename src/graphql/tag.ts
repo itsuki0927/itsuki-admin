@@ -1,4 +1,10 @@
-import type { BaseSearchRequest, ID, SearchResponse } from '@/helper/http.interface'
+import type {
+  BaseSearchRequest,
+  ID,
+  MutationRequest,
+  SearchRequest,
+  SearchResponse,
+} from '@/helper/http.interface'
 import type { API } from '@/services/ant-design-pro/typings'
 import { gql } from '@apollo/client'
 
@@ -6,9 +12,9 @@ export type QueryTagResponse = {
   tags: SearchResponse<API.Tag>
 }
 
-export type TagSearchRequest = {
-  search: BaseSearchRequest<{ name?: string }>
-}
+export type TagSearchRequest = BaseSearchRequest<{ name?: string }>
+
+export type QueryTagSearch = SearchRequest<TagSearchRequest>
 
 export type CreateTagResponse = {
   createTag: API.Tag
@@ -20,7 +26,7 @@ export type UpdateTagResponse = {
 
 type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
 
-export type CreateTagInput = { input: TagActionInput }
+export type CreateTagInput = MutationRequest<TagActionInput>
 
 export type UpdateTagInput = CreateTagInput & ID
 

@@ -26,3 +26,13 @@ export type SearchResponse<T extends IdentifiableEntity> = {
 }
 
 export type ID = { id: number }
+
+// 搜索的参数范型
+export type SearchRequest<T> = {
+  search: T
+}
+
+// mutation的参数范型
+export type MutationRequest<T> = {
+  input: T
+}
