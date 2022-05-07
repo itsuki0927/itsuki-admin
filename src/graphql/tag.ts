@@ -16,3 +16,17 @@ export const QUERY_TAG = gql`
     }
   }
 `
+
+export const CREATE_TAG = gql`
+  mutation createTag($input: TagActionInput!) {
+    createTag(input: $input) {
+      name
+      id
+      path
+      description
+      count
+      sort
+      expand
+    }
+  }
+`

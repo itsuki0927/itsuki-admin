@@ -1,14 +1,14 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import { QUERY_TAG } from '@/graphql/tag'
+import { CREATE_TAG, QUERY_TAG } from '@/graphql/tag'
 import type { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import { createTag, removeTag, updateTag } from '@/services/ant-design-pro/tag'
+import { removeTag, updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { Button, message, Modal, Table } from 'antd'
 import { useState } from 'react'
 
@@ -19,6 +19,14 @@ type QueryTagResponse = {
 type TagSearchRequest = {
   search: BaseSearchRequest<{ name?: string }>
 }
+
+type CreateTagResponse = {
+  createTag: API.Tag
+}
+
+type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
+
+export type CreateTagInput = { input: TagActionInput }
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
@@ -31,6 +39,7 @@ const TagList = () => {
       },
     },
   })
+  const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
@@ -92,13 +101,19 @@ const TagList = () => {
     })
   }
 
-  const confirmCreate = async (values: TagActionRequest) => {
-    const newData = await createTag(values)
+  const confirmCreate = async (input: TagActionRequest) => {
+    console.log('input', input)
+    const { data: newData } = await createTag({
+      variables: {
+        input,
+      },
+    })
+
     message.success('创建成功')
     updateQuery(({ tags }) => ({
       tags: {
         ...tags,
-        data: tags.data.concat(newData),
+        data: tags.data.concat(newData?.createTag!),
         total: tags.total + 1,
       },
     }))
