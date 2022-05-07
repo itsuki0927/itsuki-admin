@@ -1,3 +1,4 @@
+import type { ID } from '@/helper/http.interface'
 import type { API } from '@/services/ant-design-pro/typings'
 import { gql } from '@apollo/client'
 
@@ -9,11 +10,9 @@ export type UpdateCategoryResponse = { updateCategory: API.Category }
 
 export type QueryCategoryResponse = { categories: API.Category[] }
 
-export type CategoryId = { id: number }
-
 export type CreateCategoryInput = { input: CategoryActionInput }
 
-export type UpdateCategoryInput = CreateCategoryInput & CategoryId
+export type UpdateCategoryInput = CreateCategoryInput & ID
 
 export const QUERY_CATEGORY = gql`
   fragment CategoryFragment on Category {
