@@ -1,9 +1,9 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import { CREATE_TAG, QUERY_TAG } from '@/graphql/tag'
+import { CREATE_TAG, DELETE_TAG, QUERY_TAG } from '@/graphql/tag'
 import type { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import { removeTag, updateTag } from '@/services/ant-design-pro/tag'
+import { updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ProColumns } from '@ant-design/pro-table'
@@ -28,6 +28,10 @@ type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
 
 export type CreateTagInput = { input: TagActionInput }
 
+export type ID = {
+  id: number
+}
+
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
@@ -40,13 +44,14 @@ const TagList = () => {
     },
   })
   const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
+  const [removeTag] = useMutation<void, ID>(DELETE_TAG)
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
       onOk() {
-        removeTag(entity.id!).then(() => {
+        removeTag({ variables: { id: entity.id } }).then(() => {
           message.success('删除成功')
           updateQuery((prevData) => {
             return {

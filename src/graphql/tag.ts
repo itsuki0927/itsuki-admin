@@ -30,3 +30,9 @@ export const CREATE_TAG = gql`
     }
   }
 `
+
+export const DELETE_TAG = gql`
+  mutation deleteTag($id: ID!) {
+    deleteTag(id: $id)
+  }
+`
