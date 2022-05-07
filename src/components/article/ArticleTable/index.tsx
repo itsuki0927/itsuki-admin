@@ -21,9 +21,10 @@ import {
   SwapOutlined,
   TagOutlined,
 } from '@ant-design/icons'
-import type { ProColumns } from '@ant-design/pro-table'
+import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
+import { useRef } from 'react'
 import { history, Link } from 'umi'
 
 type ArticleTableProps = {
@@ -34,6 +35,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
   const [fetchArticles, { updateQuery }] = useArticles()
   const [updateState] = useUpdateArticleState()
   const [updateBanner] = useUpdateArticleBanner()
+  const actionRef = useRef<ActionType>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
     Modal.confirm({
@@ -59,6 +61,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             },
           }))
           message.success('变更成功')
+          actionRef.current?.reload()
           cb?.()
         })
       },
@@ -89,6 +92,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             },
           }))
           message.success('变更成功')
+          actionRef.current?.reload()
           cb?.()
         })
       },
@@ -293,6 +297,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
   return (
     <ProTable
       headerTitle='文章列表'
+      actionRef={actionRef}
       search={false}
       params={omitSelectAllValue(query)}
       columns={columns}

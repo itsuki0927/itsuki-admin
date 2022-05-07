@@ -4,10 +4,10 @@ import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
-import type { ProColumns } from '@ant-design/pro-table'
+import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import { Button, message, Modal, Table } from 'antd'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
@@ -16,6 +16,7 @@ const TagList = () => {
   const [createTag] = useCreateTag()
   const [deleteTag] = useDeleteTag()
   const [updateTag] = useUpdateTag()
+  const actionRef = useRef<ActionType>()
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
@@ -23,7 +24,6 @@ const TagList = () => {
       content: '删除后不可恢复',
       onOk() {
         deleteTag({ variables: { id: entity.id } }).then(() => {
-          message.success('删除成功')
           updateQuery((prevData) => {
             return {
               tags: {
@@ -33,6 +33,8 @@ const TagList = () => {
               },
             }
           })
+          message.success('删除成功')
+          actionRef.current?.reload()
         })
       },
     })
@@ -76,8 +78,9 @@ const TagList = () => {
           }),
         },
       }))
-      message.success('更新成功')
       setVisible(false)
+      actionRef.current?.reload()
+      message.success('更新成功')
     })
   }
 
@@ -95,8 +98,9 @@ const TagList = () => {
         total: tags.total + 1,
       },
     }))
-    message.success('创建成功')
     setVisible(false)
+    actionRef.current?.reload()
+    message.success('创建成功')
   }
 
   const columns: ProColumns<API.Tag>[] = [
@@ -139,6 +143,7 @@ const TagList = () => {
         headerTitle='标签管理'
         columns={columns}
         search={false}
+        actionRef={actionRef}
         rowKey='id'
         request={async (search) => {
           const { data } = await fetchTags({

@@ -4,7 +4,6 @@ import type {
   QueryCategoryResponse,
   CreateCategoryResponse,
   CategoryActionInput,
-  CategoryId,
   UpdateCategoryResponse,
   CreateCategoryInput,
   UpdateCategoryInput,
@@ -15,6 +14,7 @@ import {
   QUERY_CATEGORY,
   UPDATE_CATEGORY,
 } from '@/graphql/category'
+import type { ID } from '@/helper/http.interface'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
@@ -29,7 +29,7 @@ const ArticleCategoryList = () => {
   const { data, loading, updateQuery, refetch } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
   const [createCategory] = useMutation<CreateCategoryResponse, CreateCategoryInput>(CREATE_CATEGORY)
   const [updateCategory] = useMutation<UpdateCategoryResponse, UpdateCategoryInput>(UPDATE_CATEGORY)
-  const [deleteCategory] = useMutation<number, CategoryId>(DELETE_CATEGORY)
+  const [deleteCategory] = useMutation<number, ID>(DELETE_CATEGORY)
 
   const handleRemove = (entity: API.Category) => () => {
     Modal.confirm({
@@ -46,10 +46,10 @@ const ArticleCategoryList = () => {
             id: entity.id,
           },
         }).then(() => {
-          message.success('删除成功')
           updateQuery((prevData) => ({
             categories: prevData.categories.filter((v) => v.id !== entity.id),
           }))
+          message.success('删除成功')
         })
       },
     })
@@ -61,9 +61,9 @@ const ArticleCategoryList = () => {
   }
 
   const reset = (msg: string) => {
-    message.success(msg)
     setTemp(undefined)
     setVisible(false)
+    message.success(msg)
   }
 
   const handleUpdate =
