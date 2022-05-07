@@ -1,10 +1,11 @@
 import { CategorySelect } from '@/components/common'
-import { queryCategoryList } from '@/services/ant-design-pro/category'
+import { QUERY_CATEGORY } from '@/graphql/category'
+import type { QueryCategoryResponse } from '@/graphql/category'
+import { useQuery } from '@apollo/client'
 import { Form } from 'antd'
-import { useRequest } from 'umi'
 
 const ArticleCategorySelect = () => {
-  const { data, loading, refresh } = useRequest(() => queryCategoryList())
+  const { data, loading, refetch } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
 
   return (
     <Form.Item
@@ -16,7 +17,7 @@ const ArticleCategorySelect = () => {
         },
       ]}
     >
-      <CategorySelect data={data} loading={loading} onRefresh={refresh} />
+      <CategorySelect data={data?.categories} loading={loading} onRefresh={() => refetch()} />
     </Form.Item>
   )
 }

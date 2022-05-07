@@ -43,7 +43,7 @@ const CategorySelect = ({
       ) : (
         <Select placeholder='请选择文章分类' value={value} onChange={onChange}>
           {data.map((category) => (
-            <Select.Option value={category.id}>
+            <Select.Option key={category.id} value={category.id}>
               <Space size='small'>
                 <Typography.Text strong={true}>{category.name}</Typography.Text>
                 <Divider type='vertical' />
