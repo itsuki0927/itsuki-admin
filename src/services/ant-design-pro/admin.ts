@@ -3,7 +3,7 @@
 import { request } from 'umi'
 import { API } from './typings'
 export type LoginResponse = {
-  status: string
+  state: string
   token: string
   expiration: string
 }

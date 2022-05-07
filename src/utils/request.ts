@@ -22,7 +22,7 @@ const responseInterceptors = (response: Response) =>
     .then((data) => {
       console.log('data:', data)
       // 请求成功直接返回 data
-      if (data.status === 200) {
+      if (data.state === 200) {
         console.group('---response---')
         console.log('response origin data:', data)
         console.groupEnd()

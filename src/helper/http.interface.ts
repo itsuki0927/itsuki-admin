@@ -7,7 +7,7 @@ export type IdentifiableEntity<T = any> = {
 // 包装Response
 export type WrapperResponse<T> = {
   data: T
-  status: number
+  state: number
   message: string
   success: boolean
 }

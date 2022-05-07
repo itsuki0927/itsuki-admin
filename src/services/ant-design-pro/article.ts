@@ -72,7 +72,7 @@ type ArticleSummary = {
   publish: number
   value: number
   title: string
-  status: string
+  state: string
 }
 
 export type ArticleSummaryResponse = {

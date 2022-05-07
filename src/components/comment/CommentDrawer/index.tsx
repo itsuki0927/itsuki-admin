@@ -147,7 +147,7 @@ const CommentDrawer = ({ comment, onFinish, ...rest }: CommentDrawerProps) => {
         </Form.Item>
       )}
       <ProFormSelect
-        name='status'
+        name='state'
         label='评论状态'
         rules={[{ required: true, message: '请选择评论状态' }]}
         options={getSelectOptionsByState(commentStates)}

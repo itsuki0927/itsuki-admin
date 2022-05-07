@@ -1,4 +1,9 @@
-import type { QueryCommentsResponse, QueryCommentsSearch } from '@/graphql/comment'
+import type {
+  QueryCommentsResponse,
+  QueryCommentsSearch,
+  UpdateCommentStateInput,
+} from '@/graphql/comment'
+import { UPDATE_COMMENT_STATE } from '@/graphql/comment'
 import { DELETE_COMMENT, QUERY_COMMENT } from '@/graphql/comment'
 import type { ID } from '@/helper/http.interface'
 import { useLazyQuery, useMutation } from '@apollo/client'
@@ -9,4 +14,8 @@ export const useComments = () => {
 
 export const useDeleteComment = () => {
   return useMutation<void, ID>(DELETE_COMMENT)
+}
+
+export const useUpdateCommentState = () => {
+  return useMutation<void, UpdateCommentStateInput>(UPDATE_COMMENT_STATE)
 }

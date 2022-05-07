@@ -39,8 +39,8 @@ const Login: React.FC = () => {
     setSubmitting(true)
     try {
       // 登录
-      const { status, token } = await login({ ...values })
-      if (status === 'OK') {
+      const { state: s, token } = await login({ ...values })
+      if (s === 'OK') {
         message.success('登陆成功')
         setToken(token)
         await fetchUserInfo()
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
         history.push(redirect || '/')
         return
       }
-      setState(status)
+      setState(state)
     } catch (error) {
       console.log('error:', error)
       // 如果失败去设置用户错误信息

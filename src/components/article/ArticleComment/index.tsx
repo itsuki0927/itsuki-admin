@@ -54,8 +54,8 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
                 <Divider type='vertical' />
                 {comment.province || '-'} · {comment.city || '-'}
                 <Divider type='vertical' />
-                <Tag color={ps(comment.status).color} icon={ps(comment.status).icon}>
-                  {ps(comment.status).name}
+                <Tag color={ps(comment.state).color} icon={ps(comment.state).icon}>
+                  {ps(comment.state).name}
                 </Tag>
               </div>
             }

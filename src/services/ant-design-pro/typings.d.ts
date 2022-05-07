@@ -23,7 +23,7 @@ declare namespace API {
     content: string
     author: string
     cover: string
-    status: number
+    state: number
     keywords: string
     open: ArticleOpen
     publish: PublishState
@@ -91,7 +91,7 @@ declare namespace API {
     city: string
     province: string
     agent: string
-    status: number
+    state: number
     fix: string
     expand: string
     parentId: number
@@ -103,7 +103,7 @@ declare namespace API {
   type Snippet = IdentifiableEntity<{
     name: string
     description: string
-    status: number
+    state: number
     ranks: number
     code: string
     skill: string

@@ -10,7 +10,7 @@ import { API } from './typings'
  */
 export type CommentSearchRequest = BaseSearchRequest<{
   keyword?: string
-  status?: number
+  state?: number
   articleId?: number
 }>
 
@@ -24,7 +24,7 @@ export type CommentUpdateRequest = {
   content: string
   liking: number
   expand: string
-  status: CommentState
+  state: CommentState
 }
 
 /**
@@ -32,7 +32,7 @@ export type CommentUpdateRequest = {
  */
 export type CommentPatchRequest = {
   ids: number[]
-  status: CommentState
+  state: CommentState
 }
 
 export type CommentTree = API.Comment & {
