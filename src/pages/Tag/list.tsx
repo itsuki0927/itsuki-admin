@@ -12,7 +12,7 @@ import { useState } from 'react'
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const { data, loading, updateQuery, fetchMore } = useTag({})
+  const [fetchTags, { updateQuery }] = useTag()
   const [createTag] = useCreateTag()
   const [deleteTag] = useDeleteTag()
   const [updateTag] = useUpdateTag()
@@ -140,20 +140,13 @@ const TagList = () => {
         columns={columns}
         search={false}
         rowKey='id'
-        loading={loading}
-        dataSource={data?.tags.data}
-        pagination={{
-          total: data?.tags.total,
-          onChange: (current, pageSize) => {
-            fetchMore({
-              variables: {
-                search: {
-                  current,
-                  pageSize,
-                },
-              },
-            })
-          },
+        request={async (search) => {
+          const { data } = await fetchTags({
+            variables: {
+              search,
+            },
+          })
+          return data?.tags!
         }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
@@ -175,7 +168,7 @@ const TagList = () => {
           search: {
             name: 'name',
             onSearch: (name) => {
-              fetchMore({
+              fetchTags({
                 variables: {
                   search: {
                     name,

@@ -31,7 +31,7 @@ type ArticleTableProps = {
 }
 
 const ArticleTable = ({ query }: ArticleTableProps) => {
-  const { data, loading, updateQuery, fetchMore } = useArticles(omitSelectAllValue(query))
+  const [fetchArticles, { updateQuery }] = useArticles()
   const [updateState] = useUpdateArticleState()
   const [updateBanner] = useUpdateArticleBanner()
 
@@ -297,21 +297,13 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       params={omitSelectAllValue(query)}
       columns={columns}
       rowKey='id'
-      loading={loading}
-      dataSource={data?.articles?.data ?? []}
-      pagination={{
-        pageSize: 10,
-        total: data?.articles.total,
-        onChange: (current, pageSize) => {
-          fetchMore({
-            variables: {
-              search: {
-                current,
-                pageSize,
-              },
-            },
-          })
-        },
+      request={async (search) => {
+        const { data } = await fetchArticles({
+          variables: {
+            search,
+          },
+        })
+        return data?.articles!
       }}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],

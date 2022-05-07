@@ -9,14 +9,10 @@ import type {
 } from '@/graphql/tag'
 import { CREATE_TAG, DELETE_TAG, QUERY_TAG, UPDATE_TAG } from '@/graphql/tag'
 import type { ID } from '@/helper/http.interface'
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 
-export const useTag = (search: QueryTagSearch['search']) => {
-  return useQuery<QueryTagResponse, QueryTagSearch>(QUERY_TAG, {
-    variables: {
-      search,
-    },
-  })
+export const useTag = () => {
+  return useLazyQuery<QueryTagResponse, QueryTagSearch>(QUERY_TAG)
 }
 
 export const useAllTag = () => {

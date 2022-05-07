@@ -19,16 +19,12 @@ import type {
   ArticleDetailResponse,
   ArticlePatchRequest,
 } from '@/services/ant-design-pro/article'
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { Modal } from 'antd'
 import { useState } from 'react'
 
-export const useArticles = (search: QueryArticleSearch['search']) => {
-  return useQuery<QueryArticlesResponse, QueryArticleSearch>(QUERY_ARTICLES, {
-    variables: {
-      search,
-    },
-  })
+export const useArticles = () => {
+  return useLazyQuery<QueryArticlesResponse, QueryArticleSearch>(QUERY_ARTICLES)
 }
 
 export const useUpdateArticleState = () =>
