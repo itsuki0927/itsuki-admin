@@ -1,9 +1,8 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import { CREATE_TAG, DELETE_TAG, QUERY_TAG } from '@/graphql/tag'
+import { CREATE_TAG, DELETE_TAG, QUERY_TAG, UPDATE_TAG } from '@/graphql/tag'
 import type { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import { updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ProColumns } from '@ant-design/pro-table'
@@ -24,9 +23,15 @@ type CreateTagResponse = {
   createTag: API.Tag
 }
 
+type UpdateTagResponse = {
+  updateTag: API.Tag
+}
+
 type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
 
 export type CreateTagInput = { input: TagActionInput }
+
+export type UpdateTagInput = CreateTagInput & ID
 
 export type ID = {
   id: number
@@ -45,6 +50,7 @@ const TagList = () => {
   })
   const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
   const [removeTag] = useMutation<void, ID>(DELETE_TAG)
+  const [updateTag] = useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG)
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
@@ -83,25 +89,29 @@ const TagList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const confirmUpdate = (values: TagActionRequest) => {
-    if (values.expand) {
+  const confirmUpdate = (input: TagActionRequest) => {
+    if (input.expand) {
       // eslint-disable-next-line no-param-reassign
-      values.expand = JSON.stringify(values.expand)
+      input.expand = JSON.stringify(input.expand)
     }
-    return updateTag(temp?.id!, values).then(() => {
-      message.success('更新成功')
-
+    return updateTag({
+      variables: {
+        id: temp?.id!,
+        input,
+      },
+    }).then(() => {
       updateQuery(({ tags }) => ({
         tags: {
           ...tags,
           data: tags.data.map((item) => {
             if (item.id === temp?.id) {
-              return { ...item, ...values }
+              return { ...item, ...input }
             }
             return item
           }),
         },
       }))
+      message.success('更新成功')
       setVisible(false)
     })
   }
@@ -113,8 +123,6 @@ const TagList = () => {
         input,
       },
     })
-
-    message.success('创建成功')
     updateQuery(({ tags }) => ({
       tags: {
         ...tags,
@@ -122,6 +130,7 @@ const TagList = () => {
         total: tags.total + 1,
       },
     }))
+    message.success('创建成功')
     setVisible(false)
   }
 

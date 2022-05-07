@@ -36,3 +36,17 @@ export const DELETE_TAG = gql`
     deleteTag(id: $id)
   }
 `
+
+export const UPDATE_TAG = gql`
+  mutation updateTag($id: ID!, $input: TagActionInput!) {
+    updateTag(id: $id, input: $input) {
+      name
+      id
+      path
+      description
+      count
+      sort
+      expand
+    }
+  }
+`
