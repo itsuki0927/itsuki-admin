@@ -1,18 +1,36 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
+import { QUERY_TAG } from '@/graphql/tag'
+import type { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import { createTag, queryTagList, removeTag, updateTag } from '@/services/ant-design-pro/tag'
+import { createTag, removeTag, updateTag } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
-import type { ActionType, ProColumns } from '@ant-design/pro-table'
+import type { ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
+import { useQuery } from '@apollo/client'
 import { Button, message, Modal, Table } from 'antd'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
+
+type QueryTagResponse = {
+  tags: SearchResponse<API.Tag>
+}
+
+type TagSearchRequest = {
+  search: BaseSearchRequest<{ name?: string }>
+}
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const actionRef = useRef<ActionType>()
+  const { data, loading, updateQuery } = useQuery<QueryTagResponse, TagSearchRequest>(QUERY_TAG, {
+    variables: {
+      search: {
+        current: 1,
+        pageSize: 20,
+      },
+    },
+  })
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
@@ -20,8 +38,16 @@ const TagList = () => {
       content: '删除后不可恢复',
       onOk() {
         removeTag(entity.id!).then(() => {
-          actionRef.current?.reload()
           message.success('删除成功')
+          updateQuery((prevData) => {
+            return {
+              tags: {
+                ...prevData.tags,
+                data: prevData.tags.data.filter((item) => item.id !== entity.id!),
+                total: prevData.tags.total - 1,
+              },
+            }
+          })
         })
       },
     })
@@ -50,17 +76,33 @@ const TagList = () => {
     }
     return updateTag(temp?.id!, values).then(() => {
       message.success('更新成功')
-      actionRef.current?.reload()
+
+      updateQuery(({ tags }) => ({
+        tags: {
+          ...tags,
+          data: tags.data.map((item) => {
+            if (item.id === temp?.id) {
+              return { ...item, ...values }
+            }
+            return item
+          }),
+        },
+      }))
       setVisible(false)
     })
   }
 
-  const confirmCreate = (values: TagActionRequest) => {
-    return createTag(values).then(() => {
-      message.success('创建成功')
-      actionRef.current?.reload()
-      setVisible(false)
-    })
+  const confirmCreate = async (values: TagActionRequest) => {
+    const newData = await createTag(values)
+    message.success('创建成功')
+    updateQuery(({ tags }) => ({
+      tags: {
+        ...tags,
+        data: tags.data.concat(newData),
+        total: tags.total + 1,
+      },
+    }))
+    setVisible(false)
   }
 
   const columns: ProColumns<API.Tag>[] = [
@@ -68,9 +110,8 @@ const TagList = () => {
     { title: '名称', dataIndex: 'name', align: 'center' },
     { title: '路径', dataIndex: 'path', align: 'center' },
     { title: '描述', dataIndex: 'description', align: 'center' },
-    // TODO: 后端排序
     { title: '排序', dataIndex: 'sort', align: 'center', sorter: true },
-    { title: '文章', dataIndex: 'count', align: 'center' },
+    { title: '文章数', dataIndex: 'count', align: 'center' },
     {
       title: '操作',
       valueType: 'option',
@@ -105,8 +146,10 @@ const TagList = () => {
         columns={columns}
         search={false}
         rowKey='id'
-        actionRef={actionRef}
-        request={(params, sort) => queryTagList({ ...params, ...sort })}
+        loading={loading}
+        // actionRef={actionRef}
+        dataSource={data?.tags.data}
+        // request={(params, sort) => queryTagList({ ...params, ...sort })}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
         }}
