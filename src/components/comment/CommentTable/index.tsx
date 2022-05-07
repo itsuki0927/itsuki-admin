@@ -1,7 +1,7 @@
 import { CommentState, commentStates, COMMENT_GUESTBOOK_ID, cs } from '@/constants/comment'
 import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
+import { useComments, useDeleteComment } from '@/hooks/comment'
 import type { CommentPatchRequest } from '@/services/ant-design-pro/comment'
-import { queryCommentList } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
 import { getGravatarUrl } from '@/transforms/gravatar'
@@ -23,7 +23,6 @@ import { forwardRef, useImperativeHandle, useRef } from 'react'
 
 type CommentTableProps = {
   onStateChange: (data: CommentPatchRequest) => Promise<number>
-  onRemove: (id: number) => Promise<number>
   onDetail: (comment: API.Comment) => void
 }
 
@@ -32,7 +31,9 @@ export type CommentTableRef = {
 }
 
 const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
-  ({ onStateChange, onRemove, onDetail }, ref) => {
+  ({ onStateChange, onDetail }, ref) => {
+    const [fetchComments] = useComments()
+    const [deleteComment] = useDeleteComment()
     const formRef = useRef<ProFormInstance | undefined>()
     const actionRef = useRef<ActionType | undefined>()
 
@@ -55,13 +56,13 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
       })
     }
 
-    const handleRemoveComment = (id: number) => {
+    const handleRemoveComment = ({ id }: API.Comment) => {
       Modal.confirm({
         title: `确定要彻底删除 1 个评论吗？`,
         content: '此操作不能撤销!!!',
         centered: true,
         onOk() {
-          onRemove(id).then(() => {
+          deleteComment({ variables: { id } }).then(() => {
             actionRef.current?.reload()
           })
         },
@@ -310,7 +311,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
                   danger={true}
                   block={true}
                   icon={<DeleteOutlined />}
-                  onClick={() => handleRemoveComment(comment.id)}
+                  onClick={() => handleRemoveComment(comment)}
                 >
                   彻底删除
                 </Button>
@@ -339,10 +340,15 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
         headerTitle='评论列表'
         rowKey='id'
         columns={columns}
-        beforeSearchSubmit={(target) => {
-          return omitSelectAllValue(target)
+        beforeSearchSubmit={(target) => omitSelectAllValue(target)}
+        request={async (search) => {
+          const { data } = await fetchComments({
+            variables: {
+              search,
+            },
+          })
+          return data?.comments!
         }}
-        request={(params) => queryCommentList(params)}
       />
     )
   }
