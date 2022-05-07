@@ -4,7 +4,7 @@ import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { useState } from 'react'
 
 const ArticleList = () => {
-  const [query, setQuery] = useState<ArticleSearchRequest>({ pageSize: 20 })
+  const [query, setQuery] = useState<ArticleSearchRequest>({})
 
   return (
     <Container>

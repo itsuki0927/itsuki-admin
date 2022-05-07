@@ -3,11 +3,8 @@ import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
-import type {
-  ArticleBannerPatchRequest,
-  ArticlePatchRequest,
-  ArticleSearchRequest,
-} from '@/services/ant-design-pro/article'
+import { useArticles, useUpdateArticleBanner, useUpdateArticleState } from '@/hooks/article'
+import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
 import {
@@ -26,66 +23,17 @@ import {
 } from '@ant-design/icons'
 import type { ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
-import { Button, Card, Modal, Space, Table, Tag, Typography, message } from 'antd'
+import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
 import { history, Link } from 'umi'
-import { gql, useMutation, useQuery } from '@apollo/client'
 
 type ArticleTableProps = {
   query?: ArticleSearchRequest
 }
 
-const UPDATE_ARTICLE_BANNER = gql`
-  mutation updateArticleBanner($ids: [ID]!, $banner: Int!) {
-    updateArticleBanner(ids: $ids, banner: $banner)
-  }
-`
-
-const UPDATE_ARTICLE_STATE = gql`
-  mutation patchArticleState($ids: [ID]!, $state: Int!) {
-    updateArticleState(ids: $ids, state: $state)
-  }
-`
-
-const QUERY_ARTICLE = gql`
-  query findArticles($search: ArticleSearchRequest) {
-    articles(search: $search) {
-      data {
-        id
-        title
-        publish
-        description
-        path
-        keywords
-        cover
-        commenting
-        author
-        liking
-        reading
-        origin
-        open
-        banner
-        tags {
-          id
-          name
-        }
-      }
-      total
-    }
-  }
-`
-
 const ArticleTable = ({ query }: ArticleTableProps) => {
-  const { data, refetch } = useQuery(QUERY_ARTICLE, {
-    variables: {
-      search: omitSelectAllValue(query),
-    },
-  })
-  const [stateMutate] = useMutation<number, ArticlePatchRequest>(UPDATE_ARTICLE_STATE)
-  const [bannerMutate] = useMutation<number, ArticleBannerPatchRequest>(UPDATE_ARTICLE_BANNER)
-  console.group('graphql data')
-  console.log('graphql query', query)
-  console.log('graphql data', data)
-  console.groupEnd()
+  const { data, loading, updateQuery, fetchMore } = useArticles(omitSelectAllValue(query))
+  const [updateState] = useUpdateArticleState()
+  const [updateBanner] = useUpdateArticleBanner()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
     Modal.confirm({
@@ -93,15 +41,23 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
-        stateMutate({
+        updateState({
           variables: {
             ids,
             state,
           },
         }).then(() => {
-          refetch({
-            search: omitSelectAllValue(query),
-          })
+          updateQuery(({ articles }) => ({
+            articles: {
+              ...articles,
+              data: articles.data.map((item) => {
+                if (ids.includes(item.id)) {
+                  return { ...item, publish: state }
+                }
+                return item
+              }),
+            },
+          }))
           message.success('变更成功')
           cb?.()
         })
@@ -115,15 +71,23 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
-        bannerMutate({
+        updateBanner({
           variables: {
             ids,
             banner,
           },
         }).then(() => {
-          refetch({
-            search: omitSelectAllValue(query),
-          })
+          updateQuery(({ articles }) => ({
+            articles: {
+              ...articles,
+              data: articles.data.map((item) => {
+                if (ids.includes(item.id)) {
+                  return { ...item, banner }
+                }
+                return item
+              }),
+            },
+          }))
           message.success('变更成功')
           cb?.()
         })
@@ -333,7 +297,22 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       params={omitSelectAllValue(query)}
       columns={columns}
       rowKey='id'
+      loading={loading}
       dataSource={data?.articles?.data ?? []}
+      pagination={{
+        pageSize: 10,
+        total: data?.articles.total,
+        onChange: (current, pageSize) => {
+          fetchMore({
+            variables: {
+              search: {
+                current,
+                pageSize,
+              },
+            },
+          })
+        },
+      }}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
       }}

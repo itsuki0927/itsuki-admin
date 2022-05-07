@@ -23,6 +23,10 @@ export const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
+          articles: {
+            keyArgs: false,
+            merge: true,
+          },
           tags: {
             keyArgs: false,
             merge: true,
