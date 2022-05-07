@@ -24,3 +24,5 @@ export type SearchResponse<T extends IdentifiableEntity> = {
   data: T[]
   filter: BaseSearchRequest
 }
+
+export type ID = { id: number }

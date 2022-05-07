@@ -1,7 +1,15 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
+import type {
+  CreateTagInput,
+  CreateTagResponse,
+  QueryTagResponse,
+  TagSearchRequest,
+  UpdateTagInput,
+  UpdateTagResponse,
+} from '@/graphql/tag'
 import { CREATE_TAG, DELETE_TAG, QUERY_TAG, UPDATE_TAG } from '@/graphql/tag'
-import type { BaseSearchRequest, SearchResponse } from '@/helper/http.interface'
+import type { ID } from '@/helper/http.interface'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
@@ -10,32 +18,6 @@ import ProTable from '@ant-design/pro-table'
 import { useMutation, useQuery } from '@apollo/client'
 import { Button, message, Modal, Table } from 'antd'
 import { useState } from 'react'
-
-type QueryTagResponse = {
-  tags: SearchResponse<API.Tag>
-}
-
-type TagSearchRequest = {
-  search: BaseSearchRequest<{ name?: string }>
-}
-
-type CreateTagResponse = {
-  createTag: API.Tag
-}
-
-type UpdateTagResponse = {
-  updateTag: API.Tag
-}
-
-type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
-
-export type CreateTagInput = { input: TagActionInput }
-
-export type UpdateTagInput = CreateTagInput & ID
-
-export type ID = {
-  id: number
-}
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
