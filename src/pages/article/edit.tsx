@@ -1,7 +1,9 @@
 import { ArticleComment, ArticleForm } from '@/components/article'
 import { Container } from '@/components/common'
 import { getUEditorCache } from '@/components/common/UniversalEditor'
+import type { SearchResponse } from '@/helper/http.interface'
 import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant-design-pro/article'
+import type { CommentSearchRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { convertToCommentTreeData } from '@/transforms/tree'
 import { getBlogArticleUrl } from '@/transforms/url'
@@ -50,26 +52,29 @@ const handleDiffContent =
   }
 
 const QUERY_COMMENT = gql`
-  query findComments($articleId: ID!) {
-    comments(articleId: $articleId) {
-      id
-      nickname
-      email
-      website
-      content
-      liking
-      ip
-      agent
-      city
-      province
-      status
-      fix
-      expand
-      articleTitle
-      articleDescription
-      parentNickName
-      parentId
-      articleId
+  query findComments($input: CommentSearchRequest!) {
+    comments(input: $input) {
+      total
+      data {
+        id
+        nickname
+        email
+        website
+        content
+        liking
+        ip
+        agent
+        city
+        province
+        status
+        fix
+        expand
+        articleTitle
+        articleDescription
+        parentNickName
+        parentId
+        articleId
+      }
     }
   }
 `
@@ -115,10 +120,22 @@ const QUERY_ARTICLE = gql`
 `
 
 const DETELTE_ARTICLE = gql`
-  mutation deleteArticle($articleId: ID!) {
-    deleteArticle(articleId: $articleId)
+  mutation deleteArticle($id: ID!) {
+    deleteArticle(id: $id)
   }
 `
+
+type ID = {
+  id: number
+}
+
+type UpdateArticleInput = {
+  input: ArticleActionRequest
+} & ID
+
+type QueryArticleResponse = {
+  article: ArticleDetailResponse
+}
 
 const EditArticle = () => {
   const articleCacheID = window.location.pathname
@@ -127,33 +144,28 @@ const EditArticle = () => {
   const articleId = +id
   const [commentVisible, setCommentVisible] = useState(false)
   const [article, setArticle] = useState<ArticleDetailResponse | undefined>()
-  const [updateArticle] = useMutation<API.Article, { id: number; input: ArticleActionRequest }>(
-    UPDATE_ARTICLE
-  )
-  const [deleteArticle] = useMutation<number, { articleId: number }>(DETELTE_ARTICLE)
-  const { data, loading, updateQuery } = useQuery<{ article: ArticleDetailResponse }>(
-    QUERY_ARTICLE,
-    {
-      variables: {
-        id: +id,
-      },
-      onCompleted: ({ article: articleProp }) => {
-        diffContent(articleProp).then((result) => {
-          setArticle({
-            ...result,
-            categoryId: Number(result.categoryId),
-            keywords: result.keywords.split('、') as any,
-            tagIds: result.tags.map((v) => v.id),
-          })
+  const [updateArticle] = useMutation<void, UpdateArticleInput>(UPDATE_ARTICLE)
+  const [deleteArticle] = useMutation<number, ID>(DETELTE_ARTICLE)
+  const { data, loading, updateQuery } = useQuery<QueryArticleResponse, ID>(QUERY_ARTICLE, {
+    variables: {
+      id: +id,
+    },
+    onCompleted: ({ article: articleProp }) => {
+      diffContent(articleProp).then((result) => {
+        setArticle({
+          ...result,
+          categoryId: Number(result.categoryId),
+          keywords: result.keywords.split('、') as any,
+          tagIds: result.tags.map((v) => v.id),
         })
-      },
-    }
-  )
+      })
+    },
+  })
   const [fetchComments, { data: comments, loading: commentLoading }] = useLazyQuery<
     {
-      comments: API.Comment[]
+      comments: SearchResponse<API.Comment>
     },
-    { articleId: number }
+    { input: CommentSearchRequest }
   >(QUERY_COMMENT)
 
   const handleRemove = () => {
@@ -204,7 +216,9 @@ const EditArticle = () => {
               onClick={() => {
                 fetchComments({
                   variables: {
-                    articleId,
+                    input: {
+                      articleId,
+                    },
                   },
                 })
                 setCommentVisible(true)
@@ -253,13 +267,15 @@ const EditArticle = () => {
         onRefresh={() =>
           fetchComments({
             variables: {
-              articleId,
+              input: {
+                articleId,
+              },
             },
           })
         }
         loading={commentLoading}
         count={article?.commenting}
-        comments={convertToCommentTreeData(comments?.comments ?? [])}
+        comments={convertToCommentTreeData(comments?.comments.data ?? [])}
         visible={commentVisible}
         onClose={() => setCommentVisible(false)}
       />

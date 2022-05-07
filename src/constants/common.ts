@@ -1,4 +1,4 @@
-import { omitBy } from 'lodash'
+import omitBy from 'lodash/omitBy'
 
 // 选中全部
 export const SELECT_ALL_VALUE = -101
