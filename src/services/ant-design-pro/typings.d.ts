@@ -98,6 +98,7 @@ declare namespace API {
     articleId: number
     articleTitle: string
     articleDescription: string
+    parentNickName: string
   }>
 
   type Snippet = IdentifiableEntity<{
