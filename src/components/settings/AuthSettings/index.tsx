@@ -1,16 +1,17 @@
+import { useUpdateAdminPassword } from '@/hooks/admin'
 import type { AdminUpdatePasswordRequest } from '@/services/ant-design-pro/admin'
-import { updateAdminPassword } from '@/services/ant-design-pro/admin'
+// import { updateAdminPassword } from '@/services/ant-design-pro/admin'
 import { removeToken } from '@/utils/auth'
 import { CheckOutlined } from '@ant-design/icons'
 import type { ProFormInstance } from '@ant-design/pro-form'
 import ProForm, { ProFormText } from '@ant-design/pro-form'
 import { Col, notification, Row } from 'antd'
 import { useRef } from 'react'
-import { history, useModel } from 'umi'
+import { history } from 'umi'
 
 const AuthSettings = () => {
-  const { initialState } = useModel('@@initialState')
   const formRef = useRef<ProFormInstance<AdminUpdatePasswordRequest>>()
+  const [updateAdminPassword] = useUpdateAdminPassword()
 
   // 验证重复输入密码
   const validatePassword = async () => {
@@ -25,17 +26,16 @@ const AuthSettings = () => {
     }
   }
 
-  const handleUpdatePassword = (values: AdminUpdatePasswordRequest) => {
-    return updateAdminPassword({ ...initialState?.currentUser, ...values }).then(() => {
-      notification.info({
-        message: '修改了新密码，即将跳转到登录页...',
-      })
-      setTimeout(() => {
-        removeToken()
-        history.push('/user/login')
-        location.reload()
-      }, 1680)
+  const handleUpdatePassword = async (input: AdminUpdatePasswordRequest) => {
+    await updateAdminPassword({ variables: { input } })
+    notification.info({
+      message: '修改了新密码，即将跳转到登录页...',
     })
+    setTimeout(() => {
+      removeToken()
+      history.push('/user/login')
+      location.reload()
+    }, 1680)
   }
 
   return (
