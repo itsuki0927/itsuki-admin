@@ -33,9 +33,10 @@ export async function getInitialState(): Promise<{
     }
     return undefined
   }
-  // 如果是登录页面，不执行
+
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo()
+
     return {
       fetchUserInfo,
       currentUser,
