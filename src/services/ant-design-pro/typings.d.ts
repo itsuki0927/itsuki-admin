@@ -66,19 +66,10 @@ declare namespace API {
     expand?: string
   }>
 
-  type SystemSettings = IdentifiableEntity<{
-    liking: number
-    title: string
-    subtitle: string
-    email: string
-    keywords: string
-    description: string
-    domain: string
-    record: string
-    keywordsList: string[]
-    ipBlackList?: string[]
-    emailBlackList?: string[]
-    keywordBlackList?: string[]
+  type Blacklist = IdentifiableEntity<{
+    ip: string[]
+    email: string[]
+    keyword: string[]
   }>
 
   type Comment = IdentifiableEntity<{
