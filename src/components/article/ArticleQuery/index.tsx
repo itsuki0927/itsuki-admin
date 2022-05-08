@@ -22,8 +22,8 @@ const initialValues: ArticleSearchRequest = {
   publish: SELECT_ALL_VALUE,
   open: SELECT_ALL_VALUE,
   origin: SELECT_ALL_VALUE,
-  tag: SELECT_ALL_VALUE,
-  category: SELECT_ALL_VALUE,
+  tagId: SELECT_ALL_VALUE,
+  categoryId: SELECT_ALL_VALUE,
   banner: SELECT_ALL_VALUE,
 }
 
@@ -81,14 +81,14 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
           ]}
         />
         <ProFormSelect
-          name='tag'
+          name='tagId'
           label='标签'
           options={[{ label: '全部标签', value: SELECT_ALL_VALUE }].concat(
             tags?.tags.data.map((item) => ({ label: item.name, value: item.id })) ?? []
           )}
         />
         <ProFormSelect
-          name='category'
+          name='categoryId'
           label='分类'
           options={[{ label: '全部分类', value: SELECT_ALL_VALUE }].concat(
             categories?.categories.map((item) => ({ label: item.name, value: item.id })) ?? []

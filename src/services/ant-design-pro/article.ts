@@ -34,8 +34,8 @@ export type ArticleSearchRequest = BaseSearchRequest<{
   open?: ArticleOpen
   origin?: ArticleOrigin
   banner?: ArticleBanner
-  tag?: number
-  category?: number
+  tagId?: number
+  categoryId?: number
 }>
 
 /**
