@@ -1,5 +1,5 @@
+import { useLogin } from '@/hooks/admin'
 import type { LoginParams } from '@/services/ant-design-pro/admin'
-import { login } from '@/services/ant-design-pro/admin'
 import { setToken } from '@/utils/auth'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import ProForm, { ProFormText } from '@ant-design/pro-form'
@@ -22,6 +22,7 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false)
   const [state, setState] = useState('')
+  const [login] = useLogin()
   const { initialState, setInitialState } = useModel('@@initialState')
 
   const fetchUserInfo = async () => {
@@ -35,14 +36,18 @@ const Login: React.FC = () => {
     }
   }
 
-  const handleSubmit = async (values: LoginParams) => {
+  const handleSubmit = async (input: LoginParams) => {
     setSubmitting(true)
     try {
       // 登录
-      const { state: s, token } = await login({ ...values })
-      if (s === 'OK') {
+      const { data } = await login({
+        variables: {
+          input,
+        },
+      })
+      if (data?.login.state === 'OK') {
         message.success('登陆成功')
-        setToken(token)
+        setToken(data.login.token)
         await fetchUserInfo()
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return
