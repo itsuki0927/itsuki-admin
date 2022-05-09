@@ -4,7 +4,7 @@ const Settings: LayoutSettings & {
   pwa?: boolean
   logo?: string
 } = {
-  title: 'Blog Admin',
+  title: 'Itsuki Admin',
   pwa: false,
   logo: 'https://static.itsuki.cn/logo.png',
   iconfontUrl: '',
