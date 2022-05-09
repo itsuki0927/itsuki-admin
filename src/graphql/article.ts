@@ -49,6 +49,8 @@ export const QUERY_ARTICLE = gql`
   query findArticle($id: ID!) {
     article(id: $id) {
       id
+      createAt
+      updateAt
       title
       description
       content
@@ -82,6 +84,8 @@ export const QUERY_ARTICLES = gql`
     articles(search: $search) {
       data {
         id
+        createAt
+        updateAt
         title
         publish
         description

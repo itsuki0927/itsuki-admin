@@ -16,8 +16,10 @@ export type UpdateCategoryInput = CreateCategoryInput & ID
 
 export const QUERY_CATEGORY = gql`
   fragment CategoryFragment on Category {
-    name
     id
+    createAt
+    updateAt
+    name
     path
     description
     count

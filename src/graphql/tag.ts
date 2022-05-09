@@ -35,9 +35,11 @@ export const QUERY_TAG = gql`
     tags(search: $search) {
       total
       data {
+        id
+        createAt
+        updateAt
         name
         path
-        id
         expand
         description
         count

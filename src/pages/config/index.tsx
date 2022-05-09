@@ -15,7 +15,7 @@ type ConfigStateKeys = 'base' | 'account' | 'auth'
 
 const menuMap = {
   base: {
-    text: '基本设置',
+    text: '黑名单设置',
     icon: <SettingOutlined />,
   },
   account: {

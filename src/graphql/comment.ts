@@ -27,6 +27,8 @@ export const QUERY_COMMENTS = gql`
       total
       data {
         id
+        createAt
+        updateAt
         nickname
         email
         website
@@ -64,10 +66,12 @@ export const UPDATE_COMMENT_STATE = gql`
 export const QUERY_COMMENT = gql`
   query fetchComment($id: ID!) {
     comment(id: $id) {
+      id
+      createAt
+      updateAt
       nickname
       email
       website
-      id
       ip
       articleTitle
       articleDescription
