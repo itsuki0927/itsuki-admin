@@ -2,11 +2,10 @@ import { useLogin } from '@/hooks/admin'
 import type { LoginParams } from '@/services/ant-design-pro/admin'
 import { setToken } from '@/utils/auth'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import ProForm, { ProFormText } from '@ant-design/pro-form'
+import { LoginFormPage, ProFormText } from '@ant-design/pro-form'
 import { Alert, message } from 'antd'
 import React, { useState } from 'react'
-import { history, Link, useModel } from 'umi'
-import styles from './index.less'
+import { history, useModel } from 'umi'
 
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
   <Alert
@@ -27,7 +26,6 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.()
-    console.log('userInfo:', userInfo)
     if (userInfo) {
       await setInitialState((s: any) => ({
         ...s,
@@ -66,73 +64,57 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to='/'>
-              <img alt='logo' className={styles.logo} src='/logo.svg' />
-              <span className={styles.title}>博客后台管理系统</span>
-            </Link>
-          </div>
-          <div className={styles.desc}>博客后台管理系统</div>
-        </div>
-
-        <div className={styles.main}>
-          <ProForm<LoginParams>
-            initialValues={{
-              autoLogin: true,
-            }}
-            submitter={{
-              searchConfig: {
-                submitText: '登录',
-              },
-              render: (_, dom) => dom.pop(),
-              submitButtonProps: {
-                loading: submitting,
-                size: 'large',
-                block: true,
-              },
-            }}
-            onFinish={async (values) => {
-              await handleSubmit(values)
-            }}
-          >
-            {state === 'NOT_OK' && <LoginMessage content={'账户或密码错误(admin/ant.design)'} />}
-            <ProFormText
-              name='username'
-              fieldProps={{
-                size: 'large',
-                prefix: <UserOutlined className={styles.prefixIcon} />,
-              }}
-              initialValue='itsuki'
-              placeholder='用户名'
-              rules={[
-                {
-                  required: true,
-                  message: '请输入用户名!',
-                },
-              ]}
-            />
-            <ProFormText.Password
-              name='password'
-              initialValue='123456'
-              fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined className={styles.prefixIcon} />,
-              }}
-              placeholder='密码'
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码！',
-                },
-              ]}
-            />
-          </ProForm>
-        </div>
-      </div>
-    </div>
+    <LoginFormPage
+      backgroundImageUrl='https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png'
+      logo='https://static.itsuki.cn/logo.png'
+      title='Itsuki Blog Admin'
+      subTitle='Itsuki Blog 博客后台管理系统'
+      initialValues={{
+        autoLogin: true,
+      }}
+      submitter={{
+        searchConfig: {
+          submitText: '登录',
+        },
+        render: (_, dom) => dom.pop(),
+        submitButtonProps: {
+          loading: submitting,
+          size: 'large',
+          block: true,
+        },
+      }}
+      message={state === 'NOT_OK' && <LoginMessage content='账户或密码错误' />}
+      onFinish={handleSubmit}
+    >
+      <ProFormText
+        name='username'
+        fieldProps={{
+          size: 'large',
+          prefix: <UserOutlined />,
+        }}
+        placeholder='用户名'
+        rules={[
+          {
+            required: true,
+            message: '请输入用户名!',
+          },
+        ]}
+      />
+      <ProFormText.Password
+        name='password'
+        fieldProps={{
+          size: 'large',
+          prefix: <LockOutlined />,
+        }}
+        placeholder='密码'
+        rules={[
+          {
+            required: true,
+            message: '请输入密码！',
+          },
+        ]}
+      />
+    </LoginFormPage>
   )
 }
 
