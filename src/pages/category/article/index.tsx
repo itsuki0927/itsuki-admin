@@ -16,6 +16,7 @@ import {
 } from '@/graphql/category'
 import type { ID } from '@/helper/http.interface'
 import type { API } from '@/services/ant-design-pro/typings'
+import { getBlogCategoryUrl } from '@/transforms/url'
 import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { useMutation, useQuery } from '@apollo/client'
@@ -176,7 +177,13 @@ const ArticleCategoryList = () => {
                     删除
                   </Button>
                   <Divider type='vertical' />
-                  <Button size='small' icon={<LinkOutlined />} type='link' target='_blank'>
+                  <Button
+                    size='small'
+                    icon={<LinkOutlined />}
+                    href={getBlogCategoryUrl(category.path)}
+                    type='link'
+                    target='_blank'
+                  >
                     查看
                   </Button>
                 </div>

@@ -3,10 +3,11 @@ import { TagModal } from '@/components/tag'
 import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
+import { getBlogTagUrl } from '@/transforms/url'
 import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Button, message, Modal, Table } from 'antd'
+import { Button, message, Modal, Space, Table } from 'antd'
 import { useRef, useState } from 'react'
 
 const TagList = () => {
@@ -115,12 +116,9 @@ const TagList = () => {
       align: 'center',
       width: 250,
       render: (_, entity) => (
-        <div>
+        <Space>
           <Button type='text' icon={<EditOutlined />} size='small' onClick={handleUpdate(entity)}>
             编辑
-          </Button>
-          <Button type='link' icon={<LinkOutlined />} size='small'>
-            查看
           </Button>
           <Button
             type='text'
@@ -131,7 +129,15 @@ const TagList = () => {
           >
             删除
           </Button>
-        </div>
+          <Button
+            type='link'
+            href={getBlogTagUrl(entity.path)}
+            icon={<LinkOutlined />}
+            size='small'
+          >
+            查看
+          </Button>
+        </Space>
       ),
     },
   ]

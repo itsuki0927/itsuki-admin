@@ -7,6 +7,7 @@ import { useArticles, useUpdateArticleBanner, useUpdateArticleState } from '@/ho
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
+import { getBlogArticleUrl } from '@/transforms/url'
 import {
   CheckOutlined,
   CommentOutlined,
@@ -286,7 +287,14 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
           >
             {article.banner === ArticleBanner.YES ? '移除轮播' : '加入轮播'}
           </Button>
-          <Button size='small' block type='link' target='_blank' icon={<LinkOutlined />}>
+          <Button
+            size='small'
+            block
+            type='link'
+            target='_blank'
+            href={getBlogArticleUrl(article.id)}
+            icon={<LinkOutlined />}
+          >
             宿主页面
           </Button>
         </Space>
