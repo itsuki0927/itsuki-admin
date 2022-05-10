@@ -4,19 +4,7 @@ import { formatDate } from '@/transforms/date'
 import { getGravatarUrl } from '@/transforms/gravatar'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons'
-import {
-  Avatar,
-  Button,
-  Comment,
-  Divider,
-  Drawer,
-  Empty,
-  Row,
-  Space,
-  Spin,
-  Tag,
-  Typography,
-} from 'antd'
+import { Avatar, Button, Comment, Divider, Drawer, Empty, Row, Spin, Tag, Typography } from 'antd'
 import { history } from 'umi'
 
 interface ArticleCommentProps {

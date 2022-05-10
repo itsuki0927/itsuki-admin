@@ -27,7 +27,19 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import { DrawerForm } from '@ant-design/pro-form'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { Avatar, Button, Form, Input, message, Modal, Popover, Space, Tag, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popover,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 type CommentTableProps = {
@@ -51,7 +63,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
 
   useImperativeHandle(ref, () => ({
     refresh: () => {
-      actionRef?.current?.reload()
+      actionRef.current?.reload()
     },
   }))
 
@@ -202,9 +214,11 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
           <span>
             网址：
             {website ? (
-              <Typography.Link underline target='_blank' rel='noreferrer' href={website}>
-                点击打开
-              </Typography.Link>
+              <Tooltip overlay={website}>
+                <Typography.Link underline target='_blank' rel='noreferrer' href={website}>
+                  点击打开
+                </Typography.Link>
+              </Tooltip>
             ) : (
               '-'
             )}
