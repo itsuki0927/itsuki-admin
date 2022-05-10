@@ -17,7 +17,7 @@ const commentStateMap = new Map(
       id: CommentState.Auditing,
       name: '待审核',
       icon: <EditOutlined />,
-      color: 'blue',
+      color: 'gray',
     },
     {
       id: CommentState.Published,

@@ -1,4 +1,7 @@
-import type {
+import {
+  ADMIN_COMMENT,
+  CreateAdminCommentInput,
+  CreateAdminCommentResponse,
   QueryCommentResponse,
   QueryCommentsResponse,
   QueryCommentsSearch,
@@ -34,4 +37,8 @@ export const useDeleteComment = () => {
 
 export const useUpdateCommentState = () => {
   return useMutation<void, UpdateCommentStateInput>(UPDATE_COMMENT_STATE)
+}
+
+export const useCreateAdminComment = () => {
+  return useMutation<CreateAdminCommentResponse, CreateAdminCommentInput>(ADMIN_COMMENT)
 }

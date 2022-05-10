@@ -1,10 +1,22 @@
-import { ps } from '@/constants/publish'
+import { cs } from '@/constants/comment'
 import type { CommentTree } from '@/services/ant-design-pro/comment'
 import { formatDate } from '@/transforms/date'
 import { getGravatarUrl } from '@/transforms/gravatar'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Avatar, Button, Comment, Divider, Drawer, Empty, Row, Spin, Tag, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  Comment,
+  Divider,
+  Drawer,
+  Empty,
+  Row,
+  Space,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd'
 import { history } from 'umi'
 
 interface ArticleCommentProps {
@@ -54,8 +66,8 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
                 <Divider type='vertical' />
                 {comment.province || '-'} · {comment.city || '-'}
                 <Divider type='vertical' />
-                <Tag color={ps(comment.state).color} icon={ps(comment.state).icon}>
-                  {ps(comment.state).name}
+                <Tag color={cs(comment.state).color} icon={cs(comment.state).icon}>
+                  {cs(comment.state).name}
                 </Tag>
               </div>
             }

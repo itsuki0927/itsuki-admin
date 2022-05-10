@@ -11,15 +11,23 @@ export type QueryCommentResponse = {
   comment: API.Comment
 }
 
+export type CreateAdminCommentResponse = {
+  adminComment: API.Comment
+}
+
+export type UpdateCommentResponse = {
+  updateComment: API.Comment
+}
+
 export type QueryCommentsSearch = SearchRequest<CommentSearchRequest>
 
 export type UpdateCommentStateInput = ID & Pick<API.Comment, 'state'>
 
 export type UpdateCommentInput = ID & MutationRequest<CommentUpdateRequest>
 
-export type UpdateCommentResponse = {
-  updateComment: API.Comment
-}
+export type CreateAdminCommentInput = MutationRequest<
+  Pick<API.Comment, 'content' | 'articleId' | 'parentId' | 'agent'>
+>
 
 export const QUERY_COMMENTS = gql`
   query findComments($search: CommentSearchRequest!) {
@@ -109,6 +117,16 @@ export const UPDATE_COMMENT = gql`
       expand
       parentId
       parentNickName
+    }
+  }
+`
+
+export const ADMIN_COMMENT = gql`
+  mutation adminCommnet($input: AdminCommentInput!) {
+    adminComment(input: $input) {
+      nickname
+      email
+      content
     }
   }
 `
