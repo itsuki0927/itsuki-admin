@@ -56,32 +56,31 @@ const TagList = () => {
       setTemp({ ...rest, expand })
     }
 
-  const confirmUpdate = (input: TagActionRequest) => {
+  const confirmUpdate = async (input: TagActionRequest) => {
     if (input.expand) {
       // eslint-disable-next-line no-param-reassign
       input.expand = JSON.stringify(input.expand)
     }
-    return updateTag({
+    await updateTag({
       variables: {
         id: temp?.id!,
         input,
       },
-    }).then(() => {
-      updateQuery(({ tags }) => ({
-        tags: {
-          ...tags,
-          data: tags.data.map((item) => {
-            if (item.id === temp?.id) {
-              return { ...item, ...input }
-            }
-            return item
-          }),
-        },
-      }))
-      setVisible(false)
-      actionRef.current?.reload()
-      message.success('更新成功')
     })
+    updateQuery(({ tags }) => ({
+      tags: {
+        ...tags,
+        data: tags.data.map((item) => {
+          if (item.id === temp?.id) {
+            return { ...item, ...input }
+          }
+          return item
+        }),
+      },
+    }))
+    setVisible(false)
+    actionRef.current?.reload()
+    message.success('更新成功')
   }
 
   const confirmCreate = async (input: TagActionRequest) => {

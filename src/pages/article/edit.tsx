@@ -110,20 +110,19 @@ const EditArticle = () => {
       <ArticleForm
         cacheID={cacheID}
         request={() => Promise.resolve(article)}
-        onFinish={(values) => {
-          return updateArticle({
+        onFinish={async (values) => {
+          await updateArticle({
             variables: {
               id: article.id,
               input: values,
             },
-          }).then(() => {
-            message.success('更新成功')
-            updateQuery((prevData) => ({
-              ...prevData,
-              ...values,
-            }))
-            return true
           })
+          message.success('更新成功')
+          updateQuery((prevData) => ({
+            ...prevData,
+            ...values,
+          }))
+          return true
         }}
       />
       <ArticleComment

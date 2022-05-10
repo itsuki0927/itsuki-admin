@@ -17,15 +17,14 @@ const CreateArticle = () => {
   return (
     <Container>
       <ArticleForm
-        onFinish={(input) => {
-          return createArticle({
+        onFinish={async (input) => {
+          await createArticle({
             variables: {
               input,
             },
-          }).then(() => {
-            message.success('发布成功')
-            return true
           })
+          message.success('发布成功')
+          return true
         }}
       />
     </Container>
