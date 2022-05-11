@@ -12,7 +12,7 @@ export type QueryArticlesResponse = {
 }
 
 export type QueryArticleResponse = {
-  article: ArticleDetailResponse
+  articleDetail: ArticleDetailResponse
 }
 
 export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>
@@ -46,8 +46,8 @@ export const DETELTE_ARTICLE = gql`
 `
 
 export const QUERY_ARTICLE = gql`
-  query findArticle($id: ID!) {
-    article(id: $id) {
+  query findArticleDetail($id: ID!) {
+    articleDetail(id: $id) {
       id
       createAt
       updateAt
@@ -70,11 +70,11 @@ export const QUERY_ARTICLE = gql`
         name
         id
       }
-      category {
-        name
-        path
-        id
-      }
+      # category {
+      #   name
+      #   path
+      #   id
+      # }
     }
   }
 `
