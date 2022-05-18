@@ -1,22 +1,31 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
+import { SYNC_TAG_COUNT } from '@/graphql/tag'
 import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { getBlogTagUrl } from '@/transforms/url'
-import { DeleteOutlined, EditOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LinkOutlined,
+  PlusOutlined,
+  SyncOutlined,
+} from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
+import { useMutation } from '@apollo/client'
 import { Button, message, Modal, Space, Table } from 'antd'
 import { useRef, useState } from 'react'
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const [fetchTags, { updateQuery }] = useTag()
+  const [fetchTags, { updateQuery, refetch, loading }] = useTag()
   const [createTag] = useCreateTag()
   const [deleteTag] = useDeleteTag()
   const [updateTag] = useUpdateTag()
+  const [syncTagCount] = useMutation(SYNC_TAG_COUNT)
   const actionRef = useRef<ActionType>()
 
   const handleRemove = (entity: API.Tag) => () => {
@@ -148,6 +157,7 @@ const TagList = () => {
         headerTitle='标签管理'
         columns={columns}
         search={false}
+        loading={loading}
         actionRef={actionRef}
         rowKey='id'
         request={async (search) => {
@@ -156,6 +166,7 @@ const TagList = () => {
               search,
             },
           })
+          console.log('data', data?.tags)
           return data?.tags!
         }}
         rowSelection={{
@@ -193,7 +204,20 @@ const TagList = () => {
           setting: false,
         }}
         toolBarRender={() => [
-          <Button key='3' type='primary' onClick={handleCreate}>
+          <Button
+            key='sync'
+            icon={<SyncOutlined />}
+            onClick={() => {
+              syncTagCount().then(async () => {
+                await refetch()
+                actionRef.current?.reload()
+                message.success('同步成功')
+              })
+            }}
+          >
+            同步数量
+          </Button>,
+          <Button key='create' type='primary' onClick={handleCreate}>
             <PlusOutlined />
             新建标签
           </Button>,

@@ -82,3 +82,9 @@ export const UPDATE_TAG = gql`
     }
   }
 `
+
+export const SYNC_TAG_COUNT = gql`
+  mutation syncAllTagCount {
+    syncAllTagCount
+  }
+`
