@@ -66,3 +66,9 @@ export const DELETE_CATEGORY = gql`
     deleteCategory(id: $id)
   }
 `
+
+export const SYNC_CATEGORY_COUNT = gql`
+  mutation syncAllCategoryCount {
+    syncAllCategoryCount
+  }
+`

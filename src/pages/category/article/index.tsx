@@ -8,6 +8,7 @@ import type {
   CreateCategoryInput,
   UpdateCategoryInput,
 } from '@/graphql/category'
+import { SYNC_CATEGORY_COUNT } from '@/graphql/category'
 import {
   CREATE_CATEGORY,
   DELETE_CATEGORY,
@@ -17,7 +18,13 @@ import {
 import type { ID } from '@/helper/http.interface'
 import type { API } from '@/services/ant-design-pro/typings'
 import { getBlogCategoryUrl } from '@/transforms/url'
-import { DeleteOutlined, EditOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LinkOutlined,
+  ReloadOutlined,
+  SyncOutlined,
+} from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { useMutation, useQuery } from '@apollo/client'
 import { Button, Divider, Empty, message, Modal, Space, Typography } from 'antd'
@@ -28,9 +35,29 @@ const ArticleCategoryList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Category | undefined>()
   const { data, loading, updateQuery, refetch } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
-  const [createCategory] = useMutation<CreateCategoryResponse, CreateCategoryInput>(CREATE_CATEGORY)
+  const [createCategory] = useMutation<CreateCategoryResponse, CreateCategoryInput>(
+    CREATE_CATEGORY,
+    {
+      update: (cache, { data }) => {
+        const newCategory = data?.createCategory
+        const existCategoryies = cache.readQuery<QueryCategoryResponse>({
+          query: QUERY_CATEGORY,
+        })
+        if (existCategoryies && newCategory) {
+          cache.writeQuery({
+            query: QUERY_CATEGORY,
+            data: {
+              categories: [...existCategoryies.categories, newCategory],
+            },
+          })
+        }
+        return true
+      },
+    }
+  )
   const [updateCategory] = useMutation<UpdateCategoryResponse, UpdateCategoryInput>(UPDATE_CATEGORY)
   const [deleteCategory] = useMutation<number, ID>(DELETE_CATEGORY)
+  const [syncCategoryCount] = useMutation(SYNC_CATEGORY_COUNT)
 
   const handleRemove = (entity: API.Category) => () => {
     Modal.confirm({
@@ -83,22 +110,24 @@ const ArticleCategoryList = () => {
       // eslint-disable-next-line no-param-reassign
       input.expand = JSON.stringify(input.expand)
     }
-    // 有ID 表示更新
-    await updateCategory({
-      variables: {
-        id: temp?.id!,
-        input,
-      },
-    })
-    updateQuery((prevData) => ({
-      categories: prevData.categories.map((item) => {
-        if (item.id === temp?.id) {
-          return { ...item, ...input }
-        }
-        return item
-      }),
-    }))
-    reset('更新成功')
+    if (temp?.id) {
+      // 有ID 表示更新
+      await updateCategory({
+        variables: {
+          id: temp.id,
+          input,
+        },
+      })
+      updateQuery((prevData) => ({
+        categories: prevData.categories.map((item) => {
+          if (item.id === temp.id) {
+            return { ...item, ...input }
+          }
+          return item
+        }),
+      }))
+      reset('更新成功')
+    }
   }
 
   const confirmCreate = async (input: CategoryActionInput) => {
@@ -106,16 +135,12 @@ const ArticleCategoryList = () => {
       // eslint-disable-next-line no-param-reassign
       input.expand = JSON.stringify(input.expand)
     }
-    console.log('input', input)
 
-    const { data: newData } = await createCategory({
+    await createCategory({
       variables: {
         input,
       },
     })
-    updateQuery((prevData) => ({
-      categories: prevData.categories.concat(newData?.createCategory!),
-    }))
     reset('创建成功')
   }
 
@@ -128,6 +153,18 @@ const ArticleCategoryList = () => {
         headerBordered
         extra={
           <Space>
+            <Button
+              key='sync'
+              icon={<SyncOutlined />}
+              onClick={() => {
+                syncCategoryCount().then(async () => {
+                  await refetch()
+                  message.success('同步成功')
+                })
+              }}
+            >
+              同步数量
+            </Button>
             <Button key='create' type='primary' icon={<EditOutlined />} onClick={handleCreate}>
               创建分类
             </Button>
@@ -140,7 +177,7 @@ const ArticleCategoryList = () => {
         {!data?.categories.length ? (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
-          <div>
+          <ProCard ghost loading={loading}>
             {data.categories.map((category) => (
               <div key={category.id} className={styles.categoryNode}>
                 <div className={styles.content}>
@@ -189,7 +226,7 @@ const ArticleCategoryList = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </ProCard>
         )}
         <CategoryModal
           title={temp ? '编辑分类' : '添加分类'}
