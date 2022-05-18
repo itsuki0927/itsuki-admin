@@ -1,8 +1,9 @@
 import { getUEditorCache } from '@/components/common/UniversalEditor'
-import type {
+import {
   QueryArticleResponse,
   QueryArticleSearch,
   QueryArticlesResponse,
+  SYNC_ARTICLE_COMMENT_COUNT,
   UpdateArticleInput,
 } from '@/graphql/article'
 import {
@@ -90,4 +91,8 @@ export const useArticle = (id: number) => {
   })
 
   return { article, cacheID, loading, updateQuery } as const
+}
+
+export const useSyncArticleCommentCount = () => {
+  return useMutation<number, { ids: number[] }>(SYNC_ARTICLE_COMMENT_COUNT)
 }

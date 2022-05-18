@@ -108,3 +108,9 @@ export const QUERY_ARTICLES = gql`
     }
   }
 `
+
+export const SYNC_ARTICLE_COMMENT_COUNT = gql`
+  mutation syncArticleCommentCount($ids: [ID]!) {
+    syncArticleCommentCount(ids: $ids)
+  }
+`

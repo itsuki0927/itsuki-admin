@@ -3,7 +3,12 @@ import { ao } from '@/constants/article/origin'
 import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
-import { useArticles, useUpdateArticleBanner, useUpdateArticleState } from '@/hooks/article'
+import {
+  useArticles,
+  useSyncArticleCommentCount,
+  useUpdateArticleBanner,
+  useUpdateArticleState,
+} from '@/hooks/article'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
@@ -20,6 +25,7 @@ import {
   RetweetOutlined,
   RollbackOutlined,
   SwapOutlined,
+  SyncOutlined,
   TagOutlined,
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
@@ -33,9 +39,10 @@ type ArticleTableProps = {
 }
 
 const ArticleTable = ({ query }: ArticleTableProps) => {
-  const [fetchArticles, { updateQuery }] = useArticles()
+  const [fetchArticles, { updateQuery, refetch }] = useArticles()
   const [updateState] = useUpdateArticleState()
   const [updateBanner] = useUpdateArticleBanner()
+  const [syncArticleCommentCount] = useSyncArticleCommentCount()
   const actionRef = useRef<ActionType>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
@@ -378,6 +385,25 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
               }}
             >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
+            </Button>
+            <Button
+              key='sync'
+              size='small'
+              type='text'
+              onClick={async () => {
+                await syncArticleCommentCount({
+                  variables: {
+                    ids: selectedRowKeys as any[],
+                  },
+                })
+                await refetch()
+                actionRef.current?.reload()
+                message.success('同步成功')
+                onCleanSelected()
+              }}
+            >
+              <SyncOutlined />
+              同步评论
             </Button>
             <TableDropdown
               onSelect={(key) => {
