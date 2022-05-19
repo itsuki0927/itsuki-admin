@@ -2,6 +2,7 @@ import type { ArticleActionRequest, ArticleDetailResponse } from '@/services/ant
 import ProCard from '@ant-design/pro-card'
 import ProForm from '@ant-design/pro-form'
 import { FooterToolbar } from '@ant-design/pro-layout'
+import { Space } from 'antd'
 import type { CSSProperties } from 'react'
 import ArticleBasic from './ArticleBasic'
 import ArticleCategorySelect from './ArticleCategorySelect'
@@ -33,19 +34,19 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
       }}
     >
-      <ProCard title='基本信息' style={style}>
-        <ArticleBasic />
-        <ArticleCategorySelect />
-        <ArticleCover />
-      </ProCard>
+      <Space size={24} direction='vertical'>
+        <ProCard title='基本信息'>
+          <ArticleBasic />
+          <ArticleCategorySelect />
+          <ArticleCover />
+        </ProCard>
 
-      <ProCard title='其他设置' style={style}>
         <ArticleOptions />
-      </ProCard>
 
-      <ProCard title='文章内容' style={style}>
-        <ArticleContent cacheID={cacheID} />
-      </ProCard>
+        <ProCard title='文章内容'>
+          <ArticleContent cacheID={cacheID} />
+        </ProCard>
+      </Space>
     </ProForm>
   )
 }
