@@ -29,7 +29,7 @@ const TagSelect = ({ onChange, value: propValue, tags, loading, onRefresh }: Tag
         <Typography.Text>暂无标签</Typography.Text>
       ) : (
         <Spin spinning={loading}>
-          <Space size={12}>
+          <Space size={12} wrap>
             {tags.map((tag) => {
               const check = value.includes(tag.value)
               return (
