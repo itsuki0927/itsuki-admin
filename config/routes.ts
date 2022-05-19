@@ -15,8 +15,8 @@ export default [
     path: '/article',
     name: '文章管理',
     icon: 'coffee',
-    redirect: '/article/list',
     routes: [
+      { path: '/article', redirect: '/article/list' },
       { path: '/article/create', name: '撰写文章', icon: 'smile', component: './article/create' },
       {
         path: '/article/edit/:id',
