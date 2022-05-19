@@ -39,7 +39,7 @@ type ArticleTableProps = {
 }
 
 const ArticleTable = ({ query }: ArticleTableProps) => {
-  const [fetchArticles, { updateQuery, refetch }] = useArticles()
+  const [fetchArticles, { updateQuery, loading, refetch }] = useArticles()
   const [updateState] = useUpdateArticleState()
   const [updateBanner] = useUpdateArticleBanner()
   const [syncArticleCommentCount] = useSyncArticleCommentCount()
@@ -313,6 +313,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     <ProTable
       headerTitle='文章列表'
       actionRef={actionRef}
+      loading={loading}
       search={false}
       params={omitSelectAllValue(query)}
       columns={columns}
@@ -426,7 +427,13 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
         )
       }}
       toolBarRender={() => [
-        <Button key='create' type='primary' onClick={() => history.push('/article/create')}>
+        <Button
+          size='small'
+          key='create'
+          type='primary'
+          onClick={() => history.push('/article/create')}
+          icon={<EditOutlined />}
+        >
           撰写文章
         </Button>,
       ]}

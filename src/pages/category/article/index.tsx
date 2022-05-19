@@ -154,6 +154,7 @@ const ArticleCategoryList = () => {
         extra={
           <Space>
             <Button
+              size='small'
               key='sync'
               icon={<SyncOutlined />}
               onClick={() => {
@@ -165,11 +166,17 @@ const ArticleCategoryList = () => {
             >
               同步数量
             </Button>
-            <Button key='create' type='primary' icon={<EditOutlined />} onClick={handleCreate}>
-              创建分类
-            </Button>
-            <Button key='refresh' icon={<ReloadOutlined />} onClick={() => refetch()}>
+            <Button size='small' key='refresh' icon={<ReloadOutlined />} onClick={() => refetch()}>
               刷新分类
+            </Button>
+            <Button
+              size='small'
+              key='create'
+              type='primary'
+              icon={<EditOutlined />}
+              onClick={handleCreate}
+            >
+              创建分类
             </Button>
           </Space>
         }

@@ -187,6 +187,7 @@ const TagList = () => {
         )}
         options={{
           search: {
+            size: 'small',
             name: 'name',
             onSearch: (name) => {
               fetchTags({
@@ -206,6 +207,7 @@ const TagList = () => {
         toolBarRender={() => [
           <Button
             key='sync'
+            size='small'
             icon={<SyncOutlined />}
             onClick={() => {
               syncTagCount().then(async () => {
@@ -217,7 +219,7 @@ const TagList = () => {
           >
             同步数量
           </Button>,
-          <Button key='create' type='primary' onClick={handleCreate}>
+          <Button size='small' key='create' type='primary' onClick={handleCreate}>
             <PlusOutlined />
             新建标签
           </Button>,
