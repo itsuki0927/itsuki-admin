@@ -24,51 +24,16 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      # 缓存文件
-      - name: Cache node modules
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: |
-            ~/.yarn
-            **/node_modules
-            build
-          # 如果源文件或者package.json修改就进行更新缓存
-          key: ${{ runner.os }}-admin-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          # 如果源文件更新但是没有更新package.json, 根据restore-keys读取之前的缓存
-          restore-keys: |
-            ${{ runner.os }}-admin-${{ hashFiles('**/yarn.lock') }}-
-
-      # 如果没有命中缓存, 执行yarn
-      - if: ${{ steps.yarn-cache.outputs.cache-hit == false }}
-        name: Install dependencies
-        continue-on-error: true
+      - name: Install dependencies
         run: yarn --frozen-lockfile
 
       # 构建
       - name: Run build
         run: yarn build
 
-  # 同步到服务器
-  syncToServer:
-    name: Sync To Server
-    runs-on: ubuntu-latest
-    needs: build
+      - name: ls
+        run: ls -a
 
-    steps:
-      - uses: actions/checkout@v3
-
-      # 缓存中恢复文件
-      - name: Restore build folder
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.yarn
-            **/node_modules
-            build
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
       # 上传到服务器
       - name: Upload files to server
         uses: appleboy/scp-action@master
@@ -77,13 +42,13 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           source: dist
-          target: '~/blog'
+          target: '/usr/share/nginx/html'
 
   # 发布
   deploy:
     name: Deployment
     runs-on: ubuntu-latest
-    needs: [build, syncToServer]
+    needs: build
 
     steps:
       - uses: actions/checkout@v3
@@ -97,8 +62,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             echo "[deploy] start deployment..."
-
-            mv ~/blog/dist /usr/share/nginx/html
 
             # 进到当前文件夹
             cd /usr/share/nginx/html
