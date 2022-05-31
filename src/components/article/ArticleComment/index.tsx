@@ -1,9 +1,10 @@
+import { CommentAvatar } from '@/components/common'
 import { cs } from '@/constants/comment'
 import type { CommentTree } from '@/services/ant-design-pro/comment'
 import { formatDate } from '@/transforms/date'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Avatar, Button, Comment, Divider, Drawer, Empty, Row, Spin, Tag, Typography } from 'antd'
+import { Button, Comment, Divider, Drawer, Empty, Row, Spin, Tag, Typography } from 'antd'
 import { history } from 'umi'
 
 interface ArticleCommentProps {
@@ -38,10 +39,10 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
             ]}
             author={
               <div>
-                {comment.website ? (
+                {comment.loginType === 'github' ? (
                   <a
-                    href={comment.website}
-                    title={comment.website}
+                    href={'https://github.com/' + comment.nickname}
+                    title={comment.nickname}
                     target='_blank'
                     rel='noreferrer'
                   >
@@ -59,11 +60,11 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
               </div>
             }
             avatar={
-              <Avatar
-                shape='square'
-                size='large'
-                src={getGravatarUrl(comment.email)}
-                alt={comment.nickname}
+              <CommentAvatar
+                nickname={comment.nickname}
+                avatar={comment.avatar}
+                loginType={comment.loginType}
+                size='default'
               />
             }
             content={<Typography.Paragraph>{comment.content}</Typography.Paragraph>}
