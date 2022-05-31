@@ -76,8 +76,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
-          source: 'dist'
-          target: '/usr/share/nginx/html'
+          source: dist
+          target: '~/blog'
 
   # 发布
   deploy:
@@ -97,6 +97,9 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             echo "[deploy] start deployment..."
+
+            mv ~/blog/dist /usr/share/nginx/html
+
             # 进到当前文件夹
             cd /usr/share/nginx/html
 
