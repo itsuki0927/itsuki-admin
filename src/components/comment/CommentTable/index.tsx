@@ -39,13 +39,14 @@ export type CommentTableRef = {
 }
 
 const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail }, ref) => {
-  const [fetchComments, { updateQuery, loading }] = useComments()
+  const [fetchComments, { updateQuery }] = useComments()
   const [deleteComment] = useDeleteComment()
   const [updateCommentState] = useUpdateCommentState()
   const [createAdminComment] = useCreateAdminComment()
   const formRef = useRef<ProFormInstance | undefined>()
   const actionRef = useRef<ActionType | undefined>()
   const commentRef = useRef<API.Comment | undefined>()
+  const [loading, setLoading] = useState(false)
   const [commentVisible, setCommentVisible] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -403,11 +404,15 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
         loading={loading}
         beforeSearchSubmit={(target) => omitSelectAllValue(target)}
         request={async (search) => {
+          setLoading(true)
           const { data } = await fetchComments({
             variables: {
               search,
             },
           })
+          setTimeout(() => {
+            setLoading(false)
+          }, 200)
           return data?.comments!
         }}
       />

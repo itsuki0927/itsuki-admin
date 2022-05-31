@@ -31,7 +31,7 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable, { TableDropdown } from '@ant-design/pro-table'
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { history, Link } from 'umi'
 
 type ArticleTableProps = {
@@ -39,10 +39,11 @@ type ArticleTableProps = {
 }
 
 const ArticleTable = ({ query }: ArticleTableProps) => {
-  const [fetchArticles, { updateQuery, loading, refetch }] = useArticles()
+  const [fetchArticles, { updateQuery, refetch }] = useArticles()
   const [updateState] = useUpdateArticleState()
   const [updateBanner] = useUpdateArticleBanner()
   const [syncArticleCommentCount] = useSyncArticleCommentCount()
+  const [loading, setLoading] = useState(false)
   const actionRef = useRef<ActionType>()
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
@@ -51,6 +52,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
+        setLoading(true)
         updateState({
           variables: {
             ids,
@@ -70,6 +72,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
           }))
           message.success('变更成功')
           actionRef.current?.reload()
+          setLoading(false)
           cb?.()
         })
       },
@@ -82,6 +85,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
+        setLoading(true)
         updateBanner({
           variables: {
             ids,
@@ -101,6 +105,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
           }))
           message.success('变更成功')
           actionRef.current?.reload()
+          setLoading(false)
           cb?.()
         })
       },
@@ -319,11 +324,15 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       columns={columns}
       rowKey='id'
       request={async (search) => {
+        setLoading(true)
         const { data } = await fetchArticles({
           variables: {
             search,
           },
         })
+        setTimeout(() => {
+          setLoading(false)
+        }, 100)
         return data?.articles!
       }}
       rowSelection={{
@@ -392,6 +401,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
               size='small'
               type='text'
               onClick={async () => {
+                setLoading(true)
                 await syncArticleCommentCount({
                   variables: {
                     ids: selectedRowKeys as any[],
@@ -400,6 +410,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
                 await refetch()
                 actionRef.current?.reload()
                 message.success('同步成功')
+                setLoading(false)
                 onCleanSelected()
               }}
             >
