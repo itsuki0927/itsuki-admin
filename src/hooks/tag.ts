@@ -7,16 +7,15 @@ import type {
   UpdateTagInput,
   UpdateTagResponse,
 } from '@/graphql/tag'
-import { CREATE_TAG, DELETE_TAG, QUERY_TAG, UPDATE_TAG } from '@/graphql/tag'
+import { CREATE_TAG, DELETE_TAG, QUERY_TAG, SYNC_TAG_COUNT, UPDATE_TAG } from '@/graphql/tag'
 import type { ID } from '@/helper/http.interface'
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
-
-export const useTag = () => {
-  return useLazyQuery<QueryTagResponse, QueryTagSearch>(QUERY_TAG)
-}
+import { useLazyQuery, useMutation } from '@apollo/client'
 
 export const useAllTag = () => {
-  return useQuery<QueryTagResponse, QueryTagSearch>(QUERY_TAG, {
+  const [fetchTags, { updateQuery, refetch, data }] = useLazyQuery<
+    QueryTagResponse,
+    QueryTagSearch
+  >(QUERY_TAG, {
     variables: {
       search: {
         current: DEFAULT_CURRENT,
@@ -24,16 +23,25 @@ export const useAllTag = () => {
       },
     },
   })
+  return { fetchTags, updateQuery, refetch, data } as const
 }
 
 export const useCreateTag = () => {
-  return useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
+  const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
+  return createTag
 }
 
 export const useDeleteTag = () => {
-  return useMutation<void, ID>(DELETE_TAG)
+  const [deleteTag] = useMutation<void, ID>(DELETE_TAG)
+  return deleteTag
 }
 
 export const useUpdateTag = () => {
-  return useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG)
+  const [updateTag] = useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG)
+  return updateTag
+}
+
+export const useSyncTagCount = () => {
+  const [syncTagCount] = useMutation(SYNC_TAG_COUNT)
+  return syncTagCount
 }

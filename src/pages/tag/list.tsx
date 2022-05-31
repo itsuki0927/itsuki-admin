@@ -1,7 +1,6 @@
 import { Container } from '@/components/common'
 import { TagModal } from '@/components/tag'
-import { SYNC_TAG_COUNT } from '@/graphql/tag'
-import { useCreateTag, useDeleteTag, useTag, useUpdateTag } from '@/hooks/tag'
+import { useAllTag, useCreateTag, useDeleteTag, useSyncTagCount, useUpdateTag } from '@/hooks/tag'
 import type { TagActionRequest } from '@/services/ant-design-pro/tag'
 import type { API } from '@/services/ant-design-pro/typings'
 import { getBlogTagUrl } from '@/transforms/url'
@@ -14,18 +13,18 @@ import {
 } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import { useMutation } from '@apollo/client'
 import { Button, message, Modal, Space, Table } from 'antd'
 import { useRef, useState } from 'react'
 
 const TagList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Tag | undefined>()
-  const [fetchTags, { updateQuery, refetch, loading }] = useTag()
-  const [createTag] = useCreateTag()
-  const [deleteTag] = useDeleteTag()
-  const [updateTag] = useUpdateTag()
-  const [syncTagCount] = useMutation(SYNC_TAG_COUNT)
+  const [loading, setLoading] = useState(false)
+  const { fetchTags, updateQuery, refetch } = useAllTag()
+  const createTag = useCreateTag()
+  const deleteTag = useDeleteTag()
+  const updateTag = useUpdateTag()
+  const syncTagCount = useSyncTagCount()
   const actionRef = useRef<ActionType>()
 
   const handleRemove = (entity: API.Tag) => () => {
@@ -33,6 +32,7 @@ const TagList = () => {
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
       onOk() {
+        setLoading(true)
         deleteTag({ variables: { id: entity.id } }).then(() => {
           updateQuery((prevData) => {
             return {
@@ -45,6 +45,7 @@ const TagList = () => {
           })
           message.success('删除成功')
           actionRef.current?.reload()
+          setLoading(false)
         })
       },
     })
@@ -71,6 +72,7 @@ const TagList = () => {
       // eslint-disable-next-line no-param-reassign
       input.expand = JSON.stringify(input.expand)
     }
+    setLoading(true)
     await updateTag({
       variables: {
         id: temp?.id!,
@@ -91,10 +93,12 @@ const TagList = () => {
     setVisible(false)
     actionRef.current?.reload()
     message.success('更新成功')
+    setLoading(false)
+    setTemp(undefined)
   }
 
   const confirmCreate = async (input: TagActionRequest) => {
-    console.log('input', input)
+    setLoading(true)
     const { data: newData } = await createTag({
       variables: {
         input,
@@ -110,6 +114,7 @@ const TagList = () => {
     setVisible(false)
     actionRef.current?.reload()
     message.success('创建成功')
+    setLoading(false)
   }
 
   const columns: ProColumns<API.Tag>[] = [
@@ -161,12 +166,13 @@ const TagList = () => {
         actionRef={actionRef}
         rowKey='id'
         request={async (search) => {
+          setLoading(true)
           const { data } = await fetchTags({
             variables: {
               search,
             },
           })
-          console.log('data', data?.tags)
+          setLoading(false)
           return data?.tags!
         }}
         rowSelection={{
@@ -210,10 +216,12 @@ const TagList = () => {
             size='small'
             icon={<SyncOutlined />}
             onClick={() => {
+              setLoading(true)
               syncTagCount().then(async () => {
                 await refetch()
                 actionRef.current?.reload()
                 message.success('同步成功')
+                setLoading(false)
               })
             }}
           >
@@ -225,7 +233,9 @@ const TagList = () => {
           </Button>,
         ]}
       />
+
       <TagModal
+        key={temp?.id}
         title={temp ? '编辑标签' : '添加标签'}
         tag={temp}
         visible={visible}
