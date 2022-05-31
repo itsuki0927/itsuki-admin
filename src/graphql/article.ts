@@ -103,6 +103,9 @@ export const QUERY_ARTICLES = gql`
           id
           name
         }
+        category {
+          name
+        }
       }
       total
     }
