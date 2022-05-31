@@ -6,7 +6,7 @@ export default [
     routes: [
       {
         path: '/user',
-        routes: [{ name: '登录', path: '/user/login', component: './admin/Login' }],
+        routes: [{ name: '登录', path: '/user/login', component: './admin/login' }],
       },
       { component: './404' },
     ],
