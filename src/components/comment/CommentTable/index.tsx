@@ -18,7 +18,6 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  GithubOutlined,
   HeartOutlined,
   LinkOutlined,
   MailOutlined,
@@ -28,20 +27,7 @@ import type { ProFormInstance } from '@ant-design/pro-form'
 import { DrawerForm } from '@ant-design/pro-form'
 import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
-import {
-  Avatar,
-  Badge,
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Popover,
-  Space,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd'
+import { Button, Form, Input, message, Modal, Popover, Space, Tag, Tooltip, Typography } from 'antd'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 type CommentTableProps = {
@@ -53,14 +39,13 @@ export type CommentTableRef = {
 }
 
 const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail }, ref) => {
-  const [fetchComments, { updateQuery }] = useComments()
+  const [fetchComments, { updateQuery, loading }] = useComments()
   const [deleteComment] = useDeleteComment()
   const [updateCommentState] = useUpdateCommentState()
   const [createAdminComment] = useCreateAdminComment()
   const formRef = useRef<ProFormInstance | undefined>()
   const actionRef = useRef<ActionType | undefined>()
   const commentRef = useRef<API.Comment | undefined>()
-  const [loading, setLoading] = useState(false)
   const [commentVisible, setCommentVisible] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -418,13 +403,11 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
         loading={loading}
         beforeSearchSubmit={(target) => omitSelectAllValue(target)}
         request={async (search) => {
-          setLoading(true)
           const { data } = await fetchComments({
             variables: {
               search,
             },
           })
-          setLoading(false)
           return data?.comments!
         }}
       />

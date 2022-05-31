@@ -1,4 +1,3 @@
-import { GithubOutlined, QqOutlined } from '@ant-design/icons'
 import type { BadgeProps } from 'antd'
 import { Avatar, Badge, Popover } from 'antd'
 
@@ -10,7 +9,7 @@ interface CommentAvatarProps {
 }
 
 const CommentAvatar = ({ nickname, avatar, loginType, size = 'small' }: CommentAvatarProps) => {
-  const icon = loginType === 'github' ? <GithubOutlined /> : <QqOutlined />
+  const icon = loginType === 'github' ? 'G' : 'Q'
   const color = loginType === 'github' ? '#000' : 'blue'
 
   return (
