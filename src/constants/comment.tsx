@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons'
 
 /** 留言板 */
-export const COMMENT_GUESTBOOK_ID = 0
+export const COMMENT_GUESTBOOK_ID = 10000
 
 /** 评论状态 */
 export enum CommentState {

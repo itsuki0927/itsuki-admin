@@ -1,4 +1,4 @@
-import { UniversalEditor } from '@/components/common'
+import { CommentAvatar, UniversalEditor } from '@/components/common'
 import { CommentState, commentStates, COMMENT_GUESTBOOK_ID, cs } from '@/constants/comment'
 import { omitSelectAllValue, SELECT_ALL_VALUE } from '@/constants/common'
 import {
@@ -10,7 +10,6 @@ import {
 import type { CommentPatchRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
-import { getGravatarUrl } from '@/transforms/gravatar'
 import { markdownToHTML } from '@/transforms/markdown'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { getBlogArticleUrl } from '@/transforms/url'
@@ -19,8 +18,10 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
+  GithubOutlined,
   HeartOutlined,
   LinkOutlined,
+  MailOutlined,
   StopOutlined,
 } from '@ant-design/icons'
 import type { ProFormInstance } from '@ant-design/pro-form'
@@ -29,6 +30,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table'
 import ProTable from '@ant-design/pro-table'
 import {
   Avatar,
+  Badge,
   Button,
   Form,
   Input,
@@ -200,29 +202,33 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
       width: 240,
       key: 'profile',
       search: false,
-      render: (_, { email, nickname, website }) => (
+      render: (_, { email, nickname, loginType, avatar }) => (
         <Space direction='vertical'>
-          <span>
-            头像：
-            <Avatar shape='square' size='small' src={getGravatarUrl(email)} />
-          </span>
-          <span>名字：{nickname}</span>
-          <span>
-            邮箱：
+          <Space>
+            <CommentAvatar nickname={nickname} avatar={avatar} loginType={loginType} />
+            {nickname}
+          </Space>
+          <Space>
+            <MailOutlined />
             <Typography.Text copyable>{email || '-'}</Typography.Text>
-          </span>
-          <span>
-            网址：
-            {website ? (
-              <Tooltip overlay={website}>
-                <Typography.Link underline target='_blank' rel='noreferrer' href={website}>
+          </Space>
+          <Space>
+            <LinkOutlined />
+            {loginType === 'github' ? (
+              <Tooltip overlay={loginType}>
+                <Typography.Link
+                  underline
+                  target='_blank'
+                  rel='noreferrer'
+                  href={`https://github.com/${nickname}`}
+                >
                   点击打开
                 </Typography.Link>
               </Tooltip>
             ) : (
               '-'
             )}
-          </span>
+          </Space>
         </Space>
       ),
     },

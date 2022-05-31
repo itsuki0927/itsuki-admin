@@ -1,13 +1,18 @@
-import { UniversalEditor } from '@/components/common'
-import { commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
+import { CommentAvatar, UniversalEditor } from '@/components/common'
+import { CommentState, commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
 import type { CommentUpdateRequest } from '@/services/ant-design-pro/comment'
 import type { API } from '@/services/ant-design-pro/typings'
 import { formatDate } from '@/transforms/date'
-import { getGravatarUrl } from '@/transforms/gravatar'
 import { getSelectOptionsByState } from '@/transforms/option'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url'
-import { CheckOutlined, LinkOutlined, SendOutlined } from '@ant-design/icons'
+import {
+  CheckOutlined,
+  LinkOutlined,
+  MailOutlined,
+  SendOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import {
   DrawerForm,
   ProFormDigit,
@@ -15,7 +20,7 @@ import {
   ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-form'
-import { Avatar, Button, Divider, Form, Spin, Typography } from 'antd'
+import { Button, Divider, Form, Spin, Typography } from 'antd'
 
 type CommentDrawerProps = {
   comment?: API.Comment
@@ -33,6 +38,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
       layout='horizontal'
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 21 }}
+      width='40%'
       title='评论详情'
       onFinish={onFinish}
       {...rest}
@@ -53,16 +59,31 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
         </Form.Item>
         <Form.Item label='发布于'>{formatDate(comment?.createAt!)}</Form.Item>
         <Form.Item label='最后修改于'>{formatDate(comment?.updateAt!)}</Form.Item>
-        <ProFormSwitch name='fix' label='置顶评论' disabled />
+        <ProFormSwitch
+          name='fix'
+          label='置顶评论'
+          disabled={comment?.state !== CommentState.Published}
+        />
         <Form.Item label='用户头像'>
-          <Avatar shape='square' size='large' src={getGravatarUrl(comment?.email!)} />
+          <CommentAvatar
+            size='default'
+            nickname={comment?.nickname}
+            avatar={comment?.avatar}
+            loginType={comment?.loginType}
+          />
         </Form.Item>
         <ProFormText
+          fieldProps={{
+            prefix: <UserOutlined />,
+          }}
           label='用户昵称'
           name='nickname'
           rules={[{ required: true, message: '请输入用户昵称' }]}
         />
         <ProFormText
+          fieldProps={{
+            prefix: <MailOutlined />,
+          }}
           label='用户邮箱'
           name='email'
           rules={[
@@ -75,10 +96,11 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
           name='website'
           rules={[{ required: true, message: '请输入用户网址' }]}
           fieldProps={{
+            prefix: <LinkOutlined />,
             suffix: (
               <SendOutlined
                 onClick={() => {
-                  const url = comment?.website
+                  const url = comment?.loginType
                   if (url) {
                     window.open(url)
                   }
@@ -100,8 +122,11 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
           {parserOS(comment?.agent!)}
         </Form.Item>
         <ProFormDigit
+          fieldProps={{
+            width: '100px',
+          }}
           name='liking'
-          label='被喜欢'
+          label='喜欢'
           rules={[
             {
               required: true,
