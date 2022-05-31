@@ -39,7 +39,8 @@ export const QUERY_COMMENTS = gql`
         updateAt
         nickname
         email
-        website
+        loginType
+        avatar
         content
         liking
         ip
@@ -79,7 +80,8 @@ export const QUERY_COMMENT = gql`
       updateAt
       nickname
       email
-      website
+      loginType
+      avatar
       ip
       articleTitle
       articleDescription
@@ -102,7 +104,8 @@ export const UPDATE_COMMENT = gql`
     updateComment(id: $id, input: $input) {
       nickname
       email
-      website
+      loginType
+      avatar
       id
       ip
       articleTitle

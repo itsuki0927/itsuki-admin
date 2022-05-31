@@ -75,7 +75,8 @@ declare namespace API {
   type Comment = IdentifiableEntity<{
     nickname: string
     email: string
-    website: string
+    loginType: string
+    avatar: string
     content: string
     liking: number
     ip: string

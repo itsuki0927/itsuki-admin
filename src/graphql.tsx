@@ -56,6 +56,7 @@ const consoleLink = new ApolloLink((operation, forward) => {
     return data
   })
 })
+
 const roundTripLink = new ApolloLink((operation, forward) => {
   operation.setContext({ start: new Date() })
 

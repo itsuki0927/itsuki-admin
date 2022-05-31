@@ -20,7 +20,6 @@ export type CommentSearchRequest = BaseSearchRequest<{
 export type CommentUpdateRequest = {
   nickname: string
   email: string
-  website: string
   content: string
   liking: number
   expand: string
