@@ -1,21 +1,13 @@
 import { CategoryModal } from '@/components/category'
 import { Container } from '@/components/common'
-import type {
-  QueryCategoryResponse,
-  CreateCategoryResponse,
-  CategoryActionInput,
-  UpdateCategoryResponse,
-  CreateCategoryInput,
-  UpdateCategoryInput,
-} from '@/graphql/category'
-import { SYNC_CATEGORY_COUNT } from '@/graphql/category'
+import type { CategoryActionInput } from '@/graphql/category'
 import {
-  CREATE_CATEGORY,
-  DELETE_CATEGORY,
-  QUERY_CATEGORY,
-  UPDATE_CATEGORY,
-} from '@/graphql/category'
-import type { ID } from '@/helper/http.interface'
+  useCategories,
+  useCreateCategory,
+  useDeleteCategory,
+  useSyncCategoryCount,
+  useUpdateCategory,
+} from '@/hooks/category'
 import type { API } from '@/services/ant-design-pro/typings'
 import { getBlogCategoryUrl } from '@/transforms/url'
 import {
@@ -26,38 +18,28 @@ import {
   SyncOutlined,
 } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
-import { useMutation, useQuery } from '@apollo/client'
 import { Button, Divider, Empty, message, Modal, Space, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './index.less'
 
 const ArticleCategoryList = () => {
   const [visible, setVisible] = useState(false)
   const [temp, setTemp] = useState<API.Category | undefined>()
-  const { data, loading, updateQuery, refetch } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
-  const [createCategory] = useMutation<CreateCategoryResponse, CreateCategoryInput>(
-    CREATE_CATEGORY,
-    {
-      update: (cache, { data }) => {
-        const newCategory = data?.createCategory
-        const existCategoryies = cache.readQuery<QueryCategoryResponse>({
-          query: QUERY_CATEGORY,
-        })
-        if (existCategoryies && newCategory) {
-          cache.writeQuery({
-            query: QUERY_CATEGORY,
-            data: {
-              categories: [...existCategoryies.categories, newCategory],
-            },
-          })
-        }
-        return true
-      },
+  const [loading, setLoading] = useState(false)
+  const { fetchCategory, updateQuery, refetch, data } = useCategories()
+  const createCategory = useCreateCategory()
+  const deleteCategory = useDeleteCategory()
+  const syncCategoryCount = useSyncCategoryCount()
+  const updateCategory = useUpdateCategory()
+
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true)
+      await fetchCategory()
+      setLoading(false)
     }
-  )
-  const [updateCategory] = useMutation<UpdateCategoryResponse, UpdateCategoryInput>(UPDATE_CATEGORY)
-  const [deleteCategory] = useMutation<number, ID>(DELETE_CATEGORY)
-  const [syncCategoryCount] = useMutation(SYNC_CATEGORY_COUNT)
+    fetch()
+  }, [fetchCategory])
 
   const handleRemove = (entity: API.Category) => () => {
     Modal.confirm({
@@ -69,6 +51,7 @@ const ArticleCategoryList = () => {
       content: '请不要轻易删除分类!!!',
       okType: 'danger',
       onOk() {
+        setLoading(true)
         deleteCategory({
           variables: {
             id: entity.id,
@@ -78,6 +61,7 @@ const ArticleCategoryList = () => {
             categories: prevData.categories.filter((v) => v.id !== entity.id),
           }))
           message.success('删除成功')
+          setLoading(false)
         })
       },
     })
@@ -144,6 +128,15 @@ const ArticleCategoryList = () => {
     reset('创建成功')
   }
 
+  const handleSyncCount = () => {
+    setLoading(true)
+    syncCategoryCount().then(async () => {
+      await refetch()
+      setLoading(false)
+      message.success('同步成功')
+    })
+  }
+
   return (
     <Container>
       <ProCard
@@ -153,20 +146,19 @@ const ArticleCategoryList = () => {
         headerBordered
         extra={
           <Space>
-            <Button
-              size='small'
-              key='sync'
-              icon={<SyncOutlined />}
-              onClick={() => {
-                syncCategoryCount().then(async () => {
-                  await refetch()
-                  message.success('同步成功')
-                })
-              }}
-            >
+            <Button size='small' key='sync' icon={<SyncOutlined />} onClick={handleSyncCount}>
               同步数量
             </Button>
-            <Button size='small' key='refresh' icon={<ReloadOutlined />} onClick={() => refetch()}>
+            <Button
+              size='small'
+              key='refresh'
+              icon={<ReloadOutlined />}
+              onClick={async () => {
+                setLoading(true)
+                await refetch()
+                setLoading(false)
+              }}
+            >
               刷新分类
             </Button>
             <Button
