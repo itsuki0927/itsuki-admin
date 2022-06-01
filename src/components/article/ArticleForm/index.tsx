@@ -16,8 +16,6 @@ type ArticleFormProps = {
   cacheID?: string
 }
 
-const style: CSSProperties = { marginBottom: 24 }
-
 const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
   return (
     <ProForm
@@ -34,7 +32,7 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
       }}
     >
-      <Space size={24} direction='vertical'>
+      <Space size={24} direction='vertical' style={{ width: '100%' }}>
         <ProCard title='基本信息'>
           <ArticleBasic />
           <ArticleCategorySelect />

@@ -12,7 +12,7 @@ import type { ID } from '@/helper/http.interface'
 import { useLazyQuery, useMutation } from '@apollo/client'
 
 export const useAllTag = () => {
-  const [fetchTags, { updateQuery, refetch, data }] = useLazyQuery<
+  const [fetchTags, { updateQuery, loading, refetch, data }] = useLazyQuery<
     QueryTagResponse,
     QueryTagSearch
   >(QUERY_TAG, {
@@ -23,7 +23,7 @@ export const useAllTag = () => {
       },
     },
   })
-  return { fetchTags, updateQuery, refetch, data } as const
+  return { fetchTags, updateQuery, refetch, data, loading } as const
 }
 
 export const useCreateTag = () => {

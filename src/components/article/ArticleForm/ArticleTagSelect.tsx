@@ -1,9 +1,14 @@
 import { TagSelect } from '@/components/common'
 import type { TagItem, TagSelectProps } from '@/components/common/TagSelect'
 import { useAllTag } from '@/hooks/tag'
+import { useEffect } from 'react'
 
 const ArticleTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => {
-  const { data, loading, refetch } = useAllTag()
+  const { fetchTags, data, loading, refetch } = useAllTag()
+
+  useEffect(() => {
+    fetchTags()
+  }, [fetchTags])
 
   const tags = data?.tags.data.map((item) => ({ value: item.id, label: item.name }))
 
