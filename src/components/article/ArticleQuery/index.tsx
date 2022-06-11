@@ -1,6 +1,4 @@
 import { articleBanners } from '@/constants/article/banner'
-import { articleOrigins } from '@/constants/article/origin'
-import { articleOpens } from '@/constants/article/public'
 import { SELECT_ALL_VALUE } from '@/constants/common'
 import { publishStates } from '@/constants/publish'
 import { useAllTag } from '@/hooks/tag'
@@ -50,22 +48,6 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
               value: SELECT_ALL_VALUE,
             },
             ...getSelectOptionsByState(publishStates),
-          ]}
-        />
-        <ProFormSelect
-          name='open'
-          label='公开状态'
-          options={[
-            { label: '全部可见', value: SELECT_ALL_VALUE },
-            ...getSelectOptionsByState(articleOpens),
-          ]}
-        />
-        <ProFormSelect
-          name='origin'
-          label='来源状态'
-          options={[
-            { label: '全部来源', value: SELECT_ALL_VALUE },
-            ...getSelectOptionsByState(articleOrigins),
           ]}
         />
         <ProFormSelect
