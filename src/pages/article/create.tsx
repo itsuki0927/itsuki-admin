@@ -1,16 +1,9 @@
 import { ArticleForm } from '@/components/article'
 import { Container } from '@/components/common'
+import { CREATE_ARTICLE } from '@/graphql/article'
 import type { API } from '@/services/ant-design-pro/typings'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { message } from 'antd'
-
-const CREATE_ARTICLE = gql`
-  mutation createArticle($input: CreateArticleInput!) {
-    createArticle(input: $input) {
-      id
-    }
-  }
-`
 
 const CreateArticle = () => {
   const [createArticle] = useMutation<API.Article, any>(CREATE_ARTICLE)

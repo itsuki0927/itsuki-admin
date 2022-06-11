@@ -19,6 +19,14 @@ export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>
 
 export type UpdateArticleInput = MutationRequest<ArticleActionRequest> & ID
 
+export const CREATE_ARTICLE = gql`
+  mutation createArticle($input: CreateArticleInput!) {
+    createArticle(input: $input) {
+      id
+    }
+  }
+`
+
 export const UPDATE_ARTICLE_BANNER = gql`
   mutation updateArticleBanner($ids: [ID]!, $banner: Int!) {
     updateArticleBanner(ids: $ids, banner: $banner)
