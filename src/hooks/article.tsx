@@ -1,11 +1,11 @@
 import { getUEditorCache } from '@/components/common/UniversalEditor'
-import {
+import type {
   QueryArticleResponse,
   QueryArticleSearch,
   QueryArticlesResponse,
-  SYNC_ARTICLE_COMMENT_COUNT,
   UpdateArticleInput,
 } from '@/graphql/article'
+import { SYNC_ARTICLE_COMMENT_COUNT } from '@/graphql/article'
 import {
   DETELTE_ARTICLE,
   QUERY_ARTICLE,
@@ -82,7 +82,6 @@ export const useArticle = (id: number) => {
       diffContent(articleProp).then((result) => {
         setArticle({
           ...result,
-          categoryId: Number(result.categoryId),
           keywords: result.keywords.split('、') as any,
           tagIds: result.tags.map((v) => v.id),
         })

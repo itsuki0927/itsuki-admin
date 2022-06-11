@@ -1,5 +1,4 @@
-import {
-  ADMIN_COMMENT,
+import type {
   CreateAdminCommentInput,
   CreateAdminCommentResponse,
   QueryCommentResponse,
@@ -9,6 +8,7 @@ import {
   UpdateCommentResponse,
   UpdateCommentStateInput,
 } from '@/graphql/comment'
+import { ADMIN_COMMENT } from '@/graphql/comment'
 import { UPDATE_COMMENT } from '@/graphql/comment'
 import {
   DELETE_COMMENT,
