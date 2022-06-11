@@ -101,7 +101,7 @@ const EditArticle = () => {
               size='small'
               target='_blank'
               icon={<RocketOutlined />}
-              href={getBlogArticleUrl(id)}
+              href={getBlogArticleUrl(articleId)}
             />
           </Button.Group>
         </Space>
