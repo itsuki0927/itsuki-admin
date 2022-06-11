@@ -34,31 +34,40 @@ const ImageUploader = ({
   const [copied, setCopied] = useState(false)
 
   const beforeUpload = (file: File) => {
-    const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)
+    return new Promise((resolve, reject) => {
+      const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)
 
-    if (!isImg) {
-      message.success('请上传 png、jpeg、jpg 格式的图片')
-      return false
-    }
-
-    const isLimit = file.size < UPLOAD_FILE_SIZE_LIMIT
-
-    if (!isLimit) {
-      message.success('图片大小过大, 请进行压缩')
-      return false
-    }
-
-    if (file.size <= 1000 * 8) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const imageBase64 = (e as any).target.result
-        onChange?.(imageBase64)
+      if (!isImg) {
+        message.success('请上传 png、jpeg、jpg 格式的图片')
+        return reject()
       }
-      reader.readAsDataURL(file)
-      return false
-    }
 
-    return true
+      const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT
+
+      if (isMaxLimit) {
+        message.success('图片大小过大, 请进行压缩')
+        return reject()
+      }
+
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        const img = document.createElement('img')
+        img.src = reader.result as string
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          const ctx = canvas.getContext('2d')!
+          ctx.drawImage(img, 0, 0)
+          ctx.fillStyle = 'red'
+          ctx.textBaseline = 'middle'
+          ctx.font = '33px Arial'
+          ctx.fillText('itsuki.cn', 20, 20)
+          canvas.toBlob((result) => resolve(result as any))
+        }
+      }
+    })
   }
 
   const getMarkdown = (url: string) => `![](${url})`
