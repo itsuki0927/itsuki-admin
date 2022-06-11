@@ -57,9 +57,7 @@ export const QUERY_ARTICLE = gql`
       author
       cover
       keywords
-      open
       publish
-      origin
       banner
       reading
       liking
@@ -90,8 +88,6 @@ export const QUERY_ARTICLES = gql`
         author
         liking
         reading
-        origin
-        open
         banner
         tags {
           id

@@ -1,8 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner'
-import { ArticleOrigin } from '@/constants/article/origin'
-import { ArticleOpen } from '@/constants/article/public'
 import { PublishState } from '@/constants/publish'
 import { BaseSearchRequest } from '@/helper/http.interface'
 import { request } from 'umi'
@@ -17,12 +15,9 @@ export type ArticleActionRequest = {
   keywords: string
   content: string
   publish: PublishState
-  origin: ArticleOrigin
-  open: ArticleOpen
   categoryId: number
   tagIds: number[]
   cover?: string
-  password?: string
 }
 
 /**
@@ -31,11 +26,8 @@ export type ArticleActionRequest = {
 export type ArticleSearchRequest = BaseSearchRequest<{
   name?: string
   publish?: PublishState
-  open?: ArticleOpen
-  origin?: ArticleOrigin
   banner?: ArticleBanner
   tagId?: number
-  categoryId?: number
 }>
 
 /**
@@ -44,7 +36,6 @@ export type ArticleSearchRequest = BaseSearchRequest<{
 export type ArticleDetailResponse = API.Article & {
   tagIds: number[]
   keywords: string[]
-  categoryId: number
 }
 
 /**

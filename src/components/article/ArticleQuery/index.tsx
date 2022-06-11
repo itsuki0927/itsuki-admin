@@ -15,10 +15,7 @@ type ArticleQueryProps = {
 const initialValues: ArticleSearchRequest = {
   name: '',
   publish: SELECT_ALL_VALUE,
-  open: SELECT_ALL_VALUE,
-  origin: SELECT_ALL_VALUE,
   tagId: SELECT_ALL_VALUE,
-  categoryId: SELECT_ALL_VALUE,
   banner: SELECT_ALL_VALUE,
 }
 
@@ -26,6 +23,7 @@ const resolve = () => Promise.resolve(true)
 
 const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
   const { data: tags } = useAllTag()
+  console.log('tags', tags)
 
   return (
     <ProCard style={{ marginBottom: 24 }}>

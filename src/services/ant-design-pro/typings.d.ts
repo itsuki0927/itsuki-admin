@@ -25,16 +25,12 @@ declare namespace API {
     cover: string
     state: number
     keywords: string
-    open: ArticleOpen
     publish: PublishState
-    origin: ArticleOrigin
     banner: ArticleBanner
-    pinned: PinnedState
     reading: number
     liking: number
     commenting: number
     tags: API.Tag[]
-    category: API.Category
   }>
 
   type Tag = IdentifiableEntity<{
@@ -43,26 +39,6 @@ declare namespace API {
     path: string
     count: number
     sort: number
-    expand?: string
-  }>
-
-  type Category = IdentifiableEntity<{
-    name: string
-    description: string
-    path: string
-    count: number
-    sort: number
-    parentId: number
-    expand?: string
-  }>
-
-  type SnippetCategory = IdentifiableEntity<{
-    name: string
-    description: string
-    path: string
-    count: number
-    sort: number
-    parentId: number
     expand?: string
   }>
 
@@ -84,28 +60,12 @@ declare namespace API {
     province: string
     agent: string
     state: number
-    fix: string
+    fix: number
     expand: string
     parentId: number
     articleId: number
     articleTitle: string
     articleDescription: string
     parentNickName: string
-  }>
-
-  type Snippet = IdentifiableEntity<{
-    name: string
-    description: string
-    state: number
-    ranks: number
-    code: string
-    skill: string
-    example: string
-    author: string
-    website: string
-    avatar: string
-    email: string
-    pinned: PinnedState
-    categories: SnippetCategory[]
   }>
 }
