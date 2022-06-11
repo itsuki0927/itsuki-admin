@@ -29,12 +29,6 @@ export default [
     ],
   },
   { path: '/comment', name: '评论管理', icon: 'message', component: './comment/list' },
-  {
-    path: '/category',
-    name: '文章分类',
-    icon: 'folder-open',
-    component: './category/article',
-  },
   { path: '/tag', name: '标签管理', icon: 'tag', component: './tag/list' },
   { path: '/settings', name: '系统设置', icon: 'setting', component: './config/index' },
   { path: '/', redirect: '/dashboard' },

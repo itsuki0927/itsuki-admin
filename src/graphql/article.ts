@@ -64,17 +64,11 @@ export const QUERY_ARTICLE = gql`
       reading
       liking
       commenting
-      categoryId
       path
       tags {
         name
         id
       }
-      # category {
-      #   name
-      #   path
-      #   id
-      # }
     }
   }
 `
@@ -101,9 +95,6 @@ export const QUERY_ARTICLES = gql`
         banner
         tags {
           id
-          name
-        }
-        category {
           name
         }
       }

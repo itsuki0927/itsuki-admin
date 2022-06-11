@@ -3,15 +3,12 @@ import { articleOrigins } from '@/constants/article/origin'
 import { articleOpens } from '@/constants/article/public'
 import { SELECT_ALL_VALUE } from '@/constants/common'
 import { publishStates } from '@/constants/publish'
-import type { QueryCategoryResponse } from '@/graphql/category'
-import { QUERY_CATEGORY } from '@/graphql/category'
 import { useAllTag } from '@/hooks/tag'
 import type { ArticleSearchRequest } from '@/services/ant-design-pro/article'
 import { getSelectOptionsByState } from '@/transforms/option'
 import compose from '@/utils/compose'
 import ProCard from '@ant-design/pro-card'
 import { ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form'
-import { useQuery } from '@apollo/client'
 
 type ArticleQueryProps = {
   onFinish: (values: ArticleSearchRequest) => void
@@ -30,7 +27,6 @@ const initialValues: ArticleSearchRequest = {
 const resolve = () => Promise.resolve(true)
 
 const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
-  const { data: categories } = useQuery<QueryCategoryResponse>(QUERY_CATEGORY)
   const { data: tags } = useAllTag()
 
   return (
@@ -85,13 +81,6 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
           label='标签'
           options={[{ label: '全部标签', value: SELECT_ALL_VALUE }].concat(
             tags?.tags.data.map((item) => ({ label: item.name, value: item.id })) ?? []
-          )}
-        />
-        <ProFormSelect
-          name='categoryId'
-          label='分类'
-          options={[{ label: '全部分类', value: SELECT_ALL_VALUE }].concat(
-            categories?.categories.map((item) => ({ label: item.name, value: item.id })) ?? []
           )}
         />
       </QueryFilter>

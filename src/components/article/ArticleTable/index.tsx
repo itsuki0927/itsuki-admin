@@ -1,6 +1,4 @@
 import { ab, ArticleBanner } from '@/constants/article/banner'
-import { ao } from '@/constants/article/origin'
-import { ap } from '@/constants/article/public'
 import { omitSelectAllValue } from '@/constants/common'
 import { ps, PublishState } from '@/constants/publish'
 import {
@@ -19,7 +17,6 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  FolderOpenOutlined,
   HeartOutlined,
   LinkOutlined,
   RetweetOutlined,
@@ -157,22 +154,14 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     {
       title: '归类',
       width: 130,
-      render: (_, { tags, category }) => {
+      render: (_, { tags }) => {
         return (
-          <Space direction='vertical'>
-            {category && (
-              <Space size='small' key='category'>
-                <FolderOpenOutlined />
-                {category.name}
-              </Space>
-            )}
-            <Space size='small' wrap={true} key='tag'>
-              {tags?.map((tag) => (
-                <Tag icon={<TagOutlined />} key={tag.id}>
-                  {tag.name}
-                </Tag>
-              ))}
-            </Space>
+          <Space size='small' wrap={true} key='tag'>
+            {tags?.map((tag) => (
+              <Tag icon={<TagOutlined />} key={tag.id}>
+                {tag.name}
+              </Tag>
+            ))}
           </Space>
         )
       },
@@ -214,15 +203,10 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     {
       title: '状态',
       width: 120,
-      render: (
-        _,
-        { publish: propPublish, open: propOpen, origin: propOrigin, banner: propBanner }
-      ) => {
+      render: (_, { publish: propPublish, banner: propBanner }) => {
         const publish = ps(propPublish!)
-        const open = ap(propOpen!)
-        const origin = ao(propOrigin!)
         const banner = ab(propBanner!)
-        const list = [publish, open, origin, banner]
+        const list = [publish, banner]
 
         return (
           <Space direction='vertical'>
