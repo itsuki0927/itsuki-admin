@@ -94,7 +94,6 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
         <ProFormText
           label='用户网址'
           name='website'
-          rules={[{ required: true, message: '请输入用户网址' }]}
           fieldProps={{
             prefix: <LinkOutlined />,
             suffix: (
