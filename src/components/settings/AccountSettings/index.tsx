@@ -8,7 +8,7 @@ import { useModel } from 'umi'
 
 const AccountSettings = () => {
   const { initialState, setInitialState } = useModel('@@initialState')
-  const [updateAdmin] = useUpdateAdmin()
+  const updateAdmin = useUpdateAdmin()
 
   const handleFinish = async (input: AdminSaveRequest) => {
     await updateAdmin({

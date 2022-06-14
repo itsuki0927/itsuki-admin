@@ -21,7 +21,7 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false)
   const [state, setState] = useState('')
-  const [login] = useLogin()
+  const login = useLogin()
   const { initialState, setInitialState } = useModel('@@initialState')
 
   const fetchUserInfo = async () => {
