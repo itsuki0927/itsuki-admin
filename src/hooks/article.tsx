@@ -78,7 +78,7 @@ export const useArticle = (id: number) => {
     variables: {
       id,
     },
-    onCompleted: ({ articleDetail: articleProp }) => {
+    onCompleted: ({ article: articleProp }) => {
       diffContent(articleProp).then((result) => {
         setArticle({
           ...result,

@@ -12,7 +12,7 @@ export type QueryArticlesResponse = {
 }
 
 export type QueryArticleResponse = {
-  articleDetail: ArticleDetailResponse
+  article: ArticleDetailResponse
 }
 
 export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>
@@ -55,7 +55,7 @@ export const DETELTE_ARTICLE = gql`
 
 export const QUERY_ARTICLE = gql`
   query findArticleDetail($id: ID!) {
-    articleDetail(id: $id) {
+    article(id: $id) {
       id
       createAt
       updateAt
