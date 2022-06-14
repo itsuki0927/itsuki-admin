@@ -10,7 +10,11 @@ export type UpdateBlacklistResponse = {
   updateBlackList: API.Blacklist
 }
 
-export type UpdateBlackListInput = MutationRequest<Pick<API.Blacklist, 'ip' | 'email' | 'keyword'>>
+export type UpdateBlackListInput = MutationRequest<{
+  ip: string
+  email: string
+  keyword: string
+}>
 
 export const QUERY_BLACKLIST = gql`
   query fetchBlackList {

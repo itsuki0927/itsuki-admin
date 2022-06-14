@@ -1,7 +1,7 @@
 import { Container } from '@/components/common'
-import { AccountSettings, AuthSettings, BaseSettings } from '@/components/settings'
+import { AccountSettings, PasswordSettings, BlackListSettings } from '@/components/settings'
 import useQuery from '@/hooks/useQuery'
-import { SecurityScanOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
+import { LockOutlined, SecurityScanOutlined, UserOutlined } from '@ant-design/icons'
 import ProCard from '@ant-design/pro-card'
 import { GridContent } from '@ant-design/pro-layout'
 import { Menu } from 'antd'
@@ -11,26 +11,26 @@ import styles from './style.less'
 
 const { Item } = Menu
 
-type ConfigStateKeys = 'base' | 'account' | 'auth'
+type ConfigStateKeys = 'blacklist' | 'account' | 'password'
 
 const menuMap = {
-  base: {
+  blacklist: {
     text: '黑名单设置',
-    icon: <SettingOutlined />,
+    icon: <SecurityScanOutlined />,
   },
   account: {
     text: '个人设置',
     icon: <UserOutlined />,
   },
-  auth: {
+  password: {
     text: '密码设置',
-    icon: <SecurityScanOutlined />,
+    icon: <LockOutlined />,
   },
 }
 
 const SystemSettings = () => {
-  const [selectKey, setSelectKey] = useState<ConfigStateKeys>('base')
-  const { tab = 'base' } = useQuery<{ tab: string }>()
+  const [selectKey, setSelectKey] = useState<ConfigStateKeys>('blacklist')
+  const { tab = 'blacklist' } = useQuery<{ tab: string }>()
 
   useEffect(() => {
     if (tab !== selectKey) {
@@ -43,19 +43,19 @@ const SystemSettings = () => {
 
   const getRightTitle = () => (
     <div>
-      <span style={{ marginRight: 15 }}>{menuMap[selectKey].icon}</span>
+      <span style={{ marginRight: 14 }}>{menuMap[selectKey].icon}</span>
       {menuMap[selectKey].text}
     </div>
   )
 
   const renderChildren = () => {
     switch (selectKey) {
-      case 'base':
-        return <BaseSettings />
+      case 'blacklist':
+        return <BlackListSettings />
       case 'account':
         return <AccountSettings />
-      case 'auth':
-        return <AuthSettings />
+      case 'password':
+        return <PasswordSettings />
       default:
         return null
     }

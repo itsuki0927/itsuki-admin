@@ -9,13 +9,16 @@ import { LOGIN } from '@/graphql/admin'
 import { useMutation } from '@apollo/client'
 
 export const useLogin = () => {
-  return useMutation<AdminLoginResponse, AdminLoginInput>(LOGIN)
+  const [login] = useMutation<AdminLoginResponse, AdminLoginInput>(LOGIN)
+  return login
 }
 
 export const useUpdateAdmin = () => {
-  return useMutation<void, UpdateAdminInput>(UPDATE_ADMIN)
+  const [updateAdmin] = useMutation<void, UpdateAdminInput>(UPDATE_ADMIN)
+  return updateAdmin
 }
 
 export const useUpdateAdminPassword = () => {
-  return useMutation<void, UpdateAdminPasswordInput>(UPDATE_ADMIN_PASSWORD)
+  const [updateAdminPassword] = useMutation<void, UpdateAdminPasswordInput>(UPDATE_ADMIN_PASSWORD)
+  return updateAdminPassword
 }

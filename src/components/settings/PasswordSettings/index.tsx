@@ -1,6 +1,5 @@
 import { useUpdateAdminPassword } from '@/hooks/admin'
 import type { AdminUpdatePasswordRequest } from '@/services/ant-design-pro/admin'
-// import { updateAdminPassword } from '@/services/ant-design-pro/admin'
 import { removeToken } from '@/utils/auth'
 import { CheckOutlined } from '@ant-design/icons'
 import type { ProFormInstance } from '@ant-design/pro-form'
@@ -9,9 +8,9 @@ import { Col, notification, Row } from 'antd'
 import { useRef } from 'react'
 import { history } from 'umi'
 
-const AuthSettings = () => {
+const PasswordSettings = () => {
   const formRef = useRef<ProFormInstance<AdminUpdatePasswordRequest>>()
-  const [updateAdminPassword] = useUpdateAdminPassword()
+  const updateAdminPassword = useUpdateAdminPassword()
 
   // 验证重复输入密码
   const validatePassword = async () => {
@@ -88,4 +87,4 @@ const AuthSettings = () => {
     </ProForm>
   )
 }
-export default AuthSettings
+export default PasswordSettings
