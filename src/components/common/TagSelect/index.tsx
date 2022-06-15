@@ -1,4 +1,4 @@
-import { CheckOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons'
 import { Button, Divider, Space, Spin, Typography } from 'antd'
 import styles from './index.less'
 
@@ -38,7 +38,7 @@ const TagSelect = ({ onChange, value: propValue, tags, loading, onRefresh }: Tag
                   size='small'
                   type={check ? 'primary' : 'default'}
                   onClick={() => handleCheck(tag, !check)}
-                  icon={check ? <CheckOutlined /> : <TagOutlined />}
+                  icon={check ? <CheckCircleOutlined /> : <TagOutlined />}
                 >
                   {tag.label}
                 </Button>

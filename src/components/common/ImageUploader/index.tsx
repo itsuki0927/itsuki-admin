@@ -34,18 +34,18 @@ const ImageUploader = ({
   const [copied, setCopied] = useState(false)
 
   const beforeUpload = (file: File) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)
 
       if (!isImg) {
-        message.success('请上传 png、jpeg、jpg 格式的图片')
+        message.warn('请上传 png、jpeg、jpg 格式的图片')
         return reject()
       }
 
       const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT
 
       if (isMaxLimit) {
-        message.success('图片大小过大, 请进行压缩')
+        message.warn('图片大小过大, 请进行压缩')
         return reject()
       }
 
@@ -64,7 +64,7 @@ const ImageUploader = ({
           ctx.textBaseline = 'middle'
           ctx.font = '33px Arial'
           ctx.fillText('itsuki.cn', 20, 20)
-          canvas.toBlob((result) => resolve(result as any))
+          canvas.toBlob(resolve)
         }
       }
     })

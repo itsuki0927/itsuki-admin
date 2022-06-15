@@ -3,7 +3,6 @@
 import { ArticleBanner } from '@/constants/article/banner'
 import { PublishState } from '@/constants/publish'
 import { BaseSearchRequest } from '@/helper/http.interface'
-import { request } from 'umi'
 import { API } from './typings'
 
 /**
@@ -15,7 +14,6 @@ export type ArticleActionRequest = {
   keywords: string
   content: string
   publish: PublishState
-  categoryId: number
   tagIds: number[]
   cover?: string
 }
