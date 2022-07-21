@@ -1,5 +1,3 @@
-import { STATIC_URL } from '@/config'
-import { copy } from '@/utils/copy'
 import {
   CheckOutlined,
   CopyOutlined,
@@ -7,21 +5,27 @@ import {
   LinkOutlined,
   LoadingOutlined,
   PlusOutlined,
-} from '@ant-design/icons'
-import { Button, Input, message, notification, Space, Tooltip, Upload } from 'antd'
-import { useState } from 'react'
-import { request } from 'umi'
-import styles from './index.less'
+} from '@ant-design/icons';
+import { Button, Input, message, notification, Space, Tooltip, Upload } from 'antd';
+import { useState } from 'react';
+import { copy } from '@/utils/copy';
+import { STATIC_URL } from '@/config';
+// import { request } from 'umi'
+import styles from './index.less';
 
-const UPLOAD_FILE_SIZE_LIMIT = 3000000
+const request = () => {
+  return Promise.resolve(222);
+};
+
+const UPLOAD_FILE_SIZE_LIMIT = 3000000;
 
 type ImageUploaderProps = {
-  value?: string
-  onChange?: (value: string) => void
-  disabledInput?: boolean
-  disabledMarkdown?: boolean
-  prefix: string
-}
+  value?: string;
+  onChange?: (value: string) => void;
+  disabledInput?: boolean;
+  disabledMarkdown?: boolean;
+  prefix: string;
+};
 
 const ImageUploader = ({
   value,
@@ -30,77 +34,77 @@ const ImageUploader = ({
   disabledMarkdown,
   prefix,
 }: ImageUploaderProps) => {
-  const [uploading, setUploading] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const beforeUpload = (file: File) => {
     return new Promise<any>((resolve, reject) => {
-      const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)
+      const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type);
 
       if (!isImg) {
-        message.warn('请上传 png、jpeg、jpg 格式的图片')
-        return reject()
+        message.warn('请上传 png、jpeg、jpg 格式的图片');
+        return reject();
       }
 
-      const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT
+      const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT;
 
       if (isMaxLimit) {
-        message.warn('图片大小过大, 请进行压缩')
-        return reject()
+        message.warn('图片大小过大, 请进行压缩');
+        return reject();
       }
 
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       reader.onload = () => {
-        const img = document.createElement('img')
-        img.src = reader.result as string
+        const img = document.createElement('img');
+        img.src = reader.result as string;
         img.onload = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = img.naturalWidth
-          canvas.height = img.naturalHeight
-          const ctx = canvas.getContext('2d')!
-          ctx.drawImage(img, 0, 0)
-          ctx.fillStyle = 'red'
-          ctx.textBaseline = 'middle'
-          ctx.font = '33px Arial'
-          ctx.fillText('itsuki.cn', 20, 20)
-          canvas.toBlob(resolve)
-        }
-      }
-    })
-  }
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0);
+          ctx.fillStyle = 'red';
+          ctx.textBaseline = 'middle';
+          ctx.font = '33px Arial';
+          ctx.fillText('itsuki.cn', 20, 20);
+          canvas.toBlob(resolve);
+        };
+      };
+    });
+  };
 
-  const getMarkdown = (url: string) => `![](${url})`
+  const getMarkdown = (url: string) => `![](${url})`;
 
   const uploadFile = (file: File) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('prefix', prefix)
-    setUploading(true)
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('prefix', prefix);
+    setUploading(true);
     request('/upload/file', {
       method: 'POST',
       data: formData,
-    }).then((data) => {
-      const imageUrl = `${STATIC_URL}/${data}`
-      onChange?.(imageUrl)
-      setUploading(false)
+    }).then(data => {
+      const imageUrl = `${STATIC_URL}/${data}`;
+      onChange?.(imageUrl);
+      setUploading(false);
       notification.success({
         message: '上传成功',
         description: imageUrl,
-      })
-    })
-  }
+      });
+    });
+  };
 
-  const handleRemove = () => onChange?.('')
+  const handleRemove = () => onChange?.('');
 
   const handleCopy = () => {
-    copy(getMarkdown(value ?? ''))
-    message.success('复制成功')
-    setCopied(true)
+    copy(getMarkdown(value ?? ''));
+    message.success('复制成功');
+    setCopied(true);
     setTimeout(() => {
-      setCopied(false)
-    }, 5000)
-  }
+      setCopied(false);
+    }, 5000);
+  };
 
   return (
     <Space direction='vertical' className={styles.imageUploader} size={12}>
@@ -113,9 +117,9 @@ const ImageUploader = ({
         onRemove={handleRemove}
         showUploadList={false}
         disabled={uploading}
-        customRequest={(options) => {
+        customRequest={options => {
           if (options.file) {
-            uploadFile(options.file as File)
+            uploadFile(options.file as File);
           }
         }}
       >
@@ -134,7 +138,7 @@ const ImageUploader = ({
           placeholder='可以直接输入地址'
           prefix={<LinkOutlined />}
           value={value}
-          onChange={(e) => onChange?.(e.target.value)}
+          onChange={e => onChange?.(e.target.value)}
         />
       )}
       {!disabledMarkdown && value && (
@@ -156,7 +160,7 @@ const ImageUploader = ({
         </Input.Group>
       )}
     </Space>
-  )
-}
+  );
+};
 
-export default ImageUploader
+export default ImageUploader;

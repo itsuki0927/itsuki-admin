@@ -1,8 +1,17 @@
-/lambda/
-/scripts
-/config
-.history
-public
-dist
-.umi
-mock
+# config
+.eslintrc.js
+.prettierrc.js
+lint-staged.config.js
+next.config.js
+commitlint.config.js
+
+#
+.gitignore
+
+# json
+tsconfig.json
+tsconfig.node.json
+package.json
+
+# next
+/build

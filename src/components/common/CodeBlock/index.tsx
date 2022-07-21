@@ -1,18 +1,19 @@
-import { markdownToHTML } from '@/transforms/markdown'
-import type { CSSProperties, HTMLAttributes } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react';
+import { markdownToHTML } from '@/transforms/markdown';
 
 interface CodeBlockProps extends HTMLAttributes<HTMLDivElement> {
-  value: string
-  className?: string
-  style?: CSSProperties
+  value: string;
+  className?: string;
+  style?: CSSProperties;
 }
 
-const CodeBlock = ({ value }: CodeBlockProps) => (
+const CodeBlock = ({ value, ...rest }: CodeBlockProps) => (
   <div
+    {...rest}
     dangerouslySetInnerHTML={{
       __html: markdownToHTML(value),
     }}
   />
-)
+);
 
-export default CodeBlock
+export default CodeBlock;
