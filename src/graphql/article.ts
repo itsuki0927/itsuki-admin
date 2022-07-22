@@ -4,8 +4,8 @@ import type {
   ArticleDetailResponse,
   ArticleSearchRequest,
   ArticleSummaryResponse,
+  Article,
 } from '@/entities/article';
-import type { API } from '@/entities/typings';
 import type {
   ID,
   MutationRequest,
@@ -15,7 +15,7 @@ import type {
 } from '@/helper/http.interface';
 
 export type QueryArticlesResponse = {
-  articles: SearchResponse<API.Article>;
+  articles: SearchResponse<Article>;
 };
 
 export type QueryArticleResponse = {

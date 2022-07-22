@@ -1,7 +1,6 @@
 import type { DataNode } from 'rc-tree/lib/interface';
 import { NO_PARENT_VALUE } from '@/constants/common';
-import type { CommentTree } from '@/entities/comment';
-import type { API } from '@/entities/typings';
+import type { CommentTree, Comment } from '@/entities/comment';
 
 type ConvertTreeData = {
   parentId: number;
@@ -56,8 +55,9 @@ export function getAntdTreeByTree<T extends TreeData<T>>(
   return toAntdTree(tree);
 }
 
-const buildCommentTree = (data: API.Comment[], parentId: number) => {
-  const newData = JSON.parse(JSON.stringify(data)) as API.Comment[];
+const buildCommentTree = (data: Comment[], parentId: number) => {
+  const newData = JSON.parse(JSON.stringify(data)) as Comment[];
+  // eslint-disable-next-line eqeqeq
   const parents = newData.filter(v => v.parentId == parentId) as CommentTree[];
 
   return parents.map(item => {
@@ -69,5 +69,5 @@ const buildCommentTree = (data: API.Comment[], parentId: number) => {
 /**
  * comment数组转化为comment tree
  */
-export const convertToCommentTreeData = (data: API.Comment[]) =>
+export const convertToCommentTreeData = (data: Comment[]) =>
   buildCommentTree(data, NO_PARENT_VALUE);

@@ -1,34 +1,34 @@
+import { gql } from '@apollo/client';
 import type {
   BaseSearchRequest,
   ID,
   MutationRequest,
   SearchRequest,
   SearchResponse,
-} from '@/helper/http.interface'
-import type { API } from '@/entities/typings'
-import { gql } from '@apollo/client'
+} from '@/helper/http.interface';
+import { Tag } from '@/entities/tag';
 
 export type QueryTagResponse = {
-  tags: SearchResponse<API.Tag>
-}
+  tags: SearchResponse<Tag>;
+};
 
-export type TagSearchRequest = BaseSearchRequest<{ name?: string }>
+export type TagSearchRequest = BaseSearchRequest<{ name?: string }>;
 
-export type QueryTagSearch = SearchRequest<TagSearchRequest>
+export type QueryTagSearch = SearchRequest<TagSearchRequest>;
 
 export type CreateTagResponse = {
-  createTag: API.Tag
-}
+  createTag: Tag;
+};
 
 export type UpdateTagResponse = {
-  updateTag: API.Tag
-}
+  updateTag: Tag;
+};
 
-type TagActionInput = Omit<API.Tag, 'id' | 'count' | 'createAt' | 'updateAt'>
+type TagActionInput = Omit<Tag, 'id' | 'count' | 'createAt' | 'updateAt'>;
 
-export type CreateTagInput = MutationRequest<TagActionInput>
+export type CreateTagInput = MutationRequest<TagActionInput>;
 
-export type UpdateTagInput = CreateTagInput & ID
+export type UpdateTagInput = CreateTagInput & ID;
 
 export const QUERY_TAG = gql`
   query findTags($search: TagSearchRequest) {
@@ -47,7 +47,7 @@ export const QUERY_TAG = gql`
       }
     }
   }
-`
+`;
 
 export const CREATE_TAG = gql`
   mutation createTag($input: TagActionInput!) {
@@ -61,13 +61,13 @@ export const CREATE_TAG = gql`
       expand
     }
   }
-`
+`;
 
 export const DELETE_TAG = gql`
   mutation deleteTag($id: ID!) {
     deleteTag(id: $id)
   }
-`
+`;
 
 export const UPDATE_TAG = gql`
   mutation updateTag($id: ID!, $input: TagActionInput!) {
@@ -81,10 +81,10 @@ export const UPDATE_TAG = gql`
       expand
     }
   }
-`
+`;
 
 export const SYNC_TAG_COUNT = gql`
   mutation syncAllTagCount {
     syncAllTagCount
   }
-`
+`;

@@ -1,13 +1,13 @@
 import { gql } from '@apollo/client';
 import type { MutationRequest } from '@/helper/http.interface';
-import type { API } from '@/entities/typings';
+import type { Blacklist } from '@/entities/blacklist';
 
 export type QueryBlacklistResponse = {
-  blacklist: API.Blacklist;
+  blacklist: Blacklist;
 };
 
 export type UpdateBlacklistResponse = {
-  updateBlackList: API.Blacklist;
+  updateBlackList: Blacklist;
 };
 
 export type UpdateBlackListInput = MutationRequest<{

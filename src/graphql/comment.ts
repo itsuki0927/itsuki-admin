@@ -5,33 +5,36 @@ import type {
   SearchRequest,
   SearchResponse,
 } from '@/helper/http.interface';
-import type { CommentSearchRequest, CommentUpdateRequest } from '@/entities/comment';
-import type { API } from '@/entities/typings';
+import type {
+  Comment,
+  CommentSearchRequest,
+  CommentUpdateRequest,
+} from '@/entities/comment';
 
 export type QueryCommentsResponse = {
-  comments: SearchResponse<API.Comment>;
+  comments: SearchResponse<Comment>;
 };
 
 export type QueryCommentResponse = {
-  comment: API.Comment;
+  comment: Comment;
 };
 
 export type CreateAdminCommentResponse = {
-  adminComment: API.Comment;
+  adminComment: Comment;
 };
 
 export type UpdateCommentResponse = {
-  updateComment: API.Comment;
+  updateComment: Comment;
 };
 
 export type QueryCommentsSearch = SearchRequest<CommentSearchRequest>;
 
-export type UpdateCommentStateInput = ID & Pick<API.Comment, 'state'>;
+export type UpdateCommentStateInput = ID & Pick<Comment, 'state'>;
 
 export type UpdateCommentInput = ID & MutationRequest<CommentUpdateRequest>;
 
 export type CreateAdminCommentInput = MutationRequest<
-  Pick<API.Comment, 'content' | 'articleId' | 'parentId' | 'agent'>
+  Pick<Comment, 'content' | 'articleId' | 'parentId' | 'agent'>
 >;
 
 export const QUERY_COMMENTS = gql`

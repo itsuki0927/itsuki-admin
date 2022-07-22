@@ -3,10 +3,10 @@ import { message } from 'antd';
 import { ArticleForm } from '@/components/article';
 import { Container } from '@/components/common';
 import { CREATE_ARTICLE } from '@/graphql/article';
-import type { API } from '@/entities/typings';
+import type { Article } from '@/entities/article';
 
 const CreateArticle = () => {
-  const [createArticle] = useMutation<API.Article, any>(CREATE_ARTICLE);
+  const [createArticle] = useMutation<Article, any>(CREATE_ARTICLE);
   return (
     <Container>
       <ArticleForm

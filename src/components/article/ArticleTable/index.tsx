@@ -16,7 +16,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd';
 import { useRef, useState } from 'react';
-import { history, Link } from 'umi';
+import { useNavigate, Link } from 'react-router-dom';
 import { ab, ArticleBanner } from '@/constants/article/banner';
 import { omitSelectAllValue } from '@/constants/common';
 import { ps, PublishState } from '@/constants/publish';
@@ -26,8 +26,7 @@ import {
   useUpdateArticleBanner,
   useUpdateArticleState,
 } from '@/hooks/article';
-import type { ArticleSearchRequest } from '@/entities/article';
-import type { API } from '@/entities/typings';
+import type { ArticleSearchRequest, Article } from '@/entities/article';
 import { formatDate } from '@/transforms/date';
 import { getBlogArticleUrl } from '@/transforms/url';
 
@@ -42,6 +41,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
   const [syncArticleCommentCount] = useSyncArticleCommentCount();
   const [loading, setLoading] = useState(false);
   const actionRef = useRef<ActionType>();
+  const history = useNavigate();
 
   const handleStateChange = (ids: number[], state: PublishState, cb?: () => void) => {
     Modal.confirm({
@@ -78,8 +78,9 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
 
   const handleBannerChange = (ids: number[], banner: ArticleBanner, cb?: () => void) => {
     Modal.confirm({
-      title: `确定要将选中文章 ${banner === ArticleBanner.YES ? '加入轮播图' : '移除轮播图'
-        } 吗?`,
+      title: `确定要将选中文章 ${
+        banner === ArticleBanner.YES ? '加入轮播图' : '移除轮播图'
+      } 吗?`,
       content: '此操作不能撤销!!!',
       centered: true,
       onOk() {
@@ -110,7 +111,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     });
   };
 
-  const columns: ProColumns<API.Article>[] = [
+  const columns: ProColumns<Article>[] = [
     { title: 'id', width: 40, dataIndex: 'id' },
     {
       title: '文章',
@@ -429,7 +430,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
           size='small'
           key='create'
           type='primary'
-          onClick={() => history.push('/article/create')}
+          onClick={() => history('/article/create')}
           icon={<EditOutlined />}
         >
           撰写文章

@@ -1,34 +1,33 @@
-import { CommentAvatar, UniversalEditor } from '@/components/common'
-import { CommentState, commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment'
-import type { CommentUpdateRequest } from '@/entities/comment'
-import type { API } from '@/entities/typings'
-import { formatDate } from '@/transforms/date'
-import { getSelectOptionsByState } from '@/transforms/option'
-import { parserBrowser, parserOS } from '@/transforms/ua'
-import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url'
 import {
   CheckOutlined,
   LinkOutlined,
   MailOutlined,
   SendOutlined,
   UserOutlined,
-} from '@ant-design/icons'
+} from '@ant-design/icons';
 import {
   DrawerForm,
   ProFormDigit,
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
-} from '@ant-design/pro-form'
-import { Button, Divider, Form, Spin, Typography } from 'antd'
+} from '@ant-design/pro-form';
+import { Button, Divider, Form, Spin, Typography } from 'antd';
+import { CommentAvatar, UniversalEditor } from '@/components/common';
+import { CommentState, commentStates, COMMENT_GUESTBOOK_ID } from '@/constants/comment';
+import type { Comment, CommentUpdateRequest } from '@/entities/comment';
+import { formatDate } from '@/transforms/date';
+import { getSelectOptionsByState } from '@/transforms/option';
+import { parserBrowser, parserOS } from '@/transforms/ua';
+import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url';
 
 type CommentDrawerProps = {
-  comment?: API.Comment
-  loading?: boolean
-  visible?: boolean
-  onVisibleChange?: (visible: boolean) => void
-  onFinish: (comment: CommentUpdateRequest) => Promise<boolean>
-}
+  comment?: Comment;
+  loading?: boolean;
+  visible?: boolean;
+  onVisibleChange?: (visible: boolean) => void;
+  onFinish: (comment: CommentUpdateRequest) => Promise<boolean>;
+};
 
 const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerProps) => {
   return (
@@ -55,7 +54,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
     >
       <Spin spinning={loading}>
         <Form.Item label='ID'>
-          <Typography.Text copyable={true}>{comment?.id}</Typography.Text>
+          <Typography.Text copyable>{comment?.id}</Typography.Text>
         </Form.Item>
         <Form.Item label='发布于'>{formatDate(comment?.createAt!)}</Form.Item>
         <Form.Item label='最后修改于'>{formatDate(comment?.updateAt!)}</Form.Item>
@@ -99,9 +98,9 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             suffix: (
               <SendOutlined
                 onClick={() => {
-                  const url = comment?.loginType
+                  const url = comment?.loginType;
                   if (url) {
-                    window.open(url)
+                    window.open(url);
                   }
                 }}
               />
@@ -109,7 +108,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
           }}
         />
         <Form.Item label='IP / 地址'>
-          <Typography.Text copyable={true}>{comment?.ip || '-'}</Typography.Text>
+          <Typography.Text copyable>{comment?.ip || '-'}</Typography.Text>
           <Divider type='vertical' />
           {comment?.city || '-'}
           <span> - </span>
@@ -169,16 +168,11 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
           label='评论内容'
           rules={[{ required: true, message: '请输入评论内容' }]}
         >
-          <UniversalEditor
-            disabledMinimap={true}
-            disabledCacheDraft={true}
-            minRows={14}
-            maxRows={18}
-          />
+          <UniversalEditor disabledMinimap disabledCacheDraft minRows={14} maxRows={18} />
         </Form.Item>
       </Spin>
     </DrawerForm>
-  )
-}
+  );
+};
 
-export default CommentDrawer
+export default CommentDrawer;

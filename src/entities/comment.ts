@@ -1,8 +1,26 @@
-/* eslint-disable */
 import { CommentState } from '@/constants/comment';
-import { BaseSearchRequest } from '@/helper/http.interface';
-import { API } from './typings';
+import { BaseSearchRequest, IdentifiableEntity } from '@/helper/http.interface';
 
+export type Comment = IdentifiableEntity<{
+  nickname: string;
+  email: string;
+  loginType: string;
+  avatar: string;
+  content: string;
+  liking: number;
+  ip: string;
+  city: string;
+  province: string;
+  agent: string;
+  state: number;
+  fix: number;
+  expand: string;
+  parentId: number;
+  articleId: number;
+  articleTitle: string;
+  articleDescription: string;
+  parentNickName: string;
+}>;
 /**
  * 文章搜索请求类
  */
@@ -32,6 +50,6 @@ export type CommentPatchRequest = {
   state: CommentState;
 };
 
-export type CommentTree = API.Comment & {
+export type CommentTree = Comment & {
   children?: CommentTree[];
 };

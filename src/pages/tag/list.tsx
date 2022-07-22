@@ -18,13 +18,12 @@ import {
   useSyncTagCount,
   useUpdateTag,
 } from '@/hooks/tag';
-import type { TagActionRequest } from '@/entities/tag';
-import type { API } from '@/entities/typings';
+import type { TagActionRequest, Tag } from '@/entities/tag';
 import { getBlogTagUrl } from '@/transforms/url';
 
 const TagList = () => {
   const [visible, setVisible] = useState(false);
-  const [temp, setTemp] = useState<API.Tag | undefined>();
+  const [temp, setTemp] = useState<Tag | undefined>();
   const [loading, setLoading] = useState(false);
   const { fetchTags, updateQuery, refetch } = useAllTag();
   const createTag = useCreateTag();
@@ -33,7 +32,7 @@ const TagList = () => {
   const syncTagCount = useSyncTagCount();
   const actionRef = useRef<ActionType>();
 
-  const handleRemove = (entity: API.Tag) => () => {
+  const handleRemove = (entity: Tag) => () => {
     Modal.confirm({
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
@@ -61,15 +60,15 @@ const TagList = () => {
   };
 
   const handleUpdate =
-    ({ expand, ...rest }: API.Tag) =>
-      () => {
-        setVisible(true);
-        if (expand) {
-          // eslint-disable-next-line no-param-reassign
-          expand = JSON.parse(expand);
-        }
-        setTemp({ ...rest, expand });
-      };
+    ({ expand, ...rest }: Tag) =>
+    () => {
+      setVisible(true);
+      if (expand) {
+        // eslint-disable-next-line no-param-reassign
+        expand = JSON.parse(expand);
+      }
+      setTemp({ ...rest, expand });
+    };
 
   const confirmUpdate = async (input: TagActionRequest) => {
     if (input.expand) {
@@ -121,7 +120,7 @@ const TagList = () => {
     setLoading(false);
   };
 
-  const columns: ProColumns<API.Tag>[] = [
+  const columns: ProColumns<Tag>[] = [
     { title: 'id', dataIndex: 'id', align: 'center' },
     { title: '名称', dataIndex: 'name', align: 'center' },
     { title: '路径', dataIndex: 'path', align: 'center' },

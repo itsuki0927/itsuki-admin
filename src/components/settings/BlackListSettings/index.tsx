@@ -1,43 +1,43 @@
-import { useBlackList, useUpdateBlackList } from '@/hooks/blacklist'
-import type { API } from '@/entities/typings'
-import { CheckOutlined } from '@ant-design/icons'
-import ProForm, { ProFormSelect } from '@ant-design/pro-form'
-import { Col, message, Row, Spin } from 'antd'
+import { CheckOutlined } from '@ant-design/icons';
+import ProForm, { ProFormSelect } from '@ant-design/pro-form';
+import { Col, message, Row, Spin } from 'antd';
+import { useBlackList, useUpdateBlackList } from '@/hooks/blacklist';
+import type { Blacklist } from '@/entities/blacklist';
 
-const strToArray = (val: any) => (JSON.parse(val ?? undefined) ?? []) as string[]
+const strToArray = (val: any) => (JSON.parse(val ?? undefined) ?? []) as string[];
 
 const BlackListSettings = () => {
-  const [fetchBlackList, { loading, updateQuery }] = useBlackList()
-  const [updateBlackList] = useUpdateBlackList()
+  const [fetchBlackList, { loading, updateQuery }] = useBlackList();
+  const [updateBlackList] = useUpdateBlackList();
 
-  const handleUpdateBlackList = async (params: API.Blacklist) => {
+  const handleUpdateBlackList = async (params: Blacklist) => {
     const input = {
       ip: JSON.stringify(params.ip ?? []),
       email: JSON.stringify(params.email ?? []),
       keyword: JSON.stringify(params.keyword ?? []),
-    }
-    await updateBlackList({ variables: { input } })
+    };
+    await updateBlackList({ variables: { input } });
     updateQuery(({ blacklist }) => ({
       blacklist: {
         ...blacklist,
         ...params,
       },
-    }))
-    message.success('保存成功')
-    return true
-  }
+    }));
+    message.success('保存成功');
+    return true;
+  };
 
   return (
-    <ProForm<API.Blacklist>
+    <ProForm<Blacklist>
       request={async () => {
-        const { data } = await fetchBlackList()
-        const blacklist = data?.blacklist!
+        const { data } = await fetchBlackList();
+        const blacklist = data?.blacklist!;
         return {
           ...blacklist,
           ip: strToArray(blacklist.ip),
           keyword: strToArray(blacklist.keyword),
           email: strToArray(blacklist.email),
-        }
+        };
       }}
       submitter={{
         searchConfig: {
@@ -62,6 +62,6 @@ const BlackListSettings = () => {
         <ProFormSelect width='lg' mode='tags' label='关键字 黑名单' name='keyword' />
       </Spin>
     </ProForm>
-  )
-}
-export default BlackListSettings
+  );
+};
+export default BlackListSettings;
