@@ -1,23 +1,34 @@
-import type { ID, MutationRequest, SearchRequest, SearchResponse } from '@/helper/http.interface'
+import { gql } from '@apollo/client';
 import type {
   ArticleActionRequest,
   ArticleDetailResponse,
   ArticleSearchRequest,
-} from '@/services/ant-design-pro/article'
-import type { API } from '@/services/ant-design-pro/typings'
-import { gql } from '@apollo/client'
+  ArticleSummaryResponse,
+} from '@/services/ant-design-pro/article';
+import type { API } from '@/services/ant-design-pro/typings';
+import type {
+  ID,
+  MutationRequest,
+  SearchRequest,
+  SearchResponse,
+  // eslint-disable-next-line import/extensions
+} from '@/helper/http.interface';
 
 export type QueryArticlesResponse = {
-  articles: SearchResponse<API.Article>
-}
+  articles: SearchResponse<API.Article>;
+};
 
 export type QueryArticleResponse = {
-  article: ArticleDetailResponse
-}
+  article: ArticleDetailResponse;
+};
 
-export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>
+export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>;
 
-export type UpdateArticleInput = MutationRequest<ArticleActionRequest> & ID
+export type QueryArticleSummaryResponse = {
+  articleSummary: ArticleSummaryResponse;
+};
+
+export type UpdateArticleInput = MutationRequest<ArticleActionRequest> & ID;
 
 export const CREATE_ARTICLE = gql`
   mutation createArticle($input: CreateArticleInput!) {
@@ -25,19 +36,19 @@ export const CREATE_ARTICLE = gql`
       id
     }
   }
-`
+`;
 
 export const UPDATE_ARTICLE_BANNER = gql`
   mutation updateArticleBanner($ids: [ID]!, $banner: Int!) {
     updateArticleBanner(ids: $ids, banner: $banner)
   }
-`
+`;
 
 export const UPDATE_ARTICLE_STATE = gql`
   mutation patchArticleState($ids: [ID]!, $state: Int!) {
     updateArticleState(ids: $ids, state: $state)
   }
-`
+`;
 
 export const UPDATE_ARTICLE = gql`
   mutation updateArticle($id: ID!, $input: CreateArticleInput!) {
@@ -45,13 +56,13 @@ export const UPDATE_ARTICLE = gql`
       id
     }
   }
-`
+`;
 
 export const DETELTE_ARTICLE = gql`
   mutation deleteArticle($id: ID!) {
     deleteArticle(id: $id)
   }
-`
+`;
 
 export const QUERY_ARTICLE = gql`
   query findArticleDetail($id: ID!) {
@@ -77,7 +88,7 @@ export const QUERY_ARTICLE = gql`
       }
     }
   }
-`
+`;
 
 export const QUERY_ARTICLES = gql`
   query findArticles($search: ArticleSearchRequest) {
@@ -105,10 +116,41 @@ export const QUERY_ARTICLES = gql`
       total
     }
   }
-`
+`;
 
 export const SYNC_ARTICLE_COMMENT_COUNT = gql`
   mutation syncArticleCommentCount($ids: [ID]!) {
     syncArticleCommentCount(ids: $ids)
   }
-`
+`;
+
+export const ARTICLE_SUMMARY = gql`
+  query articleSummary {
+    articleSummary {
+      total {
+        publish
+        value
+        title
+        state
+      }
+      draft {
+        publish
+        value
+        title
+        state
+      }
+      recycle {
+        publish
+        value
+        title
+        state
+      }
+      published {
+        publish
+        value
+        title
+        state
+      }
+    }
+  }
+`;
