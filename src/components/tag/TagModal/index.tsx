@@ -1,26 +1,26 @@
-import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import type { API } from '@/services/ant-design-pro/typings'
-import type { ProFormInstance } from '@ant-design/pro-form'
+import type { ProFormInstance } from '@ant-design/pro-form';
 import ProForm, {
   ModalForm,
   ProFormDigit,
   ProFormList,
   ProFormText,
   ProFormTextArea,
-} from '@ant-design/pro-form'
-import { Form, Typography } from 'antd'
-import { useRef } from 'react'
+} from '@ant-design/pro-form';
+import { Form, Typography } from 'antd';
+import { useRef } from 'react';
+import type { API } from '@/entities/typings';
+import type { TagActionRequest } from '@/entities/tag';
 
 type TagModalProps = {
-  visible: boolean
-  onChange: (visible: boolean) => void
-  onFinish: (values: TagActionRequest) => Promise<boolean | void>
-  tag?: API.Tag
-  title: string
-}
+  visible: boolean;
+  onChange: (visible: boolean) => void;
+  onFinish: (values: TagActionRequest) => Promise<boolean | void>;
+  tag?: API.Tag;
+  title: string;
+};
 
 const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) => {
-  const restFormRef = useRef<ProFormInstance<TagActionRequest>>()
+  const restFormRef = useRef<ProFormInstance<TagActionRequest>>();
   return (
     <ModalForm<TagActionRequest>
       formRef={restFormRef}
@@ -32,7 +32,7 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
       wrapperCol={{ span: 18 }}
       initialValues={tag}
       key={tag?.id}
-      onFinish={(values) => onFinish(values).then(() => restFormRef.current?.resetFields())}
+      onFinish={values => onFinish(values).then(() => restFormRef.current?.resetFields())}
       modalProps={{
         onCancel: () => restFormRef.current?.resetFields(),
       }}
@@ -86,7 +86,7 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
         </ProForm.Group>
       </ProFormList>
     </ModalForm>
-  )
-}
+  );
+};
 
-export default TagModal
+export default TagModal;

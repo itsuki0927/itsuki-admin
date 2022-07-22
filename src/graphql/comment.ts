@@ -5,11 +5,8 @@ import type {
   SearchRequest,
   SearchResponse,
 } from '@/helper/http.interface';
-import type {
-  CommentSearchRequest,
-  CommentUpdateRequest,
-} from '@/services/ant-design-pro/comment';
-import type { API } from '@/services/ant-design-pro/typings';
+import type { CommentSearchRequest, CommentUpdateRequest } from '@/entities/comment';
+import type { API } from '@/entities/typings';
 
 export type QueryCommentsResponse = {
   comments: SearchResponse<API.Comment>;

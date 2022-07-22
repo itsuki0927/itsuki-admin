@@ -7,8 +7,8 @@ import {
   useDeleteComment,
   useUpdateCommentState,
 } from '@/hooks/comment'
-import type { CommentPatchRequest } from '@/services/ant-design-pro/comment'
-import type { API } from '@/services/ant-design-pro/typings'
+import type { CommentPatchRequest } from '@/entities/comment'
+import type { API } from '@/entities/typings'
 import { formatDate } from '@/transforms/date'
 import { markdownToHTML } from '@/transforms/markdown'
 import { parserBrowser, parserOS } from '@/transforms/ua'
@@ -343,17 +343,17 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(({ onDetail 
           )}
           {(comment.state === CommentState.Auditing ||
             comment.state === CommentState.Published) && (
-            <Button
-              size='small'
-              type='text'
-              block={true}
-              danger={true}
-              icon={<DeleteOutlined />}
-              onClick={() => handleStateChange({ id: comment.id, state: CommentState.Deleted })}
-            >
-              移回收站
-            </Button>
-          )}
+              <Button
+                size='small'
+                type='text'
+                block={true}
+                danger={true}
+                icon={<DeleteOutlined />}
+                onClick={() => handleStateChange({ id: comment.id, state: CommentState.Deleted })}
+              >
+                移回收站
+              </Button>
+            )}
           {(comment.state === CommentState.Deleted || comment.state === CommentState.Spam) && (
             <>
               <Button

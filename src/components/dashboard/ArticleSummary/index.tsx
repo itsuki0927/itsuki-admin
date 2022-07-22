@@ -1,4 +1,4 @@
-import type { ArticleSummaryResponse } from '@/services/ant-design-pro/article'
+import type { ArticleSummaryResponse } from '@/entities/article'
 import { StatisticCard } from '@ant-design/pro-card'
 
 interface ArticleSummaryProps {

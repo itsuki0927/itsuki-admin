@@ -1,5 +1,5 @@
-import { SiteSummaryResponse } from '@/services/ant-design-pro/siteinfo';
 import { gql } from '@apollo/client';
+import { SiteSummaryResponse } from '@/entities/siteinfo';
 
 export type QuerySiteSummaryResponse = {
   summary: SiteSummaryResponse;

@@ -1,12 +1,12 @@
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from '@apollo/client'
-import { onError } from '@apollo/client/link/error'
-import { notification, Space, Typography } from 'antd'
-import { API_URL, API_VERSION } from './config'
-import { getToken } from './utils/auth'
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { notification, Space, Typography } from 'antd';
+import { API_URL, API_VERSION } from './config';
+import { getToken } from './utils/auth';
 
 const httpLink = new HttpLink({
   uri: `${API_URL}/${API_VERSION}/graphql`,
-})
+});
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -15,7 +15,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
           locations
         )}, Path: ${path}`
-      )
+      );
       notification.error({
         message: '请求错误',
         description: (
@@ -25,52 +25,54 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
           </Space>
         ),
         duration: 3,
-      })
-    })
+      });
+    });
 
   if (networkError) {
-    console.debug(`[Network error]: ${networkError}`)
+    console.debug(`[Network error]: ${networkError}`);
     notification.error({
       message: '请求错误',
       description: '网络不通? 后端不通?, 好兄弟',
       duration: 3,
-    })
+    });
   }
-})
+});
 
 const authLink = new ApolloLink((operation, forward) => {
-  const token = getToken()
+  const token = getToken();
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
       Authorization: token ? `Bearer ${token}` : '',
     },
-  }))
-  return forward(operation)
-})
+  }));
+  return forward(operation);
+});
 
 const consoleLink = new ApolloLink((operation, forward) => {
-  console.log(`[GraphQL]: starting request for ${operation.operationName}`)
-  return forward(operation).map((data) => {
-    console.log(`[GraphQL]: ending request for ${operation.operationName}`)
-    return data
-  })
-})
+  console.log(`[GraphQL]: starting request for ${operation.operationName}`);
+  return forward(operation).map(data => {
+    console.log(`[GraphQL]: ending request for ${operation.operationName}`);
+    return data;
+  });
+});
 
 const roundTripLink = new ApolloLink((operation, forward) => {
-  operation.setContext({ start: new Date() })
+  operation.setContext({ start: new Date() });
 
-  return forward(operation).map((data) => {
-    const time = Date.now() - operation.getContext().start
-    console.log(`[GraphQL]: Operation ${operation.operationName} took ${time} to complete`)
-    return data
-  })
-})
+  return forward(operation).map(data => {
+    const time = Date.now() - operation.getContext().start;
+    console.log(
+      `[GraphQL]: Operation ${operation.operationName} took ${time} to complete`
+    );
+    return data;
+  });
+});
 
-const link = from([consoleLink, roundTripLink, errorLink, authLink, httpLink])
+const link = from([consoleLink, roundTripLink, errorLink, authLink, httpLink]);
 
 export const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
   connectToDevTools: true,
-})
+});

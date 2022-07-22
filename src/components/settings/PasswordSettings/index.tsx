@@ -1,5 +1,5 @@
 import { useUpdateAdminPassword } from '@/hooks/admin'
-import type { AdminUpdatePasswordRequest } from '@/services/ant-design-pro/admin'
+import type { AdminUpdatePasswordRequest } from '@/entities/admin'
 import { removeToken } from '@/utils/auth'
 import { CheckOutlined } from '@ant-design/icons'
 import type { ProFormInstance } from '@ant-design/pro-form'

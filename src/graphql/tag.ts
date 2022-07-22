@@ -5,7 +5,7 @@ import type {
   SearchRequest,
   SearchResponse,
 } from '@/helper/http.interface'
-import type { API } from '@/services/ant-design-pro/typings'
+import type { API } from '@/entities/typings'
 import { gql } from '@apollo/client'
 
 export type QueryTagResponse = {

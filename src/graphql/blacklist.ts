@@ -1,20 +1,20 @@
-import type { MutationRequest } from '@/helper/http.interface'
-import type { API } from '@/services/ant-design-pro/typings'
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
+import type { MutationRequest } from '@/helper/http.interface';
+import type { API } from '@/entities/typings';
 
 export type QueryBlacklistResponse = {
-  blacklist: API.Blacklist
-}
+  blacklist: API.Blacklist;
+};
 
 export type UpdateBlacklistResponse = {
-  updateBlackList: API.Blacklist
-}
+  updateBlackList: API.Blacklist;
+};
 
 export type UpdateBlackListInput = MutationRequest<{
-  ip: string
-  email: string
-  keyword: string
-}>
+  ip: string;
+  email: string;
+  keyword: string;
+}>;
 
 export const QUERY_BLACKLIST = gql`
   query fetchBlackList {
@@ -24,7 +24,7 @@ export const QUERY_BLACKLIST = gql`
       keyword
     }
   }
-`
+`;
 
 export const UPDATE_BLACKLIST = gql`
   mutation updateBlackList($input: UpdateBlackListInput!) {
@@ -34,4 +34,4 @@ export const UPDATE_BLACKLIST = gql`
       keyword
     }
   }
-`
+`;

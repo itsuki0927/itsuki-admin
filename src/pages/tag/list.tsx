@@ -1,121 +1,125 @@
-import { Container } from '@/components/common'
-import { TagModal } from '@/components/tag'
-import { useAllTag, useCreateTag, useDeleteTag, useSyncTagCount, useUpdateTag } from '@/hooks/tag'
-import type { TagActionRequest } from '@/services/ant-design-pro/tag'
-import type { API } from '@/services/ant-design-pro/typings'
-import { getBlogTagUrl } from '@/transforms/url'
 import {
   DeleteOutlined,
   EditOutlined,
   LinkOutlined,
   PlusOutlined,
   SyncOutlined,
-} from '@ant-design/icons'
-import type { ActionType, ProColumns } from '@ant-design/pro-table'
-import ProTable from '@ant-design/pro-table'
-import { Button, message, Modal, Space, Table } from 'antd'
-import { useRef, useState } from 'react'
+} from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, message, Modal, Space, Table } from 'antd';
+import { useRef, useState } from 'react';
+import { Container } from '@/components/common';
+import { TagModal } from '@/components/tag';
+import {
+  useAllTag,
+  useCreateTag,
+  useDeleteTag,
+  useSyncTagCount,
+  useUpdateTag,
+} from '@/hooks/tag';
+import type { TagActionRequest } from '@/entities/tag';
+import type { API } from '@/entities/typings';
+import { getBlogTagUrl } from '@/transforms/url';
 
 const TagList = () => {
-  const [visible, setVisible] = useState(false)
-  const [temp, setTemp] = useState<API.Tag | undefined>()
-  const [loading, setLoading] = useState(false)
-  const { fetchTags, updateQuery, refetch } = useAllTag()
-  const createTag = useCreateTag()
-  const deleteTag = useDeleteTag()
-  const updateTag = useUpdateTag()
-  const syncTagCount = useSyncTagCount()
-  const actionRef = useRef<ActionType>()
+  const [visible, setVisible] = useState(false);
+  const [temp, setTemp] = useState<API.Tag | undefined>();
+  const [loading, setLoading] = useState(false);
+  const { fetchTags, updateQuery, refetch } = useAllTag();
+  const createTag = useCreateTag();
+  const deleteTag = useDeleteTag();
+  const updateTag = useUpdateTag();
+  const syncTagCount = useSyncTagCount();
+  const actionRef = useRef<ActionType>();
 
   const handleRemove = (entity: API.Tag) => () => {
     Modal.confirm({
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
       onOk() {
-        setLoading(true)
+        setLoading(true);
         deleteTag({ variables: { id: entity.id } }).then(() => {
-          updateQuery((prevData) => {
-            return {
-              tags: {
-                ...prevData.tags,
-                data: prevData.tags.data.filter((item) => item.id !== entity.id!),
-                total: prevData.tags.total - 1,
-              },
-            }
-          })
-          message.success('删除成功')
-          actionRef.current?.reload()
-          setLoading(false)
-        })
+          updateQuery(prevData => ({
+            tags: {
+              ...prevData.tags,
+              data: prevData.tags.data.filter(item => item.id !== entity.id!),
+              total: prevData.tags.total - 1,
+            },
+          }));
+          message.success('删除成功');
+          actionRef.current?.reload();
+          setLoading(false);
+        });
       },
-    })
-  }
+    });
+  };
 
   const handleCreate = () => {
-    setVisible(true)
-    setTemp(undefined)
-  }
+    setVisible(true);
+    setTemp(undefined);
+  };
 
   const handleUpdate =
     ({ expand, ...rest }: API.Tag) =>
-    () => {
-      setVisible(true)
-      if (expand) {
-        // eslint-disable-next-line no-param-reassign
-        expand = JSON.parse(expand)
-      }
-      setTemp({ ...rest, expand })
-    }
+      () => {
+        setVisible(true);
+        if (expand) {
+          // eslint-disable-next-line no-param-reassign
+          expand = JSON.parse(expand);
+        }
+        setTemp({ ...rest, expand });
+      };
 
   const confirmUpdate = async (input: TagActionRequest) => {
     if (input.expand) {
       // eslint-disable-next-line no-param-reassign
-      input.expand = JSON.stringify(input.expand)
+      input.expand = JSON.stringify(input.expand);
     }
-    setLoading(true)
+    setLoading(true);
     await updateTag({
       variables: {
         id: temp?.id!,
         input,
       },
-    })
+    });
     updateQuery(({ tags }) => ({
       tags: {
         ...tags,
-        data: tags.data.map((item) => {
+        data: tags.data.map(item => {
           if (item.id === temp?.id) {
-            return { ...item, ...input }
+            return { ...item, ...input };
           }
-          return item
+          return item;
         }),
       },
-    }))
-    setVisible(false)
-    actionRef.current?.reload()
-    message.success('更新成功')
-    setLoading(false)
-    setTemp(undefined)
-  }
+    }));
+    setVisible(false);
+    actionRef.current?.reload();
+    message.success('更新成功');
+    setLoading(false);
+    setTemp(undefined);
+  };
 
   const confirmCreate = async (input: TagActionRequest) => {
-    setLoading(true)
+    setLoading(true);
     const { data: newData } = await createTag({
       variables: {
         input,
       },
-    })
+    });
     updateQuery(({ tags }) => ({
       tags: {
         ...tags,
         data: tags.data.concat(newData?.createTag!),
         total: tags.total + 1,
       },
-    }))
-    setVisible(false)
-    actionRef.current?.reload()
-    message.success('创建成功')
-    setLoading(false)
-  }
+    }));
+    setVisible(false);
+    actionRef.current?.reload();
+    message.success('创建成功');
+    setLoading(false);
+  };
 
   const columns: ProColumns<API.Tag>[] = [
     { title: 'id', dataIndex: 'id', align: 'center' },
@@ -131,7 +135,12 @@ const TagList = () => {
       width: 250,
       render: (_, entity) => (
         <Space>
-          <Button type='text' icon={<EditOutlined />} size='small' onClick={handleUpdate(entity)}>
+          <Button
+            type='text'
+            icon={<EditOutlined />}
+            size='small'
+            onClick={handleUpdate(entity)}
+          >
             编辑
           </Button>
           <Button
@@ -154,7 +163,7 @@ const TagList = () => {
         </Space>
       ),
     },
-  ]
+  ];
 
   return (
     <Container>
@@ -165,15 +174,15 @@ const TagList = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey='id'
-        request={async (search) => {
-          setLoading(true)
+        request={async search => {
+          setLoading(true);
           const { data } = await fetchTags({
             variables: {
               search,
             },
-          })
-          setLoading(false)
-          return data?.tags!
+          });
+          setLoading(false);
+          return data?.tags!;
         }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
@@ -184,8 +193,8 @@ const TagList = () => {
             type='text'
             onClick={() => {
               // TODO: 批量删除
-              console.log(selectedRowKeys)
-              onCleanSelected()
+              console.log(selectedRowKeys);
+              onCleanSelected();
             }}
           >
             批量删除
@@ -195,15 +204,15 @@ const TagList = () => {
           search: {
             size: 'small',
             name: 'name',
-            onSearch: (name) => {
+            onSearch: name => {
               fetchTags({
                 variables: {
                   search: {
                     name,
                   },
                 },
-              })
-              return true
+              });
+              return true;
             },
           },
           reload: false,
@@ -216,13 +225,13 @@ const TagList = () => {
             size='small'
             icon={<SyncOutlined />}
             onClick={() => {
-              setLoading(true)
+              setLoading(true);
               syncTagCount().then(async () => {
-                await refetch()
-                actionRef.current?.reload()
-                message.success('同步成功')
-                setLoading(false)
-              })
+                await refetch();
+                actionRef.current?.reload();
+                message.success('同步成功');
+                setLoading(false);
+              });
             }}
           >
             同步数量
@@ -240,10 +249,10 @@ const TagList = () => {
         tag={temp}
         visible={visible}
         onChange={setVisible}
-        onFinish={(values) => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
+        onFinish={values => (temp?.id ? confirmUpdate(values) : confirmCreate(values))}
       />
     </Container>
-  )
-}
+  );
+};
 
-export default TagList
+export default TagList;

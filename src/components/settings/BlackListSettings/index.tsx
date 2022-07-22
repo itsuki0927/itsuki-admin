@@ -1,5 +1,5 @@
 import { useBlackList, useUpdateBlackList } from '@/hooks/blacklist'
-import type { API } from '@/services/ant-design-pro/typings'
+import type { API } from '@/entities/typings'
 import { CheckOutlined } from '@ant-design/icons'
 import ProForm, { ProFormSelect } from '@ant-design/pro-form'
 import { Col, message, Row, Spin } from 'antd'

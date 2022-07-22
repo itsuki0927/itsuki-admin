@@ -1,6 +1,6 @@
 import { CommentAvatar } from '@/components/common'
 import { cs } from '@/constants/comment'
-import type { CommentTree } from '@/services/ant-design-pro/comment'
+import type { CommentTree } from '@/entities/comment'
 import { formatDate } from '@/transforms/date'
 import { parserBrowser, parserOS } from '@/transforms/ua'
 import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons'

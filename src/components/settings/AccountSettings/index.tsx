@@ -1,6 +1,6 @@
 import { ImageUploader } from '@/components/common'
 import { useUpdateAdmin } from '@/hooks/admin'
-import type { AdminSaveRequest } from '@/services/ant-design-pro/admin'
+import type { AdminSaveRequest } from '@/entities/admin'
 import { CheckOutlined } from '@ant-design/icons'
 import ProForm, { ProFormText } from '@ant-design/pro-form'
 import { Col, Form, message, Row } from 'antd'

@@ -2,7 +2,7 @@ import { CommentDrawer, CommentTable } from '@/components/comment'
 import type { CommentTableRef } from '@/components/comment/CommentTable'
 import { Container } from '@/components/common'
 import { useComment, useUpdateComment } from '@/hooks/comment'
-import type { API } from '@/services/ant-design-pro/typings'
+import type { API } from '@/entities/typings'
 import { message } from 'antd'
 import { useRef, useState } from 'react'
 

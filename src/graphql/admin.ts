@@ -1,21 +1,21 @@
-import type { MutationRequest } from '@/helper/http.interface'
+import { gql } from '@apollo/client';
+import type { MutationRequest } from '@/helper/http.interface';
 import type {
   AdminSaveRequest,
   AdminUpdatePasswordRequest,
   LoginParams,
   LoginResponse,
-} from '@/services/ant-design-pro/admin'
-import { gql } from '@apollo/client'
+} from '@/entities/admin';
 
 export type AdminLoginResponse = {
-  login: LoginResponse
-}
+  login: LoginResponse;
+};
 
-export type AdminLoginInput = MutationRequest<LoginParams>
+export type AdminLoginInput = MutationRequest<LoginParams>;
 
-export type UpdateAdminInput = MutationRequest<AdminSaveRequest>
+export type UpdateAdminInput = MutationRequest<AdminSaveRequest>;
 
-export type UpdateAdminPasswordInput = MutationRequest<AdminUpdatePasswordRequest>
+export type UpdateAdminPasswordInput = MutationRequest<AdminUpdatePasswordRequest>;
 
 export const LOGIN = gql`
   mutation login($input: LoginRequest!) {
@@ -25,7 +25,7 @@ export const LOGIN = gql`
       state
     }
   }
-`
+`;
 
 export const UPDATE_ADMIN = gql`
   mutation updateAdmin($input: UpdateAdminInput!) {
@@ -35,7 +35,7 @@ export const UPDATE_ADMIN = gql`
       nickname
     }
   }
-`
+`;
 
 export const UPDATE_ADMIN_PASSWORD = gql`
   mutation updateAdminPassword($input: UpdateAdminPasswordInput!) {
@@ -43,4 +43,4 @@ export const UPDATE_ADMIN_PASSWORD = gql`
       nickname
     }
   }
-`
+`;

@@ -1,4 +1,4 @@
-import type { SiteSummaryResponse } from '@/services/ant-design-pro/siteinfo'
+import type { SiteSummaryResponse } from '@/entities/siteinfo'
 import { CoffeeOutlined, CommentOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons'
 import { StatisticCard } from '@ant-design/pro-card'
 import classNames from 'classnames'

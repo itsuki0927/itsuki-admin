@@ -4,8 +4,8 @@ import type {
   ArticleDetailResponse,
   ArticleSearchRequest,
   ArticleSummaryResponse,
-} from '@/services/ant-design-pro/article';
-import type { API } from '@/services/ant-design-pro/typings';
+} from '@/entities/article';
+import type { API } from '@/entities/typings';
 import type {
   ID,
   MutationRequest,
