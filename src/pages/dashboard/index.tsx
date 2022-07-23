@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [fetchArticleSummary, { data: articleSummary, loading: articleLoading }] =
     useArticleSummary();
   const [fetchSummary, { data: siteSummary, loading: siteLoading }] = useSummary();
+
   useEffect(() => {
     fetchArticleSummary();
   }, [fetchArticleSummary]);

@@ -1,30 +1,29 @@
-import { ImageUploader } from '@/components/common'
-import { useUpdateAdmin } from '@/hooks/admin'
-import type { AdminSaveRequest } from '@/entities/admin'
-import { CheckOutlined } from '@ant-design/icons'
-import ProForm, { ProFormText } from '@ant-design/pro-form'
-import { Col, Form, message, Row } from 'antd'
-import { useModel } from 'umi'
+import { CheckOutlined } from '@ant-design/icons';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
+import { Col, Form, message, Row } from 'antd';
+import { ImageUploader } from '@/components/common';
+import { useUpdateAdmin } from '@/hooks/admin';
+import type { AdminSaveRequest } from '@/entities/admin';
 
 const AccountSettings = () => {
-  const { initialState, setInitialState } = useModel('@@initialState')
-  const updateAdmin = useUpdateAdmin()
+  // const { initialState, setInitialState } = useModel('@@initialState')
+  const updateAdmin = useUpdateAdmin();
 
   const handleFinish = async (input: AdminSaveRequest) => {
     await updateAdmin({
       variables: {
         input,
       },
-    })
-    setInitialState((s) => ({
-      ...s,
-      currentUser: {
-        ...s?.currentUser!,
-        ...input,
-      },
-    }))
-    message.success('保存成功')
-  }
+    });
+    // setInitialState((s) => ({
+    //   ...s,
+    //   currentUser: {
+    //     ...s?.currentUser!,
+    //     ...input,
+    //   },
+    // }))
+    message.success('保存成功');
+  };
 
   return (
     <ProForm<AdminSaveRequest>
@@ -43,7 +42,7 @@ const AccountSettings = () => {
         ),
       }}
       labelCol={{ span: 4 }}
-      initialValues={initialState?.currentUser}
+      // initialValues={initialState?.currentUser}
       onFinish={handleFinish}
     >
       <Form.Item
@@ -67,6 +66,6 @@ const AccountSettings = () => {
         rules={[{ required: true, message: '请输入签名' }]}
       />
     </ProForm>
-  )
-}
-export default AccountSettings
+  );
+};
+export default AccountSettings;

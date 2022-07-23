@@ -1,25 +1,35 @@
-import { CommentAvatar } from '@/components/common'
-import { cs } from '@/constants/comment'
-import type { CommentTree } from '@/entities/comment'
-import { formatDate } from '@/transforms/date'
-import { parserBrowser, parserOS } from '@/transforms/ua'
-import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, Comment, Divider, Drawer, Empty, Row, Spin, Tag, Typography } from 'antd'
-import { history } from 'umi'
+import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Comment,
+  Divider,
+  Drawer,
+  Empty,
+  Row,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { CommentAvatar } from '@/components/common';
+import { cs } from '@/constants/comment';
+import type { CommentTree } from '@/entities/comment';
+import { formatDate } from '@/transforms/date';
+import { parserBrowser, parserOS } from '@/transforms/ua';
 
 interface ArticleCommentProps {
-  visible: boolean
-  onClose: () => void
-  comments?: CommentTree[]
-  count?: number
-  loading?: boolean
-  onRefresh?: () => void
+  visible: boolean;
+  onClose: () => void;
+  comments?: CommentTree[];
+  count?: number;
+  loading?: boolean;
+  onRefresh?: () => void;
 }
 
 const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) => {
   return (
     <>
-      {comments?.map((comment) => {
+      {comments?.map(comment => {
         return (
           <Comment
             key={comment.id}
@@ -41,7 +51,7 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
               <div>
                 {comment.loginType === 'github' ? (
                   <a
-                    href={'https://github.com/' + comment.nickname}
+                    href={`https://github.com/${comment.nickname}`}
                     title={comment.nickname}
                     target='_blank'
                     rel='noreferrer'
@@ -72,11 +82,11 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
             <Divider style={{ margin: '12px 0' }} />
             <CommentTreeList comments={comment.children} />
           </Comment>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 const ArticleComment = ({
   visible,
@@ -86,6 +96,7 @@ const ArticleComment = ({
   loading,
   onRefresh,
 }: ArticleCommentProps) => {
+  const history = useNavigate();
   return (
     <Drawer
       width='60%'
@@ -94,14 +105,19 @@ const ArticleComment = ({
       title={`文章评论 (${count ?? '-'})`}
       footer={
         <Row justify='space-between' align='middle'>
-          <Button type='dashed' icon={<ReloadOutlined />} size='small' onClick={onRefresh}>
+          <Button
+            type='dashed'
+            icon={<ReloadOutlined />}
+            size='small'
+            onClick={onRefresh}
+          >
             刷新评论
           </Button>
           <Button
             type='primary'
             icon={<EditOutlined />}
             size='small'
-            onClick={() => history.push('/comment')}
+            onClick={() => history('/comment')}
           >
             管理评论
           </Button>
@@ -109,10 +125,14 @@ const ArticleComment = ({
       }
     >
       <Spin spinning={loading}>
-        {!count ? <Empty description='无数据' /> : <CommentTreeList comments={comments} />}
+        {!count ? (
+          <Empty description='无数据' />
+        ) : (
+          <CommentTreeList comments={comments} />
+        )}
       </Spin>
     </Drawer>
-  )
-}
+  );
+};
 
-export default ArticleComment
+export default ArticleComment;

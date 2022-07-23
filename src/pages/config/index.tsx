@@ -1,17 +1,21 @@
-import { Container } from '@/components/common'
-import { AccountSettings, PasswordSettings, BlackListSettings } from '@/components/settings'
-import useQuery from '@/hooks/useQuery'
-import { LockOutlined, SecurityScanOutlined, UserOutlined } from '@ant-design/icons'
-import ProCard from '@ant-design/pro-card'
-import { GridContent } from '@ant-design/pro-layout'
-import { Menu } from 'antd'
-import { useEffect, useState } from 'react'
-import { history } from 'umi'
-import styles from './style.less'
+import { LockOutlined, SecurityScanOutlined, UserOutlined } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
+import { GridContent } from '@ant-design/pro-layout';
+import { Menu } from 'antd';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container } from '@/components/common';
+import {
+  AccountSettings,
+  PasswordSettings,
+  BlackListSettings,
+} from '@/components/settings';
+import useQuery from '@/hooks/useQuery';
+import styles from './style.less';
 
-const { Item } = Menu
+const { Item } = Menu;
 
-type ConfigStateKeys = 'blacklist' | 'account' | 'password'
+type ConfigStateKeys = 'blacklist' | 'account' | 'password';
 
 const menuMap = {
   blacklist: {
@@ -26,40 +30,41 @@ const menuMap = {
     text: '密码设置',
     icon: <LockOutlined />,
   },
-}
+};
 
 const SystemSettings = () => {
-  const [selectKey, setSelectKey] = useState<ConfigStateKeys>('blacklist')
-  const { tab = 'blacklist' } = useQuery<{ tab: string }>()
+  const [selectKey, setSelectKey] = useState<ConfigStateKeys>('blacklist');
+  const { tab = 'blacklist' } = useQuery<{ tab: string }>();
+  const history = useNavigate();
 
   useEffect(() => {
     if (tab !== selectKey) {
-      setSelectKey(tab as ConfigStateKeys)
+      setSelectKey(tab as ConfigStateKeys);
     }
-  }, [selectKey, tab])
+  }, [selectKey, tab]);
 
   const getMenu = () =>
-    Object.keys(menuMap).map((item) => <Item key={item}>{menuMap[item].text}</Item>)
+    Object.keys(menuMap).map(item => <Item key={item}>{menuMap[item].text}</Item>);
 
   const getRightTitle = () => (
     <div>
       <span style={{ marginRight: 14 }}>{menuMap[selectKey].icon}</span>
       {menuMap[selectKey].text}
     </div>
-  )
+  );
 
   const renderChildren = () => {
     switch (selectKey) {
       case 'blacklist':
-        return <BlackListSettings />
+        return <BlackListSettings />;
       case 'account':
-        return <AccountSettings />
+        return <AccountSettings />;
       case 'password':
-        return <PasswordSettings />
+        return <PasswordSettings />;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <Container>
@@ -70,8 +75,8 @@ const SystemSettings = () => {
               <Menu
                 selectedKeys={[selectKey]}
                 onClick={({ key }) => {
-                  history.replace(`${location.pathname}?tab=${key}`)
-                  setSelectKey(key as ConfigStateKeys)
+                  history(`${location.pathname}?tab=${key}`, { replace: true });
+                  setSelectKey(key as ConfigStateKeys);
                 }}
               >
                 {getMenu()}
@@ -85,7 +90,7 @@ const SystemSettings = () => {
         </GridContent>
       </ProCard>
     </Container>
-  )
-}
+  );
+};
 
-export default SystemSettings
+export default SystemSettings;

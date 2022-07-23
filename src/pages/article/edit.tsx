@@ -1,30 +1,31 @@
-import { ArticleComment, ArticleForm } from '@/components/article'
-import { Container } from '@/components/common'
-import { MAX_PAGE_SIZE } from '@/constants/common'
-import { useArticle, useDeleteArticle, useUpdateArticle } from '@/hooks/article'
-import { useComments } from '@/hooks/comment'
-import { convertToCommentTreeData } from '@/transforms/tree'
-import { getBlogArticleUrl } from '@/transforms/url'
+import { Badge, Button, message, Modal, Space } from 'antd';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CommentOutlined,
   DeleteOutlined,
   EyeOutlined,
   LikeOutlined,
   RocketOutlined,
-} from '@ant-design/icons'
-import { Badge, Button, message, Modal, Space } from 'antd'
-import { useState } from 'react'
-import { history, useParams } from 'umi'
+} from '@ant-design/icons';
+import { ArticleComment, ArticleForm } from '@/components/article';
+import { Container } from '@/components/common';
+import { MAX_PAGE_SIZE } from '@/constants/common';
+import { useArticle, useDeleteArticle, useUpdateArticle } from '@/hooks/article';
+import { useComments } from '@/hooks/comment';
+import { convertToCommentTreeData } from '@/transforms/tree';
+import { getBlogArticleUrl } from '@/transforms/url';
 
 const EditArticle = () => {
-  const { id } = useParams<{ id: string }>()
-  const articleId = +id
-  const { article, loading, updateQuery, cacheID } = useArticle(articleId)
-  const [commentVisible, setCommentVisible] = useState(false)
-  const [updateArticle] = useUpdateArticle()
-  const [deleteArticle] = useDeleteArticle()
+  const { id } = useParams<{ id: string }>();
+  const history = useNavigate();
+  const articleId = Number(id ?? 0);
+  const { article, loading, updateQuery, cacheID } = useArticle(articleId);
+  const [commentVisible, setCommentVisible] = useState(false);
+  const [updateArticle] = useUpdateArticle();
+  const [deleteArticle] = useDeleteArticle();
 
-  const [fetchComments, { data: comments, loading: commentLoading }] = useComments()
+  const [fetchComments, { data: comments, loading: commentLoading }] = useComments();
 
   const loadComments = () => {
     fetchComments({
@@ -34,14 +35,15 @@ const EditArticle = () => {
           pageSize: MAX_PAGE_SIZE,
         },
       },
-    })
-  }
+    });
+  };
 
   const handleRemove = () => {
     Modal.confirm({
       title: (
         <p>
-          你确定要删除文章: <strong style={{ color: '#ff4d4f' }}>《{article?.title}》</strong>
+          你确定要删除文章:{' '}
+          <strong style={{ color: '#ff4d4f' }}>《{article?.title}》</strong>
           嘛?
         </p>
       ),
@@ -53,15 +55,15 @@ const EditArticle = () => {
             id: articleId,
           },
         }).then(() => {
-          message.success('删除成功')
-          history.replace('/article/list')
-        })
+          message.success('删除成功');
+          history('/article/list', { replace: true });
+        });
       },
-    })
-  }
+    });
+  };
 
   if (loading || !article) {
-    return <Container loading />
+    return <Container loading />;
   }
 
   return (
@@ -83,8 +85,8 @@ const EditArticle = () => {
               size='small'
               icon={<CommentOutlined />}
               onClick={() => {
-                loadComments()
-                setCommentVisible(true)
+                loadComments();
+                setCommentVisible(true);
               }}
             >
               文章评论
@@ -110,19 +112,19 @@ const EditArticle = () => {
       <ArticleForm
         cacheID={cacheID}
         request={() => Promise.resolve(article)}
-        onFinish={async (values) => {
+        onFinish={async values => {
           await updateArticle({
             variables: {
               id: article.id,
               input: values,
             },
-          })
-          message.success('更新成功')
-          updateQuery((prevData) => ({
+          });
+          message.success('更新成功');
+          updateQuery(prevData => ({
             ...prevData,
             ...values,
-          }))
-          return true
+          }));
+          return true;
         }}
       />
       <ArticleComment
@@ -134,7 +136,7 @@ const EditArticle = () => {
         onClose={() => setCommentVisible(false)}
       />
     </Container>
-  )
-}
+  );
+};
 
-export default EditArticle
+export default EditArticle;

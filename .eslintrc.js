@@ -1,6 +1,6 @@
-const OFF = 'off' // 关闭使用某项规则
-const ERROR = 'error' // 禁止使用某项规则
-const WARNING = 'warn' // 警告使用某项规则
+const OFF = 'off'; // 关闭使用某项规则
+const ERROR = 'error'; // 禁止使用某项规则
+const WARNING = 'warn'; // 警告使用某项规则
 
 module.exports = {
   root: true,
@@ -19,6 +19,8 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    // () => + return 省略return
+    'arrow-body-style': OFF,
     // 关闭a链接href警告
     'jsx-a11y/anchor-is-valid': OFF,
     // jsx 中使用单引号
@@ -69,4 +71,4 @@ module.exports = {
     // 允许 使用any
     '@typescript-eslint/no-explicit-any': OFF,
   },
-}
+};

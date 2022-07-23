@@ -1,41 +1,42 @@
-import { useUpdateAdminPassword } from '@/hooks/admin'
-import type { AdminUpdatePasswordRequest } from '@/entities/admin'
-import { removeToken } from '@/utils/auth'
-import { CheckOutlined } from '@ant-design/icons'
-import type { ProFormInstance } from '@ant-design/pro-form'
-import ProForm, { ProFormText } from '@ant-design/pro-form'
-import { Col, notification, Row } from 'antd'
-import { useRef } from 'react'
-import { history } from 'umi'
+import { CheckOutlined } from '@ant-design/icons';
+import type { ProFormInstance } from '@ant-design/pro-form';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
+import { Col, notification, Row } from 'antd';
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { removeToken } from '@/utils/auth';
+import type { AdminUpdatePasswordRequest } from '@/entities/admin';
+import { useUpdateAdminPassword } from '@/hooks/admin';
 
 const PasswordSettings = () => {
-  const formRef = useRef<ProFormInstance<AdminUpdatePasswordRequest>>()
-  const updateAdminPassword = useUpdateAdminPassword()
+  const formRef = useRef<ProFormInstance<AdminUpdatePasswordRequest>>();
+  const history = useNavigate();
+  const updateAdminPassword = useUpdateAdminPassword();
 
   // 验证重复输入密码
   const validatePassword = async () => {
-    const password = formRef.current?.getFieldValue('password')
-    const newPassword = formRef.current?.getFieldValue('newPassword')
-    const confirm = formRef.current?.getFieldValue('confirm')
+    const password = formRef.current?.getFieldValue('password');
+    const newPassword = formRef.current?.getFieldValue('newPassword');
+    const confirm = formRef.current?.getFieldValue('confirm');
     if (!password && !newPassword && !confirm) {
-      return
+      return;
     }
     if (newPassword !== confirm || password === newPassword) {
-      throw new Error()
+      throw new Error();
     }
-  }
+  };
 
   const handleUpdatePassword = async (input: AdminUpdatePasswordRequest) => {
-    await updateAdminPassword({ variables: { input } })
+    await updateAdminPassword({ variables: { input } });
     notification.info({
       message: '修改了新密码，即将跳转到登录页...',
-    })
+    });
     setTimeout(() => {
-      removeToken()
-      history.push('/user/login')
-      location.reload()
-    }, 1680)
-  }
+      removeToken();
+      history('/user/login');
+      location.reload();
+    }, 1680);
+  };
 
   return (
     <ProForm<AdminUpdatePasswordRequest>
@@ -85,6 +86,6 @@ const PasswordSettings = () => {
         ]}
       />
     </ProForm>
-  )
-}
-export default PasswordSettings
+  );
+};
+export default PasswordSettings;
