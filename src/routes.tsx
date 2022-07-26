@@ -1,10 +1,11 @@
+import type { MenuProps } from 'antd';
 import {
   SettingOutlined,
-  DashOutlined,
   TagOutlined,
   MessageOutlined,
   CoffeeOutlined,
   SmileOutlined,
+  DashboardOutlined,
 } from '@ant-design/icons';
 import Login from './pages/admin/login';
 import EditArticle from './pages/article/edit';
@@ -14,9 +15,9 @@ import Dashboard from './pages/dashboard';
 import TagList from './pages/tag/list';
 import SystemSettings from './pages/config';
 import CreateArticle from './pages/article/create';
-import Menu, { MenuProps } from 'rc-menu/lib/Menu';
+import Page404 from './pages/Page404';
 
-interface RouteOptoins {
+export interface RouteOptoins {
   path: string;
   name?: string;
   icon?: JSX.Element;
@@ -31,7 +32,7 @@ export const routes: RouteOptoins[] = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    icon: <DashOutlined />,
+    icon: <DashboardOutlined />,
     component: Dashboard,
     needPermission: true,
   },
@@ -39,12 +40,7 @@ export const routes: RouteOptoins[] = [
     path: '/user',
     layout: false,
     needPermission: false,
-    routes: [
-      {
-        path: '/user',
-        routes: [{ name: '登录', path: '/user/login', component: Login }],
-      },
-    ],
+    routes: [{ name: '登录', path: '/login', component: Login }],
   },
   {
     path: '/article',
@@ -86,7 +82,6 @@ export const routes: RouteOptoins[] = [
     name: '标签管理',
     icon: <TagOutlined />,
     component: TagList,
-
     needPermission: true,
   },
   {
@@ -97,22 +92,43 @@ export const routes: RouteOptoins[] = [
     needPermission: true,
   },
   { path: '/', redirect: '/dashboard' },
-  { path: '*', component: './404' },
+  { path: '*', component: <Page404 /> },
 ];
 
-const convertRoutesToAntdMenu = (routes: RouteOptoins[]) => {
-  const menu = routes.map(({ name, path, icon, routes }) => ({
-    label: name,
-    key: path,
-    icon,
-    children: routes ? convertRoutesToAntdMenu(routes) : [],
-  })) as MenuProps['items'];
+export const convertRoutesToAntdMenu = (routes: RouteOptoins[]) => {
+  const menus = routes
+    .filter(v => {
+      return v.layout !== false && !v.redirect && v.path !== '*' && !v.hideInMenu;
+    })
+    .map(({ name, path, icon, routes: children }) => ({
+      label: name,
+      key: path,
+      icon,
+      children: children ? convertRoutesToAntdMenu(children) : null,
+    })) as MenuProps['items'];
 
-  return menu;
+  return menus;
 };
 
-export const renderMenu = (routes: RouteOptoins[]) => {
-  const menus = convertRoutesToAntdMenu(routes);
-  console.log(menus);
-  return <Menu items={menus}></Menu>;
+export const renderRoutes = (routes: RouteOptoins[]) => {
+  return (
+    <Routes>
+      {routes
+        .filter(v => !v.redirect)
+        .map(route => {
+          // if(route.needPermission){
+          //   return false;
+          // }
+          if (route.redirect) return null;
+          const Comp = route.component;
+          return (
+            <Route
+              path={route.path}
+              element={<Comp />}
+              children={renderRoutes(route.routes)}
+            />
+          );
+        })}
+    </Routes>
+  );
 };

@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 import type { MutationRequest } from '@/helper/http.interface';
 import type {
+  Admin,
   AdminSaveRequest,
   AdminUpdatePasswordRequest,
   LoginParams,
@@ -16,6 +17,10 @@ export type AdminLoginInput = MutationRequest<LoginParams>;
 export type UpdateAdminInput = MutationRequest<AdminSaveRequest>;
 
 export type UpdateAdminPasswordInput = MutationRequest<AdminUpdatePasswordRequest>;
+
+export type QueryCurrentAdminResponse = {
+  currentAdmin: Admin;
+};
 
 export const LOGIN = gql`
   mutation login($input: LoginRequest!) {
@@ -41,6 +46,18 @@ export const UPDATE_ADMIN_PASSWORD = gql`
   mutation updateAdminPassword($input: UpdateAdminPasswordInput!) {
     updateAdminPassword(input: $input) {
       nickname
+    }
+  }
+`;
+
+export const QUERY_CURRENT_ADMIN = gql`
+  query currentAdmin {
+    currentAdmin {
+      nickname
+      role
+      avatar
+      username
+      description
     }
   }
 `;

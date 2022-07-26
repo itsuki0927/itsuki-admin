@@ -1,24 +1,36 @@
-import type {
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
   AdminLoginInput,
   AdminLoginResponse,
+  QueryCurrentAdminResponse,
+  QUERY_CURRENT_ADMIN,
   UpdateAdminInput,
   UpdateAdminPasswordInput,
-} from '@/graphql/admin'
-import { UPDATE_ADMIN_PASSWORD, UPDATE_ADMIN } from '@/graphql/admin'
-import { LOGIN } from '@/graphql/admin'
-import { useMutation } from '@apollo/client'
+  UPDATE_ADMIN_PASSWORD,
+  UPDATE_ADMIN,
+  LOGIN,
+} from '@/graphql/admin';
 
 export const useLogin = () => {
-  const [login] = useMutation<AdminLoginResponse, AdminLoginInput>(LOGIN)
-  return login
-}
+  const [login] = useMutation<AdminLoginResponse, AdminLoginInput>(LOGIN);
+  return login;
+};
 
 export const useUpdateAdmin = () => {
-  const [updateAdmin] = useMutation<void, UpdateAdminInput>(UPDATE_ADMIN)
-  return updateAdmin
-}
+  const [updateAdmin] = useMutation<void, UpdateAdminInput>(UPDATE_ADMIN);
+  return updateAdmin;
+};
 
 export const useUpdateAdminPassword = () => {
-  const [updateAdminPassword] = useMutation<void, UpdateAdminPasswordInput>(UPDATE_ADMIN_PASSWORD)
-  return updateAdminPassword
-}
+  const [updateAdminPassword] = useMutation<void, UpdateAdminPasswordInput>(
+    UPDATE_ADMIN_PASSWORD
+  );
+  return updateAdminPassword;
+};
+
+export const useCurrentAdmin = () => {
+  const [fetchCurrentAdmin] = useLazyQuery<QueryCurrentAdminResponse, void>(
+    QUERY_CURRENT_ADMIN
+  );
+  return fetchCurrentAdmin;
+};
