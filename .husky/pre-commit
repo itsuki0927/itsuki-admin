@@ -3,7 +3,7 @@
 
 echo '🏗️👷 Styling, testing your project before commit'
 
-# yarn lint-staged
+yarn lint-staged
 
 # If everything passes... Now we can commit
 echo '✅✅✅✅ You win this time... I am commit this now. ✅✅✅✅'
