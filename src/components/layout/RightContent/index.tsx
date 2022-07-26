@@ -1,13 +1,13 @@
-import { Space } from 'antd'
-import { Link, useModel } from 'umi'
-import HeaderSearch from '../HeaderSearch'
-import Avatar from './AvatarDropdown'
-import styles from './index.less'
+import { Space } from 'antd';
+import { Link } from 'react-router-dom';
+import HeaderSearch from '../HeaderSearch';
+import Avatar from './AvatarDropdown';
+import styles from './index.module.less';
 
 const renderItem = (title: string, url: string) => ({
   value: title,
   label: <Link to={url}>{title}</Link>,
-})
+});
 
 const options = [
   {
@@ -16,11 +16,10 @@ const options = [
   },
   {
     label: '文章管理',
-    options: [renderItem('文章列表', '/article/list'), renderItem('新撰文章', '/article/create')],
-  },
-  {
-    label: '片段管理',
-    options: [renderItem('片段列表', '/snippet/list'), renderItem('新撰片段', '/snippet/create')],
+    options: [
+      renderItem('文章列表', '/article/list'),
+      renderItem('新撰文章', '/article/create'),
+    ],
   },
   {
     label: <Link to='/comment'>评论管理</Link>,
@@ -38,26 +37,13 @@ const options = [
     label: <Link to='/settings'>系统设置</Link>,
     value: '系统设置',
   },
-]
+];
 
-export type SiderTheme = 'light' | 'dark'
+export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { initialState } = useModel('@@initialState')
-
-  if (!initialState || !initialState.settings) {
-    return null
-  }
-
-  const { navTheme, layout } = initialState.settings
-  let className = styles.right
-
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
-    className = `${styles.right}  ${styles.dark}`
-  }
-
   return (
-    <Space className={className}>
+    <Space className={styles.right}>
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
         placeholder='站内搜索'
@@ -65,7 +51,7 @@ const GlobalHeaderRight: React.FC = () => {
       />
       <Avatar menu />
     </Space>
-  )
-}
+  );
+};
 
-export default GlobalHeaderRight
+export default GlobalHeaderRight;

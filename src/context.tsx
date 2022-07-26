@@ -1,19 +1,26 @@
-import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { Admin } from './entities/admin';
-import { useCurrentAdmin } from './hooks/admin';
+import { useFetchCurrentAdmin } from './hooks/admin';
 
 interface AdminContextType {
   currentAdmin?: Admin;
-  setCurrentAdmin?: (admin: Admin) => void;
+  setCurrentAdmin?: (admin: Admin | undefined) => void;
   fetchCurrentAdmin?: () => Promise<Admin | undefined>;
 }
 export const AdminContext = createContext<AdminContextType>({});
 
 export const AdminProvider = ({ children }: PropsWithChildren) => {
   const [currentAdmin, setCurrentAdmin] = useState<Admin | undefined>(undefined);
-  const fetch = useCurrentAdmin();
+  const fetch = useFetchCurrentAdmin();
 
-  const fetchCurrentAdmin = async () => {
+  const fetchCurrentAdmin = useCallback(async () => {
     if (currentAdmin) {
       return currentAdmin;
     }
@@ -21,7 +28,7 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
     setCurrentAdmin(data?.currentAdmin);
     console.log('data', data);
     return data?.currentAdmin;
-  };
+  }, [currentAdmin, fetch]);
 
   const value = useMemo<AdminContextType>(() => {
     return {

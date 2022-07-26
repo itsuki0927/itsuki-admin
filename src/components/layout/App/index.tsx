@@ -1,17 +1,20 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import React, { useCallback, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { convertRoutesToAntdMenu, RouteOptoins, routes } from '../../../routes';
 import logoImg from '@/assets/logo.png';
 import styles from './styles.module.less';
+import RightContent from '../RightContent';
+import { useFetchCurrentAdmin } from '@/hooks/admin';
+import { useAdmin } from '@/context';
 
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
   const menus = convertRoutesToAntdMenu(routes);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { fetchCurrentAdmin } = useAdmin();
   const renderRoutes = useCallback((list: RouteOptoins[]) => {
     return list
       .filter(v => !v.redirect)
@@ -31,11 +34,18 @@ const App: React.FC = () => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log('location', location);
+    if (location.pathname !== '/login') {
+      fetchCurrentAdmin?.();
+    }
+  }, [location, fetchCurrentAdmin]);
+
   return (
     <Layout className={styles.app}>
       <Sider theme='light' width={250}>
         <div className={styles.logo}>
-          <img className={styles.img} src={logoImg} />
+          <img className={styles.img} src={logoImg} alt='logo' />
           <h1 className={styles.title}>Itsuki Admin</h1>
         </div>
         <Menu
@@ -47,11 +57,8 @@ const App: React.FC = () => {
         />
       </Sider>
       <Layout className='site-layout'>
-        <Header className='site-layout-background' style={{ padding: 0 }}>
-          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: () => setCollapsed(!collapsed),
-          })}
+        <Header className={styles.header}>
+          <RightContent />
         </Header>
         <Content className='site-layout-background'>
           <Routes>{renderRoutes(routes)}</Routes>

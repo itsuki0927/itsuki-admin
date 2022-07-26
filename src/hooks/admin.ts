@@ -28,7 +28,7 @@ export const useUpdateAdminPassword = () => {
   return updateAdminPassword;
 };
 
-export const useCurrentAdmin = () => {
+export const useFetchCurrentAdmin = () => {
   const [fetchCurrentAdmin] = useLazyQuery<QueryCurrentAdminResponse, void>(
     QUERY_CURRENT_ADMIN
   );
