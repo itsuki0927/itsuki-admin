@@ -34,7 +34,7 @@ const PasswordSettings = () => {
     setTimeout(() => {
       removeToken();
       history('/user/login');
-      location.reload();
+      window.location.reload();
     }, 1680);
   };
 

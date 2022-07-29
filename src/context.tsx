@@ -9,9 +9,9 @@ import {
   useState,
 } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Admin, LoginParams } from './entities/admin';
+import { Admin, AdminSaveRequest, LoginParams } from './entities/admin';
 import { AdminLoginResponse } from './graphql/admin';
-import { useFetchCurrentAdmin, useLogin } from './hooks/admin';
+import { useFetchCurrentAdmin, useLogin, useUpdateAdmin } from './hooks/admin';
 import { removeToken, setToken } from './utils/auth';
 
 interface AdminContextType {
@@ -19,6 +19,7 @@ interface AdminContextType {
   fetchCurrentAdmin?: () => Promise<Admin | undefined>;
   logout?: () => void;
   login?: (input: LoginParams) => Promise<AdminLoginResponse | undefined>;
+  updateAdmin?: (input: AdminSaveRequest) => Promise<void>;
 }
 export const AdminContext = createContext<AdminContextType>({});
 
@@ -29,6 +30,7 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const requestLogin = useLogin();
   const [searchParams] = useSearchParams();
+  const updateAdminRequest = useUpdateAdmin();
 
   const fetchCurrentAdmin = useCallback(async () => {
     if (currentAdmin) {
@@ -75,12 +77,28 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
     [fetchCurrentAdmin, navigate, requestLogin, searchParams]
   );
 
+  const updateAdmin = useCallback(
+    async (input: AdminSaveRequest) => {
+      await updateAdminRequest({
+        variables: {
+          input,
+        },
+      });
+      setCurrentAdmin({
+        ...currentAdmin,
+        ...input,
+      });
+    },
+    [updateAdminRequest, currentAdmin]
+  );
+
   const value = useMemo<AdminContextType>(() => {
     return {
       currentAdmin,
       fetchCurrentAdmin,
       logout,
       login,
+      updateAdmin,
     };
   }, [currentAdmin, fetchCurrentAdmin, login, logout]);
 

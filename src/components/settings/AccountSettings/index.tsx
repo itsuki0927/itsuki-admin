@@ -1,29 +1,21 @@
 import { CheckOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Col, Form, message, Row } from 'antd';
+import { Col, Form, message, Row, Spin } from 'antd';
 import { ImageUploader } from '@/components/common';
-import { useUpdateAdmin } from '@/hooks/admin';
 import type { AdminSaveRequest } from '@/entities/admin';
+import { useAdmin } from '@/context';
 
 const AccountSettings = () => {
-  // const { initialState, setInitialState } = useModel('@@initialState')
-  const updateAdmin = useUpdateAdmin();
+  const { currentAdmin, updateAdmin } = useAdmin();
 
   const handleFinish = async (input: AdminSaveRequest) => {
-    await updateAdmin({
-      variables: {
-        input,
-      },
-    });
-    // setInitialState((s) => ({
-    //   ...s,
-    //   currentUser: {
-    //     ...s?.currentUser!,
-    //     ...input,
-    //   },
-    // }))
+    await updateAdmin?.(input);
     message.success('保存成功');
   };
+
+  if (!currentAdmin) {
+    return <Spin />;
+  }
 
   return (
     <ProForm<AdminSaveRequest>
@@ -42,7 +34,7 @@ const AccountSettings = () => {
         ),
       }}
       labelCol={{ span: 4 }}
-      // initialValues={initialState?.currentUser}
+      initialValues={currentAdmin}
       onFinish={handleFinish}
     >
       <Form.Item
