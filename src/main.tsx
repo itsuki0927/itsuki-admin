@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from '@/components/layout/App';
 import { client } from './graphql';
 import { AdminProvider } from './context';
+import './global.less';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
