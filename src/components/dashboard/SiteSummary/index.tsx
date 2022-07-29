@@ -8,7 +8,7 @@ import {
 import { StatisticCard } from '@ant-design/pro-card';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
-import styles from './index.less';
+import styles from './index.module.less';
 
 const list = [
   {

@@ -10,8 +10,7 @@ import { Button, Input, message, notification, Space, Tooltip, Upload } from 'an
 import { useState } from 'react';
 import { copy } from '@/utils/copy';
 import { STATIC_URL } from '@/config';
-// import { request } from 'umi'
-import styles from './index.less';
+import styles from './index.module.less';
 
 const request = () => {
   return Promise.resolve(222);

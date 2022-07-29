@@ -18,7 +18,7 @@ import { CSSTransition } from 'react-transition-group';
 import CodeBlock from '../CodeBlock';
 import ImageUploaderModal from '../ImageUploader/Modal';
 import ScreenFull from '../Screenfull';
-import styles from './index.less';
+import styles from './index.module.less';
 
 export enum UEditorLanguage {
   Markdown = 'markdown',

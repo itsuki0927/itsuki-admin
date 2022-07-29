@@ -1,6 +1,6 @@
 import { CheckCircleOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons';
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import styles from './index.less';
+import styles from './index.module.less';
 
 export interface TagItem {
   value: number;

@@ -1,7 +1,7 @@
 import { CaretUpOutlined } from '@ant-design/icons';
 import { BackTop } from 'antd';
 import type { PropsWithChildren } from 'react';
-import styles from './index.less';
+import styles from './index.module.less';
 
 const MainContent: PropsWithChildren<any> = ({ children }) => {
   return (

@@ -11,7 +11,7 @@ import {
   BlackListSettings,
 } from '@/components/settings';
 import useQuery from '@/hooks/useQuery';
-import styles from './style.less';
+import styles from './style.module.less';
 
 const { Item } = Menu;
 
