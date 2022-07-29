@@ -6,5 +6,5 @@ module.exports = {
   // scss 检查
   '*.scss': 'yarn stylelint',
   // code 格式化
-  '*.{ts,tsx,scss,md}': 'yarn format',
+  '*.{ts,tsx,less,md}': 'yarn format',
 };
