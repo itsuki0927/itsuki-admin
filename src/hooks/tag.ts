@@ -1,4 +1,4 @@
-import { DEFAULT_CURRENT, MAX_PAGE_SIZE } from '@/constants/common'
+import { DEFAULT_CURRENT, MAX_PAGE_SIZE } from '@/constants/common';
 import type {
   CreateTagInput,
   CreateTagResponse,
@@ -6,10 +6,16 @@ import type {
   QueryTagSearch,
   UpdateTagInput,
   UpdateTagResponse,
-} from '@/graphql/tag'
-import { CREATE_TAG, DELETE_TAG, QUERY_TAG, SYNC_TAG_COUNT, UPDATE_TAG } from '@/graphql/tag'
-import type { ID } from '@/helper/http.interface'
-import { useLazyQuery, useMutation } from '@apollo/client'
+} from '@/graphql/tag';
+import {
+  CREATE_TAG,
+  DELETE_TAG,
+  QUERY_TAG,
+  SYNC_TAG_COUNT,
+  UPDATE_TAG,
+} from '@/graphql/tag';
+import type { ID } from '@/helper/http.interface';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
 export const useAllTag = () => {
   const [fetchTags, { updateQuery, loading, refetch, data }] = useLazyQuery<
@@ -22,26 +28,26 @@ export const useAllTag = () => {
         pageSize: MAX_PAGE_SIZE,
       },
     },
-  })
-  return { fetchTags, updateQuery, refetch, data, loading } as const
-}
+  });
+  return { fetchTags, updateQuery, refetch, data, loading } as const;
+};
 
 export const useCreateTag = () => {
-  const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG)
-  return createTag
-}
+  const [createTag] = useMutation<CreateTagResponse, CreateTagInput>(CREATE_TAG);
+  return createTag;
+};
 
 export const useDeleteTag = () => {
-  const [deleteTag] = useMutation<void, ID>(DELETE_TAG)
-  return deleteTag
-}
+  const [deleteTag] = useMutation<void, ID>(DELETE_TAG);
+  return deleteTag;
+};
 
 export const useUpdateTag = () => {
-  const [updateTag] = useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG)
-  return updateTag
-}
+  const [updateTag] = useMutation<UpdateTagResponse, UpdateTagInput>(UPDATE_TAG);
+  return updateTag;
+};
 
 export const useSyncTagCount = () => {
-  const [syncTagCount] = useMutation(SYNC_TAG_COUNT)
-  return syncTagCount
-}
+  const [syncTagCount] = useMutation(SYNC_TAG_COUNT);
+  return syncTagCount;
+};

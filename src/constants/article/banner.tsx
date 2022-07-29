@@ -1,4 +1,4 @@
-import { RetweetOutlined, SwapOutlined } from '@ant-design/icons'
+import { RetweetOutlined, SwapOutlined } from '@ant-design/icons';
 
 /** 文章轮播 */
 export enum ArticleBanner {
@@ -20,9 +20,9 @@ const articleBannerMap = new Map(
       icon: <RetweetOutlined />,
       color: 'pink',
     },
-  ].map((item) => [item.id, item])
-)
+  ].map(item => [item.id, item])
+);
 
-export const ab = (state: ArticleBanner) => articleBannerMap.get(state)!
+export const ab = (state: ArticleBanner) => articleBannerMap.get(state)!;
 
-export const articleBanners = [...articleBannerMap.values()]
+export const articleBanners = [...articleBannerMap.values()];

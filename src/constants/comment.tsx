@@ -1,7 +1,12 @@
-import { DeleteOutlined, EditOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  CheckOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 
 /** 留言板 */
-export const COMMENT_GUESTBOOK_ID = 10000
+export const COMMENT_GUESTBOOK_ID = 10000;
 
 /** 评论状态 */
 export enum CommentState {
@@ -37,11 +42,11 @@ const commentStateMap = new Map(
       icon: <DeleteOutlined />,
       color: 'orange',
     },
-  ].map((item) => [item.id, item])
-)
+  ].map(item => [item.id, item])
+);
 
 export const cs = (state: CommentState) => {
-  return commentStateMap.get(state)!
-}
+  return commentStateMap.get(state)!;
+};
 
-export const commentStates = [...commentStateMap.values()]
+export const commentStates = [...commentStateMap.values()];

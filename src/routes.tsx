@@ -37,10 +37,12 @@ export const routes: RouteOptoins[] = [
     needPermission: true,
   },
   {
-    path: '/user',
+    path: '/login',
     layout: false,
     needPermission: false,
-    routes: [{ name: '登录', path: '/login', component: Login }],
+    hideInMenu: false,
+    name: '登陆',
+    component: Login,
   },
   {
     path: '/article',
@@ -108,27 +110,4 @@ export const convertRoutesToAntdMenu = (routes: RouteOptoins[]) => {
     })) as MenuProps['items'];
 
   return menus;
-};
-
-export const renderRoutes = (routes: RouteOptoins[]) => {
-  return (
-    <Routes>
-      {routes
-        .filter(v => !v.redirect)
-        .map(route => {
-          // if(route.needPermission){
-          //   return false;
-          // }
-          if (route.redirect) return null;
-          const Comp = route.component;
-          return (
-            <Route
-              path={route.path}
-              element={<Comp />}
-              children={renderRoutes(route.routes)}
-            />
-          );
-        })}
-    </Routes>
-  );
 };

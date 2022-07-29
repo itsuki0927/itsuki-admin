@@ -1,13 +1,13 @@
-import { FileImageOutlined } from '@ant-design/icons'
-import { Button, Modal, Space } from 'antd'
-import React, { useEffect, useState } from 'react'
-import ImageUploader from './index'
+import { FileImageOutlined } from '@ant-design/icons';
+import { Button, Modal, Space } from 'antd';
+import React, { useEffect, useState } from 'react';
+import ImageUploader from './index';
 
 export interface ImageUploaderModalProps {
-  initValue?: string
-  visible?: boolean
-  onClose?: (value: string) => void
-  prefix: string
+  initValue?: string;
+  visible?: boolean;
+  onClose?: (value: string) => void;
+  prefix: string;
 }
 export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   initValue,
@@ -15,13 +15,13 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   onClose,
   prefix,
 }) => {
-  const [value, setValue] = useState(initValue || '')
+  const [value, setValue] = useState(initValue || '');
 
   useEffect(() => {
     if (!visible) {
-      setValue('')
+      setValue('');
     }
-  }, [visible])
+  }, [visible]);
 
   return (
     <Modal
@@ -43,12 +43,12 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
       <ImageUploader
         prefix={prefix}
         value={value}
-        onChange={(newValue) => {
-          setValue(newValue)
+        onChange={newValue => {
+          setValue(newValue);
         }}
       />
     </Modal>
-  )
-}
+  );
+};
 
-export default ImageUploaderModal
+export default ImageUploaderModal;

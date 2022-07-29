@@ -17,7 +17,12 @@ export default [
     icon: 'coffee',
     routes: [
       { path: '/article', redirect: '/article/list' },
-      { path: '/article/create', name: '撰写文章', icon: 'smile', component: './article/create' },
+      {
+        path: '/article/create',
+        name: '撰写文章',
+        icon: 'smile',
+        component: './article/create',
+      },
       {
         path: '/article/edit/:id',
         name: '更新文章',
@@ -25,7 +30,12 @@ export default [
         component: './article/edit',
         hideInMenu: true,
       },
-      { path: '/article/list', name: '文章列表', icon: 'smile', component: './article/list' },
+      {
+        path: '/article/list',
+        name: '文章列表',
+        icon: 'smile',
+        component: './article/list',
+      },
     ],
   },
   { path: '/comment', name: '评论管理', icon: 'message', component: './comment/list' },
@@ -33,4 +43,4 @@ export default [
   { path: '/settings', name: '系统设置', icon: 'setting', component: './config/index' },
   { path: '/', redirect: '/dashboard' },
   { component: './404' },
-]
+];

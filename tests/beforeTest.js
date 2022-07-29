@@ -11,7 +11,9 @@ const installPuppeteer = () => {
   // get installed package manager
   const packageName = packages.find(detectInstaller.hasPackageCommand) || 'npm';
   console.log(`🤖 will use ${packageName} install puppeteer`);
-  const command = `${packageName} ${packageName.includes('yarn') ? 'add' : 'i'} puppeteer`;
+  const command = `${packageName} ${
+    packageName.includes('yarn') ? 'add' : 'i'
+  } puppeteer`;
   execSync(command, {
     stdio: 'inherit',
   });

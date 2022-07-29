@@ -1,9 +1,14 @@
-import type { SiteSummaryResponse } from '@/entities/siteinfo'
-import { CoffeeOutlined, CommentOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons'
-import { StatisticCard } from '@ant-design/pro-card'
-import classNames from 'classnames'
-import type { ReactNode } from 'react'
-import styles from './index.less'
+import type { SiteSummaryResponse } from '@/entities/siteinfo';
+import {
+  CoffeeOutlined,
+  CommentOutlined,
+  EyeOutlined,
+  TagOutlined,
+} from '@ant-design/icons';
+import { StatisticCard } from '@ant-design/pro-card';
+import classNames from 'classnames';
+import type { ReactNode } from 'react';
+import styles from './index.less';
 
 const list = [
   {
@@ -26,18 +31,18 @@ const list = [
     title: '全站评论',
     icon: <CommentOutlined className={classNames(styles.icon, styles.comment)} />,
   },
-]
+];
 
 interface SiteSummaryProps {
-  summary?: SiteSummaryResponse
+  summary?: SiteSummaryResponse;
 }
 
 const SiteSummary = ({ summary }: SiteSummaryProps) => {
   if (!summary) {
-    return <StatisticCard.Group loading />
+    return <StatisticCard.Group loading />;
   }
 
-  const dom: ReactNode[] = []
+  const dom: ReactNode[] = [];
   list.forEach((item, index) => {
     dom.push(
       <StatisticCard
@@ -47,18 +52,18 @@ const SiteSummary = ({ summary }: SiteSummaryProps) => {
           icon: item.icon,
         }}
       />
-    )
+    );
 
     if (index < list.length - 1) {
-      dom.push(<StatisticCard.Divider />)
+      dom.push(<StatisticCard.Divider />);
     }
-  })
+  });
 
   return (
     <StatisticCard.Group ghost direction={'row'}>
       {dom}
     </StatisticCard.Group>
-  )
-}
+  );
+};
 
-export default SiteSummary
+export default SiteSummary;

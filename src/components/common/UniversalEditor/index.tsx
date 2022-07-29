@@ -1,24 +1,24 @@
-import { saveFile } from '@/utils'
-import storage from '@/utils/storage'
+import { saveFile } from '@/utils';
+import storage from '@/utils/storage';
 import {
   CloudUploadOutlined,
   DownloadOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
   LoadingOutlined,
-} from '@ant-design/icons'
-import Editor from '@monaco-editor/react'
-import { Button, Select, Space, Spin, Typography } from 'antd'
-import classnames from 'classnames'
-import { debounce } from 'lodash'
-import { KeyMod, KeyCode } from 'monaco-editor'
-import type { editor } from 'monaco-editor'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
-import CodeBlock from '../CodeBlock'
-import ImageUploaderModal from '../ImageUploader/Modal'
-import ScreenFull from '../Screenfull'
-import styles from './index.less'
+} from '@ant-design/icons';
+import Editor from '@monaco-editor/react';
+import { Button, Select, Space, Spin, Typography } from 'antd';
+import classnames from 'classnames';
+import { debounce } from 'lodash';
+import { KeyMod, KeyCode } from 'monaco-editor';
+import type { editor } from 'monaco-editor';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import CodeBlock from '../CodeBlock';
+import ImageUploaderModal from '../ImageUploader/Modal';
+import ScreenFull from '../Screenfull';
+import styles from './index.less';
 
 export enum UEditorLanguage {
   Markdown = 'markdown',
@@ -34,51 +34,51 @@ const fileExtMap = new Map([
   [UEditorLanguage.TypeScript, 'ts'],
   [UEditorLanguage.Css, 'css'],
   [UEditorLanguage.Json, 'json'],
-])
+]);
 
-const TOOLBAR_HEIGHT = 48
-const SINGLE_LINE_HEIGHT = 24
-const MIN_ROWS = 34
-const MAX_ROWS = 40
+const TOOLBAR_HEIGHT = 48;
+const SINGLE_LINE_HEIGHT = 24;
+const MIN_ROWS = 34;
+const MAX_ROWS = 40;
 
 const getEditorCacheStorageKey = (id: string) => {
-  return `ueditor-${id}`
-}
+  return `ueditor-${id}`;
+};
 
 const setUEditorCache = debounce((id: string, content: string) => {
-  return storage.set(getEditorCacheStorageKey(id), content)
-}, 666)
+  return storage.set(getEditorCacheStorageKey(id), content);
+}, 666);
 
 export const getUEditorCache = (id: string) => {
-  return storage.get(getEditorCacheStorageKey(id))
-}
+  return storage.get(getEditorCacheStorageKey(id));
+};
 
 export interface UniversalEditorProps {
-  value?: string
-  onChange?: (value?: string) => void
-  placeholder?: string
-  disabled?: boolean
-  loading?: boolean
-  minRows?: number
-  maxRows?: number
+  value?: string;
+  onChange?: (value?: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  loading?: boolean;
+  minRows?: number;
+  maxRows?: number;
   // 编辑区域唯一 ID，默认为 window.location.pathname
-  cacheID?: string | false
+  cacheID?: string | false;
   /** 是否禁用顶部工具栏 */
-  disabledToolbar?: boolean
+  disabledToolbar?: boolean;
   /** 是否禁用编辑器 minimap */
-  disabledMinimap?: boolean
+  disabledMinimap?: boolean;
   /** 是否禁用草稿缓存 */
-  disabledCacheDraft?: boolean
+  disabledCacheDraft?: boolean;
   /** 是否在 UI 上响应 Form 状态 */
-  formStatus?: boolean
-  language?: UEditorLanguage
-  style?: React.CSSProperties
-  size?: 'small' | 'default'
-  uploadPrefix?: string
-  height?: number | string
+  formStatus?: boolean;
+  language?: UEditorLanguage;
+  style?: React.CSSProperties;
+  size?: 'small' | 'default';
+  uploadPrefix?: string;
+  height?: number | string;
 }
 
-const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString()
+const timestampToYMD = (timestamp: number) => new Date(timestamp).toLocaleString();
 
 export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   placeholder = '请输入内容',
@@ -96,59 +96,59 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   height = '80vh',
   ...props
 }) => {
-  const cacheID = props.cacheID || window.location.pathname
-  const [fullscreen, setFullscreen] = useState(false)
-  const [isPreview, setPreview] = useState(false)
-  const [uploaderModalVisible, setUploaderModalVisible] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [language, setLanguage] = useState(props.language ?? UEditorLanguage.JavaScript)
-  const editorRef = useRef<editor.IStandaloneCodeEditor>()
+  const cacheID = props.cacheID || window.location.pathname;
+  const [fullscreen, setFullscreen] = useState(false);
+  const [isPreview, setPreview] = useState(false);
+  const [uploaderModalVisible, setUploaderModalVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [language, setLanguage] = useState(props.language ?? UEditorLanguage.JavaScript);
+  const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
   const handleSaveContent = useCallback(() => {
-    const time = timestampToYMD(Date.now())
-    const fileExt = fileExtMap.get(language)
-    const fileName = `${cacheID}-${time}.${fileExt}`
-    const content = editorRef.current?.getValue() ?? value ?? ''
-    saveFile(content, fileName)
-  }, [cacheID, language, value])
+    const time = timestampToYMD(Date.now());
+    const fileExt = fileExtMap.get(language);
+    const fileName = `${cacheID}-${time}.${fileExt}`;
+    const content = editorRef.current?.getValue() ?? value ?? '';
+    saveFile(content, fileName);
+  }, [cacheID, language, value]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleResizeWidth = () => {
-    const widthRatio = isPreview ? 0.5 : 1
-    const layoutInfo = editorRef.current?.getLayoutInfo()!
+    const widthRatio = isPreview ? 0.5 : 1;
+    const layoutInfo = editorRef.current?.getLayoutInfo()!;
     editorRef.current?.layout({
       width: fullscreen
         ? window.innerWidth * widthRatio
         : containerRef.current!.clientWidth * widthRatio,
       height: layoutInfo.height,
-    })
-  }
+    });
+  };
 
   const handleResizeHeight = useCallback(() => {
     if (!editorRef.current) {
-      return false
+      return false;
     }
 
-    const layoutInfo = editorRef.current.getLayoutInfo()!
-    let targetHeight: number = 0
+    const layoutInfo = editorRef.current.getLayoutInfo()!;
+    let targetHeight: number = 0;
 
     if (fullscreen) {
-      targetHeight = window.innerHeight - TOOLBAR_HEIGHT
+      targetHeight = window.innerHeight - TOOLBAR_HEIGHT;
     } else {
       // 非全屏，则计算高度
-      const maxHeight = (props.maxRows ?? MAX_ROWS) * SINGLE_LINE_HEIGHT
-      const minHeight = (props.minRows ?? MIN_ROWS) * SINGLE_LINE_HEIGHT
-      const contentHeight = editorRef.current.getContentHeight()!
-      const lineCount = editorRef.current.getModel()?.getLineCount() || 1
+      const maxHeight = (props.maxRows ?? MAX_ROWS) * SINGLE_LINE_HEIGHT;
+      const minHeight = (props.minRows ?? MIN_ROWS) * SINGLE_LINE_HEIGHT;
+      const contentHeight = editorRef.current.getContentHeight()!;
+      const lineCount = editorRef.current.getModel()?.getLineCount() || 1;
       if (contentHeight) {
         if (contentHeight > maxHeight) {
-          targetHeight = maxHeight
+          targetHeight = maxHeight;
         } else {
-          const linesHeight = lineCount * SINGLE_LINE_HEIGHT
+          const linesHeight = lineCount * SINGLE_LINE_HEIGHT;
           if (linesHeight < minHeight) {
-            targetHeight = minHeight
+            targetHeight = minHeight;
           } else {
-            targetHeight = linesHeight
+            targetHeight = linesHeight;
           }
         }
       }
@@ -158,47 +158,47 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
       editorRef.current.layout({
         width: layoutInfo.width,
         height: targetHeight,
-      })
+      });
     }
-  }, [fullscreen, props.maxRows, props.minRows])
+  }, [fullscreen, props.maxRows, props.minRows]);
 
   const handleMount = (editorInstance: editor.IStandaloneCodeEditor) =>
-    (editorRef.current = editorInstance)
+    (editorRef.current = editorInstance);
 
   // 绑定键位 effect
   useEffect(() => {
     if (editorRef.current) {
       // Command + S = save content
-      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, handleSaveContent)
+      editorRef.current.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, handleSaveContent);
       // Esc = exit fullscreen
-      editorRef.current.addCommand(KeyCode.Escape, () => setFullscreen(false))
+      editorRef.current.addCommand(KeyCode.Escape, () => setFullscreen(false));
       //
       editorRef.current.addCommand(KeyMod.Alt | KeyCode.KeyD, () => {
-        editorRef.current?.trigger('anyString', 'editor.action.formatDocument', '')
-      })
+        editorRef.current?.trigger('anyString', 'editor.action.formatDocument', '');
+      });
     }
-  }, [handleSaveContent])
+  }, [handleSaveContent]);
 
   // 设置缓存 effect
   useEffect(() => {
     if (!disabledCacheDraft) {
-      setUEditorCache(cacheID, value)
+      setUEditorCache(cacheID, value);
     }
-  }, [disabledCacheDraft, value, cacheID])
+  }, [disabledCacheDraft, value, cacheID]);
 
   // resize height effect
   useEffect(() => {
-    const sizeDisposer = editorRef.current?.onDidContentSizeChange(handleResizeHeight)
+    const sizeDisposer = editorRef.current?.onDidContentSizeChange(handleResizeHeight);
 
     return () => {
-      sizeDisposer?.dispose()
-    }
-  }, [handleResizeHeight, value])
+      sizeDisposer?.dispose();
+    };
+  }, [handleResizeHeight, value]);
 
   // preview change effect
   useEffect(() => {
-    handleResizeWidth()
-  }, [handleResizeWidth, fullscreen, isPreview])
+    handleResizeWidth();
+  }, [handleResizeWidth, fullscreen, isPreview]);
 
   return (
     <div
@@ -277,7 +277,10 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
           </Space>
         </div>
       )}
-      <Spin spinning={!!loading} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}>
+      <Spin
+        spinning={!!loading}
+        indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+      >
         <div className={styles.container} ref={containerRef}>
           <Editor
             language={language}
@@ -321,7 +324,12 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
             }}
             onMount={handleMount}
           />
-          <CSSTransition in={isPreview} timeout={200} unmountOnExit={true} classNames='fade-fast'>
+          <CSSTransition
+            in={isPreview}
+            timeout={200}
+            unmountOnExit={true}
+            classNames='fade-fast'
+          >
             <div className={classnames(styles.preview)}>
               <CodeBlock value={value} className={styles.markdown} />
             </div>
@@ -329,7 +337,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
         </div>
       </Spin>
     </div>
-  )
-}
+  );
+};
 
-export default UniversalEditor
+export default UniversalEditor;

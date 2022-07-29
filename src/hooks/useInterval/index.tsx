@@ -1,23 +1,23 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react';
 
-type EmptyFunction = () => void
+type EmptyFunction = () => void;
 
 const useInterval = (handler: EmptyFunction, delay: number | null = 1000) => {
-  const callbackRef = useRef<EmptyFunction | undefined>()
+  const callbackRef = useRef<EmptyFunction | undefined>();
 
   useEffect(() => {
-    callbackRef.current = handler
-  }, [handler])
+    callbackRef.current = handler;
+  }, [handler]);
 
   useEffect(() => {
     const tick = () => {
-      callbackRef.current!()
-    }
+      callbackRef.current!();
+    };
     if (delay !== null) {
-      const id = setInterval(tick, delay)
-      return () => clearInterval(id)
+      const id = setInterval(tick, delay);
+      return () => clearInterval(id);
     }
-  }, [delay])
-}
+  }, [delay]);
+};
 
-export default useInterval
+export default useInterval;

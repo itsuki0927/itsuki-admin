@@ -1,8 +1,8 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 interface HamburgerProps {
-  collapsed?: boolean
-  onCollapse?: (collapsed: boolean) => void
+  collapsed?: boolean;
+  onCollapse?: (collapsed: boolean) => void;
 }
 
 const Hamburger = ({ collapsed, onCollapse }: HamburgerProps) => (
@@ -16,6 +16,6 @@ const Hamburger = ({ collapsed, onCollapse }: HamburgerProps) => (
   >
     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
   </div>
-)
+);
 
-export default Hamburger
+export default Hamburger;

@@ -1,10 +1,10 @@
-import highlight from '@/utils/highlight'
-import { marked } from 'marked'
+import highlight from '@/utils/highlight';
+import { marked } from 'marked';
 
-const renderer = new marked.Renderer()
+const renderer = new marked.Renderer();
 
 renderer.link = (href, title, text) => {
-  const textIsImage = text.includes('<img')
+  const textIsImage = text.includes('<img');
   const linkHtml = `
     <a
       href="${href}"
@@ -14,9 +14,9 @@ renderer.link = (href, title, text) => {
     >
       ${text}
     </a>
-  `
-  return linkHtml.replace(/\s+/g, ' ').replace(/\n/g, ' ')
-}
+  `;
+  return linkHtml.replace(/\s+/g, ' ').replace(/\n/g, ' ');
+};
 
 marked.setOptions({
   renderer,
@@ -29,11 +29,11 @@ marked.setOptions({
   highlight(code, language) {
     return highlight.getLanguage(language)
       ? highlight.highlight(code, { language }).value
-      : highlight.highlightAuto(code).value
+      : highlight.highlightAuto(code).value;
   },
-})
+});
 
 export const genMarkdownString = (code: string | undefined, language = 'js') =>
-  code ? '```' + language + '\n' + code + '\n```' : ''
+  code ? '```' + language + '\n' + code + '\n```' : '';
 
-export const markdownToHTML = marked
+export const markdownToHTML = marked;

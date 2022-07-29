@@ -1,12 +1,12 @@
-import ProForm, { ProFormSelect, ProFormText } from '@ant-design/pro-form'
-import { Form, Select } from 'antd'
+import ProForm, { ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { Form, Select } from 'antd';
 
 export default () => {
   return (
     <ProForm
-      onFinish={(value) => {
-        console.log(value)
-        return Promise.resolve(true)
+      onFinish={value => {
+        console.log(value);
+        return Promise.resolve(true);
       }}
     >
       <ProFormText name='input' />
@@ -20,5 +20,5 @@ export default () => {
         <Select mode='tags' />
       </Form.Item>
     </ProForm>
-  )
-}
+  );
+};

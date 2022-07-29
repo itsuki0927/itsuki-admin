@@ -1,71 +1,61 @@
-import { Layout, Menu } from 'antd';
 import React, { useCallback, useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { convertRoutesToAntdMenu, RouteOptoins, routes } from '../../../routes';
-import logoImg from '@/assets/logo.png';
-import styles from './styles.module.less';
-import RightContent from '../RightContent';
-import { useFetchCurrentAdmin } from '@/hooks/admin';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { RouteOptoins, routes } from '../../../routes';
 import { useAdmin } from '@/context';
+import { getToken } from '@/utils/auth';
+import BaseLayout from '../BaseLayout';
 
-const { Header, Sider, Content } = Layout;
+const RequireAuth = ({ children }: { children: JSX.Element }) => {
+  const token = getToken();
+  const location = useLocation();
+
+  if (!token) {
+    return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+  return children;
+};
 
 const App: React.FC = () => {
-  const menus = convertRoutesToAntdMenu(routes);
-  const navigate = useNavigate();
   const location = useLocation();
-  const { fetchCurrentAdmin } = useAdmin();
+  const { fetchCurrentAdmin, currentAdmin } = useAdmin();
   const renderRoutes = useCallback((list: RouteOptoins[]) => {
     return list
-      .filter(v => !v.redirect)
-      .map(route => {
-        // if(route.needPermission){
-        //   return false;
-        // }
-        if (route.redirect) return null;
-        const Comp = route.component;
-        if (Comp) {
-          return <Route path={route.path} element={<Comp />} />;
+      .map(
+        ({ redirect, layout = true, routes, component: Comp, needPermission, path }) => {
+          if (redirect) {
+            return <Route path={path} element={<Navigate to={redirect} />} />;
+          }
+          if (Comp) {
+            const dom = needPermission ? (
+              <RequireAuth>
+                <Comp />
+              </RequireAuth>
+            ) : (
+              <Comp />
+            );
+            return (
+              <Route
+                path={path}
+                element={layout ? <BaseLayout>{dom}</BaseLayout> : dom}
+              />
+            );
+          }
+          if (routes) {
+            return renderRoutes(routes);
+          }
+          return null;
         }
-        if (route.routes) {
-          return renderRoutes(route.routes);
-        }
-        return null;
-      });
+      )
+      .filter(Boolean);
   }, []);
 
   useEffect(() => {
-    console.log('location', location);
-    if (location.pathname !== '/login') {
+    if (location.pathname !== '/login' && !currentAdmin) {
       fetchCurrentAdmin?.();
     }
-  }, [location, fetchCurrentAdmin]);
+  }, [location, fetchCurrentAdmin, currentAdmin]);
 
-  return (
-    <Layout className={styles.app}>
-      <Sider theme='light' width={250}>
-        <div className={styles.logo}>
-          <img className={styles.img} src={logoImg} alt='logo' />
-          <h1 className={styles.title}>Itsuki Admin</h1>
-        </div>
-        <Menu
-          items={menus}
-          mode='inline'
-          onSelect={({ key }) => {
-            navigate(key);
-          }}
-        />
-      </Sider>
-      <Layout className='site-layout'>
-        <Header className={styles.header}>
-          <RightContent />
-        </Header>
-        <Content className='site-layout-background'>
-          <Routes>{renderRoutes(routes)}</Routes>
-        </Content>
-      </Layout>
-    </Layout>
-  );
+  return <Routes>{renderRoutes(routes)}</Routes>;
 };
 
 export default App;

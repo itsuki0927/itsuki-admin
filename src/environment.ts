@@ -4,10 +4,10 @@ export enum Environment {
   Test = 'test',
 }
 
-export const mode = process.env.NODE_ENV
+export const mode = process.env.NODE_ENV;
 
-export const isDev = Environment.Development === mode
+export const isDev = Environment.Development === mode;
 
-export const isProd = Environment.Production === mode
+export const isProd = Environment.Production === mode;
 
-export const isTest = Environment.Test === mode
+export const isTest = Environment.Test === mode;

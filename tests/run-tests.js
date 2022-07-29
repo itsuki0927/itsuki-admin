@@ -13,11 +13,15 @@ env.PROGRESS = 'none';
 // flag to prevent multiple test
 let once = false;
 
-const startServer = spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['run', 'serve'], {
-  env,
-});
+const startServer = spawn(
+  /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
+  ['run', 'serve'],
+  {
+    env,
+  }
+);
 
-startServer.stderr.on('data', (data) => {
+startServer.stderr.on('data', data => {
   // eslint-disable-next-line
   console.log(data.toString());
 });
@@ -27,7 +31,7 @@ startServer.on('exit', () => {
 });
 
 console.log('Starting development server for e2e tests...');
-startServer.stdout.on('data', (data) => {
+startServer.stdout.on('data', data => {
   console.log(data.toString());
   // hack code , wait umi
   if (!once && data.toString().indexOf('Serving your umi project!') >= 0) {
@@ -39,9 +43,9 @@ startServer.stdout.on('data', (data) => {
       ['test', '--', '--maxWorkers=1', '--runInBand'],
       {
         stdio: 'inherit',
-      },
+      }
     );
-    testCmd.on('exit', (code) => {
+    testCmd.on('exit', code => {
       console.log(code);
       startServer.kill();
       process.exit(code);

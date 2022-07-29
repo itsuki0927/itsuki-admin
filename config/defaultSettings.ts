@@ -1,8 +1,8 @@
-import { Settings as LayoutSettings } from '@ant-design/pro-layout'
+import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
 const Settings: LayoutSettings & {
-  pwa?: boolean
-  logo?: string
+  pwa?: boolean;
+  logo?: string;
 } = {
   title: 'Itsuki Admin',
   pwa: false,
@@ -16,6 +16,6 @@ const Settings: LayoutSettings & {
   fixedHeader: true,
   fixSiderbar: true,
   footerRender: false,
-}
+};
 
-export default Settings
+export default Settings;

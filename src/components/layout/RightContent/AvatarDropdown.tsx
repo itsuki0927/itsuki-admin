@@ -1,9 +1,8 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { stringify } from 'querystring';
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import HeaderDropdown from '../HeaderDropdown';
 import { useAdmin } from '@/context';
 import styles from './index.module.less';
@@ -14,35 +13,18 @@ export type GlobalHeaderRightProps = {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const history = useNavigate();
-  const { currentAdmin, setCurrentAdmin } = useAdmin();
-  const location = useLocation();
-
-  /**
-   * 退出登录，并且将当前的 url 保存
-   */
-  const loginOut = useCallback(async () => {
-    const { pathname } = location;
-    // const { redirect } = query;
-    const redirect = undefined;
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history(`/user/login${stringify({ redirect: pathname })}`, {
-        replace: true,
-      });
-    }
-  }, [history, location]);
+  const { currentAdmin, logout } = useAdmin();
 
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        setCurrentAdmin?.(undefined);
-        loginOut();
+        logout?.();
         return;
       }
       history(`/settings?tab=${key}`);
     },
-    [history, setCurrentAdmin, loginOut]
+    [history, logout]
   );
 
   const loading = (
