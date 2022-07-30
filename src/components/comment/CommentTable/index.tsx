@@ -369,45 +369,45 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             )}
             {(comment.state === CommentState.Auditing ||
               comment.state === CommentState.Published) && (
+              <Button
+                size='small'
+                type='text'
+                block
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() =>
+                  handleStateChange({ id: comment.id, state: CommentState.Deleted })
+                }
+              >
+                移回收站
+              </Button>
+            )}
+            {(comment.state === CommentState.Deleted ||
+              comment.state === CommentState.Spam) && (
+              <>
                 <Button
                   size='small'
                   type='text'
                   block
-                  danger
-                  icon={<DeleteOutlined />}
+                  icon={<EditOutlined />}
                   onClick={() =>
-                    handleStateChange({ id: comment.id, state: CommentState.Deleted })
+                    handleStateChange({ id: comment.id, state: CommentState.Auditing })
                   }
                 >
-                  移回收站
+                  <Typography.Text type='warning'>退为草稿</Typography.Text>
                 </Button>
-              )}
-            {(comment.state === CommentState.Deleted ||
-              comment.state === CommentState.Spam) && (
-                <>
-                  <Button
-                    size='small'
-                    type='text'
-                    block
-                    icon={<EditOutlined />}
-                    onClick={() =>
-                      handleStateChange({ id: comment.id, state: CommentState.Auditing })
-                    }
-                  >
-                    <Typography.Text type='warning'>退为草稿</Typography.Text>
-                  </Button>
-                  <Button
-                    size='small'
-                    type='text'
-                    danger
-                    block
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleRemoveComment(comment)}
-                  >
-                    彻底删除
-                  </Button>
-                </>
-              )}
+                <Button
+                  size='small'
+                  type='text'
+                  danger
+                  block
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleRemoveComment(comment)}
+                >
+                  彻底删除
+                </Button>
+              </>
+            )}
             <Button
               size='small'
               block
