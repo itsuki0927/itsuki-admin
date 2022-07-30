@@ -1,5 +1,5 @@
-import type { ArticleSummaryResponse } from '@/entities/article';
 import { StatisticCard } from '@ant-design/pro-card';
+import type { ArticleSummaryResponse } from '@/entities/article';
 
 interface ArticleSummaryProps {
   summary?: ArticleSummaryResponse;

@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { AutoComplete, Input } from 'antd';
+import { AutoComplete, Input, InputRef } from 'antd';
 import type { AutoCompleteProps } from 'antd/es/auto-complete';
 import classNames from 'classnames';
 import useMergedState from 'rc-util/es/hooks/useMergedState';
@@ -27,18 +27,20 @@ const HeaderSearch: React.FC<HeaderSearchProps> = props => {
     placeholder,
     visible,
     defaultVisible,
+    value,
+    onChange,
     ...restProps
   } = props;
 
-  const inputRef = useRef<Input | null>(null);
+  const inputRef = useRef<InputRef | null>(null);
 
-  const [value, setValue] = useMergedState<string | undefined>(defaultValue, {
-    value: props.value,
-    onChange: props.onChange,
+  const [innerValue, setValue] = useMergedState<string | undefined>(defaultValue, {
+    value,
+    onChange,
   });
 
   const [searchMode, setSearchMode] = useMergedState(defaultVisible ?? false, {
-    value: props.visible,
+    value: visible,
     onChange: onVisibleChange,
   });
 
@@ -47,6 +49,8 @@ const HeaderSearch: React.FC<HeaderSearchProps> = props => {
   });
   return (
     <div
+      role='button'
+      tabIndex={0}
       className={classNames(className, styles.headerSearch)}
       onClick={() => {
         setSearchMode(true);
@@ -71,15 +75,19 @@ const HeaderSearch: React.FC<HeaderSearchProps> = props => {
       <AutoComplete
         key='AutoComplete'
         className={inputClass}
-        value={value}
+        value={innerValue}
         options={restProps.options}
-        onChange={setValue}
+        onChange={e => {
+          setValue(e);
+        }}
         dropdownMatchSelectWidth={300}
         filterOption={(inputValue, option) => {
           if (option?.options) {
             return option.options.some((v: any) => v.value.includes(inputValue));
           }
-          return option!.value.includes(inputValue);
+          if (option?.value) {
+            return option.value.toString().includes(inputValue);
+          }
         }}
       >
         <Input

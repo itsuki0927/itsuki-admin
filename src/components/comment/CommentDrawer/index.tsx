@@ -30,6 +30,10 @@ type CommentDrawerProps = {
 };
 
 const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerProps) => {
+  if (!comment) {
+    return <Spin />;
+  }
+
   return (
     <DrawerForm<CommentUpdateRequest>
       key={comment?.id}
@@ -56,8 +60,8 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
         <Form.Item label='ID'>
           <Typography.Text copyable>{comment?.id}</Typography.Text>
         </Form.Item>
-        <Form.Item label='发布于'>{formatDate(comment?.createAt!)}</Form.Item>
-        <Form.Item label='最后修改于'>{formatDate(comment?.updateAt!)}</Form.Item>
+        <Form.Item label='发布于'>{formatDate(comment?.createAt)}</Form.Item>
+        <Form.Item label='最后修改于'>{formatDate(comment?.updateAt)}</Form.Item>
         <ProFormSwitch
           name='fix'
           label='置顶评论'
@@ -115,9 +119,9 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
           {comment?.province || '-'}
         </Form.Item>
         <Form.Item label='终端'>
-          {parserBrowser(comment?.agent!)}
+          {parserBrowser(comment?.agent)}
           <Divider type='vertical' />
-          {parserOS(comment?.agent!)}
+          {parserOS(comment?.agent)}
         </Form.Item>
         <ProFormDigit
           fieldProps={{
@@ -140,7 +144,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             href={
               comment?.articleId === COMMENT_GUESTBOOK_ID
                 ? getBlogGuestbookUrl()
-                : getBlogArticleUrl(comment?.articleId!)
+                : getBlogArticleUrl(comment?.articleId)
             }
           >
             {comment?.articleId === COMMENT_GUESTBOOK_ID

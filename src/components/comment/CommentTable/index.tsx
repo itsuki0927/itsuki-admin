@@ -141,6 +141,23 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
       formRef.current?.submit();
     };
 
+    const dropdownRender = (menu: React.ReactElement) => (
+      <div>
+        {menu}
+        <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+          <Input.Search
+            allowClear
+            size='small'
+            type='number'
+            placeholder='AID'
+            min={1}
+            enterButton={<span>GO</span>}
+            onSearch={value => handleArticleIdChange(value)}
+          />
+        </div>
+      </div>
+    );
+
     const columns: ProColumns<Comment>[] = [
       { title: 'ID', width: 40, dataIndex: 'id', search: false },
       {
@@ -169,22 +186,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
           [COMMENT_GUESTBOOK_ID]: '留言评论',
         },
         fieldProps: {
-          dropdownRender: (menu: React.ReactElement) => (
-            <div>
-              {menu}
-              <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                <Input.Search
-                  allowClear
-                  size='small'
-                  type='number'
-                  placeholder='AID'
-                  min={1}
-                  enterButton={<span>GO</span>}
-                  onSearch={value => handleArticleIdChange(value)}
-                />
-              </div>
-            </div>
-          ),
+          dropdownRender,
         },
       },
       {
@@ -247,7 +249,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
           <Space direction='vertical'>
             <span>
               IP：
-              <Typography.Text copyable={true}>{ip || '-'}</Typography.Text>
+              <Typography.Text copyable>{ip || '-'}</Typography.Text>
             </span>
             <span>
               位置：
@@ -342,7 +344,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
               <Button
                 size='small'
                 type='text'
-                block={true}
+                block
                 icon={<CheckOutlined />}
                 onClick={() =>
                   handleStateChange({ id: comment.id, state: CommentState.Published })
@@ -355,8 +357,8 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
               <Button
                 size='small'
                 type='text'
-                block={true}
-                danger={true}
+                block
+                danger
                 icon={<StopOutlined />}
                 onClick={() =>
                   handleStateChange({ id: comment.id, state: CommentState.Spam })
@@ -367,48 +369,48 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             )}
             {(comment.state === CommentState.Auditing ||
               comment.state === CommentState.Published) && (
-              <Button
-                size='small'
-                type='text'
-                block={true}
-                danger={true}
-                icon={<DeleteOutlined />}
-                onClick={() =>
-                  handleStateChange({ id: comment.id, state: CommentState.Deleted })
-                }
-              >
-                移回收站
-              </Button>
-            )}
-            {(comment.state === CommentState.Deleted ||
-              comment.state === CommentState.Spam) && (
-              <>
                 <Button
                   size='small'
                   type='text'
-                  block={true}
-                  icon={<EditOutlined />}
+                  block
+                  danger
+                  icon={<DeleteOutlined />}
                   onClick={() =>
-                    handleStateChange({ id: comment.id, state: CommentState.Auditing })
+                    handleStateChange({ id: comment.id, state: CommentState.Deleted })
                   }
                 >
-                  <Typography.Text type='warning'>退为草稿</Typography.Text>
+                  移回收站
                 </Button>
-                <Button
-                  size='small'
-                  type='text'
-                  danger={true}
-                  block={true}
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleRemoveComment(comment)}
-                >
-                  彻底删除
-                </Button>
-              </>
-            )}
+              )}
+            {(comment.state === CommentState.Deleted ||
+              comment.state === CommentState.Spam) && (
+                <>
+                  <Button
+                    size='small'
+                    type='text'
+                    block
+                    icon={<EditOutlined />}
+                    onClick={() =>
+                      handleStateChange({ id: comment.id, state: CommentState.Auditing })
+                    }
+                  >
+                    <Typography.Text type='warning'>退为草稿</Typography.Text>
+                  </Button>
+                  <Button
+                    size='small'
+                    type='text'
+                    danger
+                    block
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleRemoveComment(comment)}
+                  >
+                    彻底删除
+                  </Button>
+                </>
+              )}
             <Button
               size='small'
-              block={true}
+              block
               type='link'
               target='_blank'
               icon={<LinkOutlined />}
@@ -442,7 +444,11 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             setTimeout(() => {
               setLoading(false);
             }, 200);
-            return data?.comments!;
+            if (!data?.comments) {
+              message.success('评论没有数据');
+              return {};
+            }
+            return data?.comments;
           }}
         />
 
@@ -467,7 +473,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
                 return {
                   comments: {
                     ...comments,
-                    data: comments.data.concat(data?.adminComment!),
+                    data: comments.data.concat(data?.adminComment ?? []),
                     total: comments.total + 1,
                   },
                 };
@@ -493,11 +499,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             label='回复内容'
             rules={[{ required: true, message: '请输入回复内容' }]}
           >
-            <UniversalEditor
-              disabledMinimap={true}
-              disabledCacheDraft={true}
-              maxRows={9}
-            />
+            <UniversalEditor disabledMinimap disabledCacheDraft maxRows={9} />
           </Form.Item>
         </DrawerForm>
       </>

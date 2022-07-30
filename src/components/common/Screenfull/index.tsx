@@ -1,6 +1,6 @@
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import screenfull from 'screenfull';
 
 type ScreenFullProps = {
@@ -11,7 +11,7 @@ type ScreenFullProps = {
 const ScreenFull = ({ onChange, value: propValue }: ScreenFullProps) => {
   const [isFullscreen, setIsFullscreen] = useState(propValue);
 
-  const change = () => {
+  const change = useCallback(() => {
     const fullscreen = (screenfull as any).isFullscreen;
     if (fullscreen) {
       document.body.classList.add('fullscreen');
@@ -20,29 +20,28 @@ const ScreenFull = ({ onChange, value: propValue }: ScreenFullProps) => {
     }
     setIsFullscreen(fullscreen);
     onChange?.(fullscreen);
-  };
-
-  const init = () => {
-    if (screenfull.isEnabled) {
-      screenfull.on('change', change);
-    }
-  };
-
-  const destroy = () => {
-    if (screenfull.isEnabled) {
-      screenfull.off('change', change);
-    }
-  };
+  }, [onChange]);
 
   useEffect(() => {
+    const init = () => {
+      if (screenfull.isEnabled) {
+        screenfull.on('change', change);
+      }
+    };
+
+    const destroy = () => {
+      if (screenfull.isEnabled) {
+        screenfull.off('change', change);
+      }
+    };
     init();
     return () => destroy();
-  }, []);
+  }, [change]);
 
   const handleClick = () => {
     if (!screenfull.isEnabled) {
       message.warn({
-        message: 'you browser can not work',
+        content: 'you browser can not work',
         type: 'warning',
       });
       return false;

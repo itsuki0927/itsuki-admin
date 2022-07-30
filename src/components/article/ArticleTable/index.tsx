@@ -17,6 +17,7 @@ import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd';
 import { useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AlertRenderType } from '@ant-design/pro-table/lib/components/Alert';
 import { ab, ArticleBanner } from '@/constants/article/banner';
 import { omitSelectAllValue } from '@/constants/common';
 import { ps, PublishState } from '@/constants/publish';
@@ -300,6 +301,115 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     },
   ];
 
+  const renderAlert: AlertRenderType<Article> = ({
+    selectedRowKeys,
+    onCleanSelected,
+  }) => (
+    <Space size={24}>
+      <span>
+        已选 {selectedRowKeys.length} 项
+        <a style={{ marginLeft: 8 }} onClick={onCleanSelected} role='button' tabIndex={0}>
+          取消选择
+        </a>
+      </span>
+    </Space>
+  );
+
+  const renderAlertOption: AlertRenderType<Article> = ({
+    selectedRowKeys,
+    onCleanSelected,
+  }) => (
+    <Space>
+      <Button
+        key='publish'
+        size='small'
+        type='text'
+        block
+        icon={<CheckOutlined />}
+        onClick={() => {
+          handleStateChange(
+            selectedRowKeys as number[],
+            PublishState.Published,
+            onCleanSelected
+          );
+        }}
+      >
+        <Typography.Text type='success'>直接发布</Typography.Text>
+      </Button>
+      <Button
+        key='recycle'
+        size='small'
+        type='text'
+        block
+        danger
+        icon={<DeleteOutlined />}
+        onClick={() => {
+          handleStateChange(
+            selectedRowKeys as number[],
+            PublishState.Recycle,
+            onCleanSelected
+          );
+        }}
+      >
+        移回收站
+      </Button>
+      <Button
+        key='draft'
+        size='small'
+        type='text'
+        block
+        icon={<RollbackOutlined />}
+        onClick={() => {
+          handleStateChange(
+            selectedRowKeys as number[],
+            PublishState.Draft,
+            onCleanSelected
+          );
+        }}
+      >
+        <Typography.Text type='warning'>退至草稿</Typography.Text>
+      </Button>
+      <Button
+        key='sync'
+        size='small'
+        type='text'
+        onClick={async () => {
+          setLoading(true);
+          await syncArticleCommentCount({
+            variables: {
+              ids: selectedRowKeys as any[],
+            },
+          });
+          await refetch();
+          actionRef.current?.reload();
+          message.success('同步成功');
+          setLoading(false);
+          onCleanSelected();
+        }}
+      >
+        <SyncOutlined />
+        同步评论
+      </Button>
+      <TableDropdown
+        onSelect={key => {
+          handleBannerChange(
+            selectedRowKeys as number[],
+            key === 'joinBanner' ? ArticleBanner.YES : ArticleBanner.NO,
+            onCleanSelected
+          );
+        }}
+        key='other'
+        menus={[
+          { name: '加入轮播', key: 'joinBanner' },
+          {
+            name: '移除轮播',
+            key: 'removeBanner',
+          },
+        ]}
+      />
+    </Space>
+  );
+
   return (
     <ProTable
       headerTitle='文章列表'
@@ -316,115 +426,18 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             search,
           },
         });
-        setTimeout(() => {
-          setLoading(false);
-        }, 100);
-        return data?.articles!;
+        setLoading(false);
+        if (!data?.articles) {
+          message.error('找不到文章');
+          return {};
+        }
+        return data.articles;
       }}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
       }}
-      tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
-        <Space size={24}>
-          <span>
-            已选 {selectedRowKeys.length} 项
-            <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
-              取消选择
-            </a>
-          </span>
-        </Space>
-      )}
-      tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
-        <Space>
-          <Button
-            key='publish'
-            size='small'
-            type='text'
-            block
-            icon={<CheckOutlined />}
-            onClick={() => {
-              handleStateChange(
-                selectedRowKeys as number[],
-                PublishState.Published,
-                onCleanSelected
-              );
-            }}
-          >
-            <Typography.Text type='success'>直接发布</Typography.Text>
-          </Button>
-          <Button
-            key='recycle'
-            size='small'
-            type='text'
-            block
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => {
-              handleStateChange(
-                selectedRowKeys as number[],
-                PublishState.Recycle,
-                onCleanSelected
-              );
-            }}
-          >
-            移回收站
-          </Button>
-          <Button
-            key='draft'
-            size='small'
-            type='text'
-            block
-            icon={<RollbackOutlined />}
-            onClick={() => {
-              handleStateChange(
-                selectedRowKeys as number[],
-                PublishState.Draft,
-                onCleanSelected
-              );
-            }}
-          >
-            <Typography.Text type='warning'>退至草稿</Typography.Text>
-          </Button>
-          <Button
-            key='sync'
-            size='small'
-            type='text'
-            onClick={async () => {
-              setLoading(true);
-              await syncArticleCommentCount({
-                variables: {
-                  ids: selectedRowKeys as any[],
-                },
-              });
-              await refetch();
-              actionRef.current?.reload();
-              message.success('同步成功');
-              setLoading(false);
-              onCleanSelected();
-            }}
-          >
-            <SyncOutlined />
-            同步评论
-          </Button>
-          <TableDropdown
-            onSelect={key => {
-              handleBannerChange(
-                selectedRowKeys as number[],
-                key === 'joinBanner' ? ArticleBanner.YES : ArticleBanner.NO,
-                onCleanSelected
-              );
-            }}
-            key='other'
-            menus={[
-              { name: '加入轮播', key: 'joinBanner' },
-              {
-                name: '移除轮播',
-                key: 'removeBanner',
-              },
-            ]}
-          />
-        </Space>
-      )}
+      tableAlertRender={renderAlert}
+      tableAlertOptionRender={renderAlertOption}
       toolBarRender={() => [
         <Button
           size='small'

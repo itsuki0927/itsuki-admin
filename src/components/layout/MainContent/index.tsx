@@ -3,7 +3,7 @@ import { BackTop } from 'antd';
 import type { PropsWithChildren } from 'react';
 import styles from './index.module.less';
 
-const MainContent: PropsWithChildren<any> = ({ children }) => {
+const MainContent = ({ children }: PropsWithChildren<unknown>) => {
   return (
     <>
       {children}

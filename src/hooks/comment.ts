@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client';
 import type {
   CreateAdminCommentInput,
   CreateAdminCommentResponse,
@@ -8,16 +9,15 @@ import type {
   UpdateCommentResponse,
   UpdateCommentStateInput,
 } from '@/graphql/comment';
-import { ADMIN_COMMENT } from '@/graphql/comment';
-import { UPDATE_COMMENT } from '@/graphql/comment';
 import {
+  ADMIN_COMMENT,
   DELETE_COMMENT,
   QUERY_COMMENT,
   QUERY_COMMENTS,
+  UPDATE_COMMENT,
   UPDATE_COMMENT_STATE,
 } from '@/graphql/comment';
-import type { ID } from '@/helper/http.interface';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import type { ID } from '@/helper/basicType';
 
 export const useComments = () => {
   return useLazyQuery<QueryCommentsResponse, QueryCommentsSearch>(QUERY_COMMENTS);

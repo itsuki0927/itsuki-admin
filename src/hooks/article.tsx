@@ -17,7 +17,7 @@ import {
   UPDATE_ARTICLE_STATE,
   SYNC_ARTICLE_COMMENT_COUNT,
 } from '@/graphql/article';
-import type { ID } from '@/helper/http.interface';
+import type { ID } from '@/helper/basicType';
 import type {
   ArticleBannerPatchRequest,
   ArticleDetailResponse,
@@ -40,33 +40,33 @@ export const useDeleteArticle = () => useMutation<number, ID>(DETELTE_ARTICLE);
 
 const handleDiffContent =
   (articleCacheID: string) =>
-  (result: ArticleDetailResponse): Promise<ArticleDetailResponse> =>
-    new Promise(resolve => {
-      const localContent = getUEditorCache(articleCacheID);
-      if (result && !!localContent && localContent !== result.content) {
-        Modal.confirm({
-          title: '本地缓存存在未保存的文章，是否要覆盖远程数据？',
-          content: '如果覆盖错了，就自己刷新吧！',
-          okText: '本地覆盖远程',
-          cancelText: '使用远程数据',
-          centered: true,
-          okButtonProps: {
-            danger: true,
-          },
-          onOk() {
-            resolve({
-              ...result,
-              content: localContent,
-            });
-          },
-          onCancel() {
-            resolve(result);
-          },
-        });
-      } else {
-        resolve(result);
-      }
-    });
+    (result: ArticleDetailResponse): Promise<ArticleDetailResponse> =>
+      new Promise(resolve => {
+        const localContent = getUEditorCache(articleCacheID);
+        if (result && !!localContent && localContent !== result.content) {
+          Modal.confirm({
+            title: '本地缓存存在未保存的文章，是否要覆盖远程数据？',
+            content: '如果覆盖错了，就自己刷新吧！',
+            okText: '本地覆盖远程',
+            cancelText: '使用远程数据',
+            centered: true,
+            okButtonProps: {
+              danger: true,
+            },
+            onOk() {
+              resolve({
+                ...result,
+                content: localContent,
+              });
+            },
+            onCancel() {
+              resolve(result);
+            },
+          });
+        } else {
+          resolve(result);
+        }
+      });
 
 export const useArticle = (id: number) => {
   const cacheID = window.location.pathname;

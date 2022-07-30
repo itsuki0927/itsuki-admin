@@ -1,4 +1,3 @@
-import type { SiteSummaryResponse } from '@/entities/siteinfo';
 import {
   CoffeeOutlined,
   CommentOutlined,
@@ -8,6 +7,7 @@ import {
 import { StatisticCard } from '@ant-design/pro-card';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
+import type { SiteSummaryResponse } from '@/entities/siteinfo';
 import styles from './index.module.less';
 
 const list = [
@@ -31,7 +31,7 @@ const list = [
     title: '全站评论',
     icon: <CommentOutlined className={classNames(styles.icon, styles.comment)} />,
   },
-];
+] as const;
 
 interface SiteSummaryProps {
   summary?: SiteSummaryResponse;
@@ -48,7 +48,7 @@ const SiteSummary = ({ summary }: SiteSummaryProps) => {
       <StatisticCard
         statistic={{
           title: item.title,
-          value: summary[item.key] ?? ~~(Math.random() * 10000),
+          value: summary[item.key as keyof typeof summary] ?? ~~(Math.random() * 10000),
           icon: item.icon,
         }}
       />
@@ -60,7 +60,7 @@ const SiteSummary = ({ summary }: SiteSummaryProps) => {
   });
 
   return (
-    <StatisticCard.Group ghost direction={'row'}>
+    <StatisticCard.Group ghost direction='row'>
       {dom}
     </StatisticCard.Group>
   );

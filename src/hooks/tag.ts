@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { DEFAULT_CURRENT, MAX_PAGE_SIZE } from '@/constants/common';
 import type {
   CreateTagInput,
@@ -14,8 +15,7 @@ import {
   SYNC_TAG_COUNT,
   UPDATE_TAG,
 } from '@/graphql/tag';
-import type { ID } from '@/helper/http.interface';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import type { ID } from '@/helper/basicType';
 
 export const useAllTag = () => {
   const [fetchTags, { updateQuery, loading, refetch, data }] = useLazyQuery<

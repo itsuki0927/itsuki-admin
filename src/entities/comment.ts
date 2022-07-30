@@ -1,5 +1,5 @@
 import { CommentState } from '@/constants/comment';
-import { BaseSearchRequest, IdentifiableEntity } from '@/helper/http.interface';
+import { BaseSearchRequest, IdentifiableEntity } from '@/helper/basicType';
 
 export type Comment = IdentifiableEntity<{
   nickname: string;

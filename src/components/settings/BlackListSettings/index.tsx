@@ -31,7 +31,11 @@ const BlackListSettings = () => {
     <ProForm<Blacklist>
       request={async () => {
         const { data } = await fetchBlackList();
-        const blacklist = data?.blacklist!;
+        const blacklist = data?.blacklist;
+        if (!blacklist) {
+          message.error('blacklist is empty');
+          return {} as any;
+        }
         return {
           ...blacklist,
           ip: strToArray(blacklist.ip),

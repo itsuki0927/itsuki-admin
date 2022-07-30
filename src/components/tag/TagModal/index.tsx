@@ -8,14 +8,13 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import { Form, Typography } from 'antd';
 import { useRef } from 'react';
-import type { API } from '@/entities/typings';
-import type { TagActionRequest } from '@/entities/tag';
+import type { Tag, TagActionRequest } from '@/entities/tag';
 
 type TagModalProps = {
   visible: boolean;
   onChange: (visible: boolean) => void;
   onFinish: (values: TagActionRequest) => Promise<boolean | void>;
-  tag?: API.Tag;
+  tag?: Tag;
   title: string;
 };
 
@@ -42,8 +41,12 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
           <Form.Item label='ID'>
             <Typography.Text copyable>{tag.id}</Typography.Text>
           </Form.Item>
-          <Form.Item label='发布于'>{tag.createAt}</Form.Item>
-          <Form.Item label='最后修改于'>{tag.updateAt}</Form.Item>
+          <Form.Item label='发布于'>
+            <Typography.Text>{tag.createAt as any}</Typography.Text>
+          </Form.Item>
+          <Form.Item label='最后修改于'>
+            <Typography.Text>{tag.updateAt as any}</Typography.Text>
+          </Form.Item>
         </>
       )}
       <ProFormText

@@ -17,18 +17,18 @@ import SystemSettings from './pages/config';
 import CreateArticle from './pages/article/create';
 import Page404 from './pages/Page404';
 
-export interface RouteOptoins {
+export interface RouteOptions {
   path: string;
   name?: string;
   icon?: JSX.Element;
   component?: any;
   layout?: boolean;
-  routes?: RouteOptoins[];
+  routes?: RouteOptions[];
   redirect?: string;
   needPermission?: boolean;
   hideInMenu?: boolean;
 }
-export const routes: RouteOptoins[] = [
+export const constantRoutes: RouteOptions[] = [
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -97,7 +97,7 @@ export const routes: RouteOptoins[] = [
   { path: '*', component: <Page404 /> },
 ];
 
-export const convertRoutesToAntdMenu = (routes: RouteOptoins[]) => {
+export const convertRoutesToAntdMenu = (routes: RouteOptions[]) => {
   const menus = routes
     .filter(v => {
       return v.layout !== false && !v.redirect && v.path !== '*' && !v.hideInMenu;

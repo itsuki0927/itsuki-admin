@@ -12,8 +12,8 @@ import { copy } from '@/utils/copy';
 import { STATIC_URL } from '@/config';
 import styles from './index.module.less';
 
-const request = () => {
-  return Promise.resolve(222);
+const request = (a: any, b: any) => {
+  return Promise.resolve(a + b);
 };
 
 const UPLOAD_FILE_SIZE_LIMIT = 3000000;
@@ -42,6 +42,7 @@ const ImageUploader = ({
 
       if (!isImg) {
         message.warn('请上传 png、jpeg、jpg 格式的图片');
+        // eslint-disable-next-line no-promise-executor-return
         return reject();
       }
 
@@ -49,6 +50,7 @@ const ImageUploader = ({
 
       if (isMaxLimit) {
         message.warn('图片大小过大, 请进行压缩');
+        // eslint-disable-next-line no-promise-executor-return
         return reject();
       }
 
@@ -123,7 +125,7 @@ const ImageUploader = ({
         }}
       >
         {value ? (
-          <img src={value} className={styles.image} />
+          <img src={value} className={styles.image} alt='upload-preview' />
         ) : (
           <div className={styles.trigger}>
             {uploading ? <LoadingOutlined /> : <PlusOutlined />}

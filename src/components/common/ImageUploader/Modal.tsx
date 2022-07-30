@@ -9,7 +9,7 @@ export interface ImageUploaderModalProps {
   onClose?: (value: string) => void;
   prefix: string;
 }
-export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
+const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   initValue,
   visible,
   onClose,
@@ -35,7 +35,7 @@ export const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
         </Space>
       }
       footer={
-        <Button block={true} type='link' onClick={() => onClose?.(value)}>
+        <Button block type='link' onClick={() => onClose?.(value)}>
           OK
         </Button>
       }

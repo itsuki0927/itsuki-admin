@@ -11,8 +11,7 @@ import type {
   MutationRequest,
   SearchRequest,
   SearchResponse,
-  // eslint-disable-next-line import/extensions
-} from '@/helper/http.interface';
+} from '@/helper/basicType';
 
 export type QueryArticlesResponse = {
   articles: SearchResponse<Article>;

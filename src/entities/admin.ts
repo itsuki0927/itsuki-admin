@@ -1,4 +1,4 @@
-import { IdentifiableEntity } from '@/helper/http.interface';
+import { IdentifiableEntity } from '@/helper/basicType';
 
 export type Admin = IdentifiableEntity<{
   username: string;

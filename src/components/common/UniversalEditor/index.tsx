@@ -1,5 +1,3 @@
-import { saveFile } from '@/utils';
-import storage from '@/utils/storage';
 import {
   CloudUploadOutlined,
   DownloadOutlined,
@@ -11,10 +9,12 @@ import Editor from '@monaco-editor/react';
 import { Button, Select, Space, Spin, Typography } from 'antd';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
-import { KeyMod, KeyCode } from 'monaco-editor';
 import type { editor } from 'monaco-editor';
+import { KeyCode, KeyMod } from 'monaco-editor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import storage from '@/utils/storage';
+import { saveFile } from '@/utils';
 import CodeBlock from '../CodeBlock';
 import ImageUploaderModal from '../ImageUploader/Modal';
 import ScreenFull from '../Screenfull';
@@ -115,7 +115,10 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleResizeWidth = () => {
     const widthRatio = isPreview ? 0.5 : 1;
-    const layoutInfo = editorRef.current?.getLayoutInfo()!;
+    const layoutInfo = editorRef.current?.getLayoutInfo();
+    if (!layoutInfo) {
+      throw new Error('layout is null');
+    }
     editorRef.current?.layout({
       width: fullscreen
         ? window.innerWidth * widthRatio
@@ -130,7 +133,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
     }
 
     const layoutInfo = editorRef.current.getLayoutInfo()!;
-    let targetHeight: number = 0;
+    let targetHeight = 0;
 
     if (fullscreen) {
       targetHeight = window.innerHeight - TOOLBAR_HEIGHT;
@@ -162,8 +165,9 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
     }
   }, [fullscreen, props.maxRows, props.minRows]);
 
-  const handleMount = (editorInstance: editor.IStandaloneCodeEditor) =>
-    (editorRef.current = editorInstance);
+  const handleMount = (editorInstance: editor.IStandaloneCodeEditor) => {
+    editorRef.current = editorInstance;
+  };
 
   // 绑定键位 effect
   useEffect(() => {
@@ -213,7 +217,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
       {!disabledToolbar && (
         <div className={styles.toolbar}>
           <Space className={styles.left}>
-            <Typography.Text type='secondary' strong={true} className={styles.logo}>
+            <Typography.Text type='secondary' strong className={styles.logo}>
               UEditor
             </Typography.Text>
             <Button
@@ -327,7 +331,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
           <CSSTransition
             in={isPreview}
             timeout={200}
-            unmountOnExit={true}
+            unmountOnExit
             classNames='fade-fast'
           >
             <div className={classnames(styles.preview)}>

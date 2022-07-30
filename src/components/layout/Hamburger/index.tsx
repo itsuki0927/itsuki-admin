@@ -13,6 +13,8 @@ const Hamburger = ({ collapsed, onCollapse }: HamburgerProps) => (
       fontSize: '16px',
       padding: '0 12px',
     }}
+    role='button'
+    tabIndex={0}
   >
     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
   </div>

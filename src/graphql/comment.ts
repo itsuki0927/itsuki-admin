@@ -1,15 +1,15 @@
 import { gql } from '@apollo/client';
 import type {
-  ID,
-  MutationRequest,
-  SearchRequest,
-  SearchResponse,
-} from '@/helper/http.interface';
-import type {
   Comment,
   CommentSearchRequest,
   CommentUpdateRequest,
 } from '@/entities/comment';
+import type {
+  ID,
+  MutationRequest,
+  SearchRequest,
+  SearchResponse,
+} from '@/helper/basicType';
 
 export type QueryCommentsResponse = {
   comments: SearchResponse<Comment>;

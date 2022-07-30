@@ -1,8 +1,6 @@
-// @ts-ignore
-/* eslint-disable */
 import { ArticleBanner } from '@/constants/article/banner';
 import { PublishState } from '@/constants/publish';
-import { BaseSearchRequest, IdentifiableEntity } from '@/helper/http.interface';
+import { BaseSearchRequest, IdentifiableEntity } from '@/helper/basicType';
 import { Tag } from './tag';
 
 export type Article = IdentifiableEntity<{

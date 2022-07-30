@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { RouteOptoins, routes } from '../../../routes';
+import { RouteOptions, constantRoutes } from '@/routes';
 import { useAdmin } from '@/context';
 import { getToken } from '@/utils/auth';
 import BaseLayout from '../BaseLayout';
@@ -18,10 +18,17 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
 const App: React.FC = () => {
   const location = useLocation();
   const { fetchCurrentAdmin, currentAdmin } = useAdmin();
-  const renderRoutes = useCallback((list: RouteOptoins[]) => {
+  const renderRoutes = useCallback((list: RouteOptions[]) => {
     return list
       .map(
-        ({ redirect, layout = true, routes, component: Comp, needPermission, path }) => {
+        ({
+          redirect,
+          layout = true,
+          routes,
+          component: Comp,
+          needPermission,
+          path,
+        }): any => {
           if (redirect) {
             return <Route path={path} element={<Navigate to={redirect} />} />;
           }
@@ -55,7 +62,7 @@ const App: React.FC = () => {
     }
   }, [location, fetchCurrentAdmin, currentAdmin]);
 
-  return <Routes>{renderRoutes(routes)}</Routes>;
+  return <Routes>{renderRoutes(constantRoutes)}</Routes>;
 };
 
 export default App;

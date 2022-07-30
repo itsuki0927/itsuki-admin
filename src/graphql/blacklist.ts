@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import type { MutationRequest } from '@/helper/http.interface';
+import type { MutationRequest } from '@/helper/basicType';
 import type { Blacklist } from '@/entities/blacklist';
 
 export type QueryBlacklistResponse = {

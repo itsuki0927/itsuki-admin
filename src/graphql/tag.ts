@@ -5,7 +5,7 @@ import type {
   MutationRequest,
   SearchRequest,
   SearchResponse,
-} from '@/helper/http.interface';
+} from '@/helper/basicType';
 import { Tag } from '@/entities/tag';
 
 export type QueryTagResponse = {

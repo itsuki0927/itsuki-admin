@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { TagSelect } from '@/components/common';
 import type { TagItem, TagSelectProps } from '@/components/common/TagSelect';
 import { useAllTag } from '@/hooks/tag';
-import { useEffect } from 'react';
 
 const ArticleTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => {
   const { fetchTags, data, loading, refetch } = useAllTag();
