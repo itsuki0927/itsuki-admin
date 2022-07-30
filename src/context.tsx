@@ -79,15 +79,17 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
 
   const updateAdmin = useCallback(
     async (input: AdminSaveRequest) => {
-      await updateAdminRequest({
-        variables: {
-          input,
-        },
-      });
-      setCurrentAdmin({
-        ...currentAdmin,
-        ...input,
-      });
+      if (currentAdmin) {
+        await updateAdminRequest({
+          variables: {
+            input,
+          },
+        });
+        setCurrentAdmin({
+          ...currentAdmin,
+          ...input,
+        });
+      }
     },
     [updateAdminRequest, currentAdmin]
   );
@@ -100,7 +102,7 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
       login,
       updateAdmin,
     };
-  }, [currentAdmin, fetchCurrentAdmin, login, logout]);
+  }, [currentAdmin, fetchCurrentAdmin, login, logout, updateAdmin]);
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
 };

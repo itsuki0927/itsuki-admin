@@ -4,10 +4,10 @@ import { PropsWithChildren } from 'react';
 import logoImg from '@/assets/logo.png';
 import styles from './styles.module.less';
 import RightContent from '../RightContent';
-import { convertRoutesToAntdMenu, routes } from '@/routes';
+import { convertRoutesToAntdMenu, constantRoutes } from '@/routes';
 
 const { Header, Sider, Content } = Layout;
-const menus = convertRoutesToAntdMenu(routes);
+const menus = convertRoutesToAntdMenu(constantRoutes);
 
 const BaseLayout = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();

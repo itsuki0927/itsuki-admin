@@ -44,7 +44,9 @@ const SystemSettings = () => {
   }, [selectKey, tab]);
 
   const getMenu = () =>
-    Object.keys(menuMap).map(item => <Item key={item}>{menuMap[item].text}</Item>);
+    Object.keys(menuMap).map(item => (
+      <Item key={item}>{menuMap[item as keyof typeof menuMap].text}</Item>
+    ));
 
   const getRightTitle = () => (
     <div>
@@ -75,7 +77,7 @@ const SystemSettings = () => {
               <Menu
                 selectedKeys={[selectKey]}
                 onClick={({ key }) => {
-                  history(`${location.pathname}?tab=${key}`, { replace: true });
+                  history(`${window.location.pathname}?tab=${key}`, { replace: true });
                   setSelectKey(key as ConfigStateKeys);
                 }}
               >

@@ -13,9 +13,8 @@ export const parserBrowser = (ua: string) => {
   const browser = parser.getBrowser();
   if (!browser.name && !browser.version) {
     return ua;
-  } else {
-    return `${browser.name || '未知'} - ${browser.version || '未知'}`;
   }
+  return `${browser.name || '未知'} - ${browser.version || '未知'}`;
 };
 
 /**
@@ -29,7 +28,6 @@ export const parserOS = (ua: string) => {
   const os = parser.getOS();
   if (!os.name && !os.version) {
     return ua;
-  } else {
-    return `${os.name || '未知'} - ${os.version || '未知'}`;
   }
+  return `${os.name || '未知'} - ${os.version || '未知'}`;
 };
