@@ -1,8 +1,18 @@
 {
-  "name": "ant-design-pro",
-  "version": "5.2.0",
-  "private": true,
-  "description": "An out-of-box UI solution for enterprise applications",
+  "name": "itsuki-admin",
+  "description": "Itsuki.cn blog admin",
+  "version": "2.0.0",
+  "license": "MIT",
+  "private": false,
+  "author": {
+    "name": "itsuki0927",
+    "url": "https://admin.itsuki.cn"
+  },
+  "homepage": "https://github.com/itsuki0927/itsuki-admin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itsuki0927/itsuki-admin"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
