@@ -3,8 +3,8 @@ module.exports = {
   '**/*.ts?(x)': () => 'yarn check-types',
   // eslint 检查
   '*.ts?(x)': 'yarn check-lint',
-  // scss 检查
-  '*.scss': 'yarn stylelint',
+  // less 检查
+  '*.less': 'yarn stylelint',
   // code 格式化
   '*.{ts,tsx,less,md}': 'yarn format',
 };
