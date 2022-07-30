@@ -1,18 +1,13 @@
-import { Environment, mode } from './environment';
+/* eslint-disable prefer-destructuring */
 
-const apiMap = {
-  [Environment.Development]: 'http://localhost:5555',
-  [Environment.Production]: 'https://api.itsuki.cn',
-} as const;
+export const STATIC_URL = import.meta.env.VITE_STATIC_URL;
 
-export const STATIC_URL = 'https://static.itsuki.cn';
+export const API_URL = import.meta.env.VITE_API_URL;
 
-export const API_URL = apiMap[mode as keyof typeof apiMap];
+export const API_VERSION = import.meta.env.VITE_API_VERSION;
 
-export const API_VERSION = 'v1';
+export const BLOG_TITLE = import.meta.env.VITE_BLOG_TITLE;
 
-export const APP_TITLE = 'Blog Admin';
-
-export const BLOG_HOST = 'itsuki.cn';
+export const BLOG_HOST = import.meta.env.VITE_BLOG_HOST;
 
 export const BLOG_ORIGIN = `https://${BLOG_HOST}`;

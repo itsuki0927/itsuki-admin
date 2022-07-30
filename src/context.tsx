@@ -1,5 +1,4 @@
 import { message } from 'antd';
-import { stringify } from 'querystring';
 import {
   createContext,
   PropsWithChildren,
@@ -45,7 +44,7 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
     const { pathname } = location;
     setCurrentAdmin?.(undefined);
     if (window.location.pathname !== '/user/login') {
-      navigate(`/login?${stringify({ redirect: pathname })}`, {
+      navigate(`/login?redirect=${pathname}`, {
         replace: true,
       });
       removeToken();
