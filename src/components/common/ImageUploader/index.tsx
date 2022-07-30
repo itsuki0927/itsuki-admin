@@ -11,10 +11,7 @@ import { useState } from 'react';
 import { copy } from '@/utils/copy';
 import { STATIC_URL } from '@/config';
 import styles from './index.module.less';
-
-const request = (a: any, b: any) => {
-  return Promise.resolve(a + b);
-};
+import uploadFetch from './fetch';
 
 const UPLOAD_FILE_SIZE_LIMIT = 3000000;
 
@@ -36,70 +33,58 @@ const ImageUploader = ({
   const [uploading, setUploading] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const handleRemove = () => onChange?.('');
+
   const beforeUpload = (file: File) => {
     return new Promise<any>((resolve, reject) => {
       const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type);
 
       if (!isImg) {
         message.warn('请上传 png、jpeg、jpg 格式的图片');
-        // eslint-disable-next-line no-promise-executor-return
-        return reject();
+        reject();
+        return;
       }
 
       const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT;
 
       if (isMaxLimit) {
         message.warn('图片大小过大, 请进行压缩');
-        // eslint-disable-next-line no-promise-executor-return
-        return reject();
+        reject();
+        return;
       }
 
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const img = document.createElement('img');
-        img.src = reader.result as string;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-          const ctx = canvas.getContext('2d')!;
-          ctx.drawImage(img, 0, 0);
-          ctx.fillStyle = 'red';
-          ctx.textBaseline = 'middle';
-          ctx.font = '33px Arial';
-          ctx.fillText('itsuki.cn', 20, 20);
-          canvas.toBlob(resolve);
-        };
-      };
+      resolve(file);
     });
   };
 
-  const getMarkdown = (url: string) => `![](${url})`;
+  const genMarkdownString = (url: string) => `![](${url})`;
 
   const uploadFile = (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('prefix', prefix);
     setUploading(true);
-    request('/upload/file', {
-      method: 'POST',
-      data: formData,
-    }).then(data => {
-      const imageUrl = `${STATIC_URL}/${data}`;
-      onChange?.(imageUrl);
-      setUploading(false);
-      notification.success({
-        message: '上传成功',
-        description: imageUrl,
+    handleRemove();
+    uploadFetch(prefix, file)
+      .then(data => {
+        if (data) {
+          const imageUrl = `${STATIC_URL}/${data.uploadFile}`;
+          onChange?.(imageUrl);
+          setUploading(false);
+          notification.success({
+            message: '上传成功',
+            description: imageUrl,
+          });
+        }
+      })
+      .catch(err => {
+        setUploading(false);
+        notification.error({
+          message: '上传失败',
+          description: err,
+        });
       });
-    });
   };
 
-  const handleRemove = () => onChange?.('');
-
   const handleCopy = () => {
-    copy(getMarkdown(value ?? ''));
+    copy(genMarkdownString(value ?? ''));
     message.success('复制成功');
     setCopied(true);
     setTimeout(() => {
@@ -129,7 +114,7 @@ const ImageUploader = ({
         ) : (
           <div className={styles.trigger}>
             {uploading ? <LoadingOutlined /> : <PlusOutlined />}
-            <p className={styles.uploadText}>{uploading ? 'Uploading' : 'Upload'}</p>
+            <p className={styles.uploadText}>{uploading ? 'UPLOADING' : 'UPLOAD'}</p>
           </div>
         )}
       </Upload>
@@ -149,7 +134,7 @@ const ImageUploader = ({
             style={{ width: 'calc(100% - 32px - 1px)' }}
             placeholder='Markdown image'
             prefix={<FileMarkdownOutlined />}
-            value={getMarkdown(value)}
+            value={genMarkdownString(value)}
           />
           <Tooltip title='Copy Markdown'>
             <Button

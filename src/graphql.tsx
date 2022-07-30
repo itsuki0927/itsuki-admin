@@ -4,8 +4,10 @@ import { notification, Space, Typography } from 'antd';
 import { API_URL, API_VERSION } from './config';
 import { getToken } from './utils/auth';
 
+export const baseURI = `${API_URL}/${API_VERSION}/graphql`;
+
 const httpLink = new HttpLink({
-  uri: `${API_URL}/${API_VERSION}/graphql`,
+  uri: baseURI,
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
