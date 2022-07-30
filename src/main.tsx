@@ -6,14 +6,17 @@ import App from '@/components/layout/App';
 import { client } from './graphql';
 import { AdminProvider } from './context';
 import './global.less';
+import { UIProvider } from './ui';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <BrowserRouter>
-        <AdminProvider>
-          <App />
-        </AdminProvider>
+        <UIProvider>
+          <AdminProvider>
+            <App />
+          </AdminProvider>
+        </UIProvider>
       </BrowserRouter>
     </ApolloProvider>
   </React.StrictMode>

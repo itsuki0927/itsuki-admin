@@ -1,4 +1,5 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import styles from './index.module.less';
 
 interface HamburgerProps {
   collapsed?: boolean;
@@ -8,11 +9,7 @@ interface HamburgerProps {
 const Hamburger = ({ collapsed, onCollapse }: HamburgerProps) => (
   <div
     onClick={() => onCollapse?.(!collapsed)}
-    style={{
-      cursor: 'pointer',
-      fontSize: '16px',
-      padding: '0 12px',
-    }}
+    className={styles.hamburger}
     role='button'
     tabIndex={0}
   >

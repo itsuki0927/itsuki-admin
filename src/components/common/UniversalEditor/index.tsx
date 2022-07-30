@@ -117,7 +117,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
     const widthRatio = isPreview ? 0.5 : 1;
     const layoutInfo = editorRef.current?.getLayoutInfo();
     if (!layoutInfo) {
-      throw new Error('layout is null');
+      return;
     }
     editorRef.current?.layout({
       width: fullscreen
