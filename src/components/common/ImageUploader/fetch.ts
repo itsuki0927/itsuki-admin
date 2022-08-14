@@ -42,7 +42,7 @@ const uploadFetch = async (prefix: string, file: File) => {
     }
   };
 
-  return timeoutPromise(fetcher);
+  return timeoutPromise(fetcher, 20000);
 };
 
 export default uploadFetch;

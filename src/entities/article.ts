@@ -30,7 +30,8 @@ export type ArticleActionRequest = {
   content: string;
   publish: PublishState;
   tagIds: number[];
-  cover?: string;
+  cover: string;
+  path: string;
 };
 
 /**

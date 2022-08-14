@@ -1,6 +1,6 @@
 export function timeoutPromise<T>(promiseFn: () => Promise<T>, time = 10000) {
   let timer: null | NodeJS.Timeout;
-  let timePResolve: (value: unknown) => void;
+  let timePResolve: (value: string) => void;
   const timeP = () =>
     new Promise((resolve, reject) => {
       timePResolve = resolve;

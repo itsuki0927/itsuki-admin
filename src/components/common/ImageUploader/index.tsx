@@ -20,7 +20,7 @@ type ImageUploaderProps = {
   onChange?: (value: string) => void;
   disabledInput?: boolean;
   disabledMarkdown?: boolean;
-  prefix: string;
+  getPrefix?: () => string;
 };
 
 const ImageUploader = ({
@@ -28,7 +28,7 @@ const ImageUploader = ({
   onChange,
   disabledInput,
   disabledMarkdown,
-  prefix,
+  getPrefix,
 }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -62,25 +62,28 @@ const ImageUploader = ({
   const uploadFile = (file: File) => {
     setUploading(true);
     handleRemove();
-    uploadFetch(prefix, file)
-      .then(data => {
-        if (data) {
-          const imageUrl = `${STATIC_URL}/${data.uploadFile}`;
-          onChange?.(imageUrl);
+    const prefix = getPrefix?.();
+    if (prefix) {
+      uploadFetch(prefix, file)
+        .then(data => {
+          if (data) {
+            const imageUrl = `${STATIC_URL}/${data.uploadFile}`;
+            onChange?.(imageUrl);
+            setUploading(false);
+            notification.success({
+              message: '上传成功',
+              description: imageUrl,
+            });
+          }
+        })
+        .catch(err => {
           setUploading(false);
-          notification.success({
-            message: '上传成功',
-            description: imageUrl,
+          notification.error({
+            message: '上传失败',
+            description: err,
           });
-        }
-      })
-      .catch(err => {
-        setUploading(false);
-        notification.error({
-          message: '上传失败',
-          description: err,
         });
-      });
+    }
   };
 
   const handleCopy = () => {

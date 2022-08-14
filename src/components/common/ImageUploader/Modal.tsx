@@ -7,13 +7,13 @@ export interface ImageUploaderModalProps {
   initValue?: string;
   visible?: boolean;
   onClose?: (value: string) => void;
-  prefix: string;
+  getPrefix?: () => string;
 }
 const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
   initValue,
   visible,
   onClose,
-  prefix,
+  ...rest
 }) => {
   const [value, setValue] = useState(initValue || '');
 
@@ -40,13 +40,7 @@ const ImageUploaderModal: React.FC<ImageUploaderModalProps> = ({
         </Button>
       }
     >
-      <ImageUploader
-        prefix={prefix}
-        value={value}
-        onChange={newValue => {
-          setValue(newValue);
-        }}
-      />
+      <ImageUploader {...rest} value={value} onChange={setValue} />
     </Modal>
   );
 };

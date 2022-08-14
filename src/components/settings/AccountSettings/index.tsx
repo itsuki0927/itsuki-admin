@@ -43,7 +43,7 @@ const AccountSettings = () => {
         wrapperCol={{ span: 6 }}
         rules={[{ required: true, message: '请输入昵称' }]}
       >
-        <ImageUploader prefix='avatar' disabledMarkdown />
+        <ImageUploader getPrefix={() => 'avatar'} disabledMarkdown />
       </Form.Item>
       <ProFormText
         width='lg'

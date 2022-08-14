@@ -74,7 +74,7 @@ export interface UniversalEditorProps {
   language?: UEditorLanguage;
   style?: React.CSSProperties;
   size?: 'small' | 'default';
-  uploadPrefix?: string;
+  getUploadPrefix?: () => string;
   height?: number | string;
 }
 
@@ -92,7 +92,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   style,
   size,
   loading,
-  uploadPrefix,
+  getUploadPrefix = () => 'article',
   height = '80vh',
   ...props
 }) => {
@@ -231,7 +231,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
             {language === UEditorLanguage.Markdown && (
               <>
                 <ImageUploaderModal
-                  prefix={uploadPrefix ?? 'article'}
+                  getPrefix={getUploadPrefix}
                   visible={uploaderModalVisible}
                   onClose={() => setUploaderModalVisible(false)}
                 />
