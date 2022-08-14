@@ -42,6 +42,9 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => (
             placeholder='请输入文章标题'
           />
           <ProFormText
+            fieldProps={{
+              addonBefore: 'https://itsuki.cn/blog/',
+            }}
             rules={[{ required: true, message: '请输入文章路径' }]}
             name='path'
             label='文章路径'
