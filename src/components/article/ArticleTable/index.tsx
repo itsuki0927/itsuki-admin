@@ -220,7 +220,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       width: 110,
       render: (_, article) => (
         <Space direction='vertical'>
-          <Link key='article-edit' to={`/article/edit/${article.id}`}>
+          <Link key='article-edit' to={`/article/edit/${article.path}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
               文章详情
             </Button>
@@ -291,7 +291,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             block
             type='link'
             target='_blank'
-            href={getBlogArticleUrl(article.id)}
+            href={getBlogArticleUrl(article.path)}
             icon={<LinkOutlined />}
           >
             宿主页面

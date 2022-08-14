@@ -19,6 +19,7 @@ export type Comment = IdentifiableEntity<{
   articleId: number;
   articleTitle: string;
   articleDescription: string;
+  articlePath: string;
   parentNickName: string;
 }>;
 /**
@@ -28,6 +29,7 @@ export type CommentSearchRequest = BaseSearchRequest<{
   keyword?: string;
   state?: number;
   articleId?: number;
+  articlePath?: string;
 }>;
 
 /**

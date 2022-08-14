@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { Modal } from 'antd';
 import { useState } from 'react';
 import { getUEditorCache } from '@/components/common/UniversalEditor';
@@ -16,6 +16,7 @@ import {
   UPDATE_ARTICLE_BANNER,
   UPDATE_ARTICLE_STATE,
   SYNC_ARTICLE_COMMENT_COUNT,
+  QueryArticleInput,
 } from '@/graphql/article';
 import type { ID } from '@/helper/basicType';
 import type {
@@ -68,15 +69,15 @@ const handleDiffContent =
       }
     });
 
-export const useArticle = (id: number) => {
+export const useArticle = () => {
   const cacheID = window.location.pathname;
   const diffContent = handleDiffContent(cacheID);
 
   const [article, setArticle] = useState<ArticleDetailResponse | undefined>();
-  const { loading, updateQuery } = useQuery<QueryArticleResponse, ID>(QUERY_ARTICLE, {
-    variables: {
-      id,
-    },
+  const [fetchArticle, { loading, updateQuery }] = useLazyQuery<
+    QueryArticleResponse,
+    QueryArticleInput
+  >(QUERY_ARTICLE, {
     onCompleted: ({ article: articleProp }) => {
       diffContent(articleProp).then(result => {
         setArticle({
@@ -88,7 +89,7 @@ export const useArticle = (id: number) => {
     },
   });
 
-  return { article, cacheID, loading, updateQuery } as const;
+  return { fetchArticle, article, cacheID, loading, updateQuery } as const;
 };
 
 export const useSyncArticleCommentCount = () =>

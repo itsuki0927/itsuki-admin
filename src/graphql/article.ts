@@ -21,6 +21,10 @@ export type QueryArticleResponse = {
   article: ArticleDetailResponse;
 };
 
+export type QueryArticleInput = {
+  path: string;
+};
+
 export type QueryArticleSearch = SearchRequest<ArticleSearchRequest>;
 
 export type QueryArticleSummaryResponse = {
@@ -64,8 +68,8 @@ export const DETELTE_ARTICLE = gql`
 `;
 
 export const QUERY_ARTICLE = gql`
-  query findArticleDetail($id: ID!) {
-    article(id: $id) {
+  query findArticleDetail($path: String!) {
+    article(path: $path) {
       id
       createAt
       updateAt

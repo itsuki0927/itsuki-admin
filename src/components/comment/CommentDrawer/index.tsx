@@ -144,7 +144,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             href={
               comment?.articleId === COMMENT_GUESTBOOK_ID
                 ? getBlogGuestbookUrl()
-                : getBlogArticleUrl(comment?.articleId)
+                : getBlogArticleUrl(comment?.articlePath)
             }
           >
             {comment?.articleId === COMMENT_GUESTBOOK_ID

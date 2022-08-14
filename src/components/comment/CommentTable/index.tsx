@@ -414,7 +414,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
               type='link'
               target='_blank'
               icon={<LinkOutlined />}
-              href={getBlogArticleUrl(comment.articleId)}
+              href={getBlogArticleUrl(comment.articlePath)}
             >
               宿主页面
             </Button>

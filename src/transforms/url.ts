@@ -3,8 +3,8 @@
  */
 import { BLOG_ORIGIN } from '@/config';
 
-export const getBlogArticleUrl = (articleId: number) =>
-  `${BLOG_ORIGIN}/article/${articleId}`;
+export const getBlogArticleUrl = (articlePath: string) =>
+  `${BLOG_ORIGIN}/blog/${articlePath}`;
 
 export const getBlogGuestbookUrl = () => `${BLOG_ORIGIN}/guestbook`;
 

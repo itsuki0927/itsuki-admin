@@ -58,7 +58,7 @@ export const constantRoutes: RouteOptions[] = [
         component: CreateArticle,
       },
       {
-        path: '/article/edit/:id',
+        path: '/article/edit/:path',
         name: '更新文章',
         icon: <SmileOutlined />,
         component: EditArticle,

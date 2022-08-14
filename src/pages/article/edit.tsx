@@ -1,5 +1,5 @@
 import { Badge, Button, message, Modal, Space } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   CommentOutlined,
@@ -17,10 +17,9 @@ import { convertToCommentTreeData } from '@/transforms/tree';
 import { getBlogArticleUrl } from '@/transforms/url';
 
 const EditArticle = () => {
-  const { id } = useParams<{ id: string }>();
+  const { path } = useParams<{ path: string }>();
   const history = useNavigate();
-  const articleId = Number(id ?? 0);
-  const { article, loading, updateQuery, cacheID } = useArticle(articleId);
+  const { article, loading, updateQuery, cacheID, fetchArticle } = useArticle();
   const [commentVisible, setCommentVisible] = useState(false);
   const [updateArticle] = useUpdateArticle();
   const [deleteArticle] = useDeleteArticle();
@@ -28,15 +27,30 @@ const EditArticle = () => {
   const [fetchComments, { data: comments, loading: commentLoading }] = useComments();
 
   const loadComments = () => {
-    fetchComments({
-      variables: {
-        search: {
-          articleId,
-          pageSize: MAX_PAGE_SIZE,
+    if (article?.id) {
+      fetchComments({
+        variables: {
+          search: {
+            articleId: article.id,
+            pageSize: MAX_PAGE_SIZE,
+          },
         },
-      },
-    });
+      });
+    }
   };
+
+  useEffect(() => {
+    const fetchArticleIfPath = async () => {
+      if (path) {
+        await fetchArticle({
+          variables: {
+            path,
+          },
+        });
+      }
+    };
+    fetchArticleIfPath();
+  }, [fetchArticle, path]);
 
   const handleRemove = () => {
     Modal.confirm({
@@ -50,14 +64,16 @@ const EditArticle = () => {
       content: '此操作不能撤销!!!',
       okType: 'danger',
       onOk() {
-        deleteArticle({
-          variables: {
-            id: articleId,
-          },
-        }).then(() => {
-          message.success('删除成功');
-          history('/article/list', { replace: true });
-        });
+        if (article?.id) {
+          deleteArticle({
+            variables: {
+              id: article.id,
+            },
+          }).then(() => {
+            message.success('删除成功');
+            history('/article/list', { replace: true });
+          });
+        }
       },
     });
   };
@@ -103,7 +119,7 @@ const EditArticle = () => {
               size='small'
               target='_blank'
               icon={<RocketOutlined />}
-              href={getBlogArticleUrl(articleId)}
+              href={getBlogArticleUrl(article.path)}
             />
           </Button.Group>
         </Space>

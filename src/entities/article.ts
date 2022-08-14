@@ -16,6 +16,7 @@ export type Article = IdentifiableEntity<{
   reading: number;
   liking: number;
   commenting: number;
+  path: string;
   tags: Tag[];
 }>;
 
