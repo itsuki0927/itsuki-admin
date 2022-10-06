@@ -1,13 +1,13 @@
 import { StatisticCard } from '@ant-design/pro-card';
-import type { ArticleSummaryResponse } from '@/entities/article';
+import type { BlogSummaryResponse } from '@/entities/blog';
 
-interface ArticleSummaryProps {
-  summary?: ArticleSummaryResponse;
+interface BlogSummaryProps {
+  summary?: BlogSummaryResponse;
 }
 
 const keys = ['total', 'draft', 'recycle', 'published'] as const;
 
-const ArticleSummary = ({ summary }: ArticleSummaryProps) => {
+const BlogSummary = ({ summary }: BlogSummaryProps) => {
   if (!summary) {
     return <StatisticCard.Group loading />;
   }
@@ -20,4 +20,4 @@ const ArticleSummary = ({ summary }: ArticleSummaryProps) => {
   );
 };
 
-export default ArticleSummary;
+export default BlogSummary;

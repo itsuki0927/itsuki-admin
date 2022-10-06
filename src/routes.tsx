@@ -8,13 +8,13 @@ import {
   DashboardOutlined,
 } from '@ant-design/icons';
 import Login from './pages/admin/login';
-import EditArticle from './pages/article/edit';
-import ArticleList from './pages/article/list';
+import EditBlog from './pages/blog/edit';
+import BlogList from './pages/blog/list';
 import CommentList from './pages/comment/list';
 import Dashboard from './pages/dashboard';
 import TagList from './pages/tag/list';
 import SystemSettings from './pages/config';
-import CreateArticle from './pages/article/create';
+import CreateBlog from './pages/blog/create';
 import Page404 from './pages/Page404';
 
 export interface RouteOptions {
@@ -45,30 +45,30 @@ export const constantRoutes: RouteOptions[] = [
     component: Login,
   },
   {
-    path: '/article',
+    path: '/blog',
     name: '文章管理',
     icon: <CoffeeOutlined />,
     needPermission: true,
     routes: [
-      { path: '/article', redirect: '/article/list' },
+      { path: '/blog', redirect: '/blog/list' },
       {
-        path: '/article/create',
+        path: '/blog/create',
         name: '撰写文章',
         icon: <SmileOutlined />,
-        component: CreateArticle,
+        component: CreateBlog,
       },
       {
-        path: '/article/edit/:path',
+        path: '/blog/edit/:path',
         name: '更新文章',
         icon: <SmileOutlined />,
-        component: EditArticle,
+        component: EditBlog,
         hideInMenu: true,
       },
       {
-        path: '/article/list',
+        path: '/blog/list',
         name: '文章列表',
         icon: <SmileOutlined />,
-        component: ArticleList,
+        component: BlogList,
       },
     ],
   },

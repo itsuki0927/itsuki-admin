@@ -17,7 +17,7 @@ import type { CommentTree } from '@/entities/comment';
 import { formatDate } from '@/transforms/date';
 import { parserBrowser, parserOS } from '@/transforms/ua';
 
-interface ArticleCommentProps {
+interface BlogCommentProps {
   visible: boolean;
   onClose: () => void;
   comments?: CommentTree[];
@@ -26,7 +26,7 @@ interface ArticleCommentProps {
   onRefresh?: () => void;
 }
 
-const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) => {
+const CommentTreeList = ({ comments }: Pick<BlogCommentProps, 'comments'>) => {
   return (
     <>
       {comments?.map(comment => {
@@ -49,7 +49,7 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
             ]}
             author={
               <div>
-                {comment.loginType === 'github' ? (
+                {comment.provider === 'github' ? (
                   <a
                     href={`https://github.com/${comment.nickname}`}
                     title={comment.nickname}
@@ -73,7 +73,7 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
               <CommentAvatar
                 nickname={comment.nickname}
                 avatar={comment.avatar}
-                loginType={comment.loginType}
+                provider={comment.provider}
                 size='default'
               />
             }
@@ -88,14 +88,14 @@ const CommentTreeList = ({ comments }: Pick<ArticleCommentProps, 'comments'>) =>
   );
 };
 
-const ArticleComment = ({
+const BlogComment = ({
   visible,
   onClose,
   count,
   comments,
   loading,
   onRefresh,
-}: ArticleCommentProps) => {
+}: BlogCommentProps) => {
   const history = useNavigate();
   return (
     <Drawer
@@ -135,4 +135,4 @@ const ArticleComment = ({
   );
 };
 
-export default ArticleComment;
+export default BlogComment;

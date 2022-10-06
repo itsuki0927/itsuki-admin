@@ -1,5 +1,5 @@
 export type SiteSummaryResponse = {
-  article: number;
+  blog: number;
   tag: number;
   comment: number;
 };

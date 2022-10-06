@@ -8,30 +8,30 @@ import {
   LikeOutlined,
   RocketOutlined,
 } from '@ant-design/icons';
-import { ArticleComment, ArticleForm } from '@/components/article';
+import { BlogComment, BlogForm } from '@/components/blog';
 import { Container } from '@/components/common';
 import { MAX_PAGE_SIZE } from '@/constants/common';
-import { useArticle, useDeleteArticle, useUpdateArticle } from '@/hooks/article';
+import { useBlog, useDeleteBlog, useUpdateBlog } from '@/hooks/blog';
 import { useComments } from '@/hooks/comment';
 import { convertToCommentTreeData } from '@/transforms/tree';
-import { getBlogArticleUrl } from '@/transforms/url';
+import { getBlogBlogUrl } from '@/transforms/url';
 
-const EditArticle = () => {
+const EditBlog = () => {
   const { path } = useParams<{ path: string }>();
   const history = useNavigate();
-  const { article, loading, updateQuery, cacheID, fetchArticle } = useArticle();
+  const { blog, loading, updateQuery, cacheID, fetchBlog } = useBlog();
   const [commentVisible, setCommentVisible] = useState(false);
-  const [updateArticle] = useUpdateArticle();
-  const [deleteArticle] = useDeleteArticle();
+  const [updateBlog] = useUpdateBlog();
+  const [deleteBlog] = useDeleteBlog();
 
   const [fetchComments, { data: comments, loading: commentLoading }] = useComments();
 
   const loadComments = () => {
-    if (article?.id) {
+    if (blog?.id) {
       fetchComments({
         variables: {
           search: {
-            articleId: article.id,
+            blogId: blog.id,
             pageSize: MAX_PAGE_SIZE,
           },
         },
@@ -40,45 +40,45 @@ const EditArticle = () => {
   };
 
   useEffect(() => {
-    const fetchArticleIfPath = async () => {
+    const fetchBlogIfPath = async () => {
       if (path) {
-        await fetchArticle({
+        await fetchBlog({
           variables: {
             path,
           },
         });
       }
     };
-    fetchArticleIfPath();
-  }, [fetchArticle, path]);
+    fetchBlogIfPath();
+  }, [fetchBlog, path]);
 
   const handleRemove = () => {
     Modal.confirm({
       title: (
         <p>
           你确定要删除文章:{' '}
-          <strong style={{ color: '#ff4d4f' }}>《{article?.title}》</strong>
+          <strong style={{ color: '#ff4d4f' }}>《{blog?.title}》</strong>
           嘛?
         </p>
       ),
       content: '此操作不能撤销!!!',
       okType: 'danger',
       onOk() {
-        if (article?.id) {
-          deleteArticle({
+        if (blog?.id) {
+          deleteBlog({
             variables: {
-              id: article.id,
+              id: blog.id,
             },
           }).then(() => {
             message.success('删除成功');
-            history('/article/list', { replace: true });
+            history('/blog/list', { replace: true });
           });
         }
       },
     });
   };
 
-  if (loading || !article) {
+  if (loading || !blog) {
     return <Container loading />;
   }
 
@@ -96,7 +96,7 @@ const EditArticle = () => {
           >
             删除文章
           </Button>
-          <Badge key='comments' count={article.commenting}>
+          <Badge key='comments' count={blog.commenting}>
             <Button
               size='small'
               icon={<CommentOutlined />}
@@ -110,28 +110,28 @@ const EditArticle = () => {
           </Badge>
           <Button.Group key='meta'>
             <Button size='small' disabled icon={<LikeOutlined />}>
-              {article.liking}喜欢
+              {blog.liking}喜欢
             </Button>
             <Button size='small' disabled icon={<EyeOutlined />}>
-              {article.reading}阅读
+              {blog.reading}阅读
             </Button>
             <Button
               size='small'
               target='_blank'
               icon={<RocketOutlined />}
-              href={getBlogArticleUrl(article.path)}
+              href={getBlogBlogUrl(blog.path)}
             />
           </Button.Group>
         </Space>
       }
     >
-      <ArticleForm
+      <BlogForm
         cacheID={cacheID}
-        request={() => Promise.resolve(article)}
+        request={() => Promise.resolve(blog)}
         onFinish={async values => {
-          await updateArticle({
+          await updateBlog({
             variables: {
-              id: article.id,
+              id: blog.id,
               input: values,
             },
           });
@@ -143,10 +143,10 @@ const EditArticle = () => {
           return true;
         }}
       />
-      <ArticleComment
+      <BlogComment
         onRefresh={loadComments}
         loading={commentLoading}
-        count={article?.commenting}
+        count={blog?.commenting}
         comments={convertToCommentTreeData(comments?.comments.data ?? [])}
         visible={commentVisible}
         onClose={() => setCommentVisible(false)}
@@ -155,4 +155,4 @@ const EditArticle = () => {
   );
 };
 
-export default EditArticle;
+export default EditBlog;

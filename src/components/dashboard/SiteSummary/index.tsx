@@ -17,9 +17,9 @@ const list = [
     icon: <EyeOutlined className={classNames(styles.icon, styles.read)} />,
   },
   {
-    key: 'article',
+    key: 'blog',
     title: '全站文章',
-    icon: <CoffeeOutlined className={classNames(styles.icon, styles.article)} />,
+    icon: <CoffeeOutlined className={classNames(styles.icon, styles.blog)} />,
   },
   {
     key: 'tag',

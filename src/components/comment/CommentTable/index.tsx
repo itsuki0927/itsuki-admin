@@ -43,7 +43,7 @@ import {
 import { formatDate } from '@/transforms/date';
 import { markdownToHTML } from '@/transforms/markdown';
 import { parserBrowser, parserOS } from '@/transforms/ua';
-import { getBlogArticleUrl } from '@/transforms/url';
+import { getBlogBlogUrl } from '@/transforms/url';
 
 type CommentTableProps = {
   onDetail: (comment: Comment) => void;
@@ -134,9 +134,9 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
       });
     };
 
-    const handleArticleIdChange = (articleId: number | string) => {
+    const handleBlogIdChange = (blogId: number | string) => {
       formRef.current?.setFieldsValue({
-        articleId,
+        blogId,
       });
       formRef.current?.submit();
     };
@@ -152,7 +152,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             placeholder='AID'
             min={1}
             enterButton={<span>GO</span>}
-            onSearch={value => handleArticleIdChange(value)}
+            onSearch={value => handleBlogIdChange(value)}
           />
         </div>
       </div>
@@ -170,14 +170,10 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
       {
         title: 'AID',
         width: 40,
-        dataIndex: 'articleId',
-        render: (_, { articleId }) => (
-          <Button
-            size='small'
-            type='ghost'
-            onClick={() => handleArticleIdChange(articleId)}
-          >
-            {articleId || '留言板'}
+        dataIndex: 'blogId',
+        render: (_, { blogId }) => (
+          <Button size='small' type='ghost' onClick={() => handleBlogIdChange(blogId)}>
+            {blogId || '留言板'}
           </Button>
         ),
         valueType: 'select',
@@ -210,10 +206,10 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
         width: 240,
         key: 'profile',
         search: false,
-        render: (_, { email, nickname, loginType, avatar }) => (
+        render: (_, { email, nickname, provider, avatar }) => (
           <Space direction='vertical'>
             <Space>
-              <CommentAvatar nickname={nickname} avatar={avatar} loginType={loginType} />
+              <CommentAvatar nickname={nickname} avatar={avatar} provider={provider} />
               {nickname}
             </Space>
             <Space>
@@ -222,8 +218,8 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
             </Space>
             <Space>
               <LinkOutlined />
-              {loginType === 'github' ? (
-                <Tooltip overlay={loginType}>
+              {provider === 'github' ? (
+                <Tooltip overlay={provider}>
                   <Typography.Link
                     underline
                     target='_blank'
@@ -414,7 +410,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
               type='link'
               target='_blank'
               icon={<LinkOutlined />}
-              href={getBlogArticleUrl(comment.articlePath)}
+              href={getBlogBlogUrl(comment.blogPath)}
             >
               宿主页面
             </Button>
@@ -464,7 +460,7 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
                   input: {
                     content,
                     parentId: commentRef.current.id,
-                    articleId: commentRef.current.articleId,
+                    blogId: commentRef.current.blogId,
                     agent: navigator.userAgent,
                   },
                 },

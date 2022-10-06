@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { message } from 'antd';
-import { ArticleForm } from '@/components/article';
+import { BlogForm } from '@/components/blog';
 import { Container } from '@/components/common';
-import { CREATE_ARTICLE } from '@/graphql/article';
-import type { Article } from '@/entities/article';
+import { CREATE_BLOG } from '@/graphql/blog';
+import type { Blog } from '@/entities/blog';
 
-const CreateArticle = () => {
-  const [createArticle] = useMutation<Article, any>(CREATE_ARTICLE);
+const CreateBlog = () => {
+  const [createBlog] = useMutation<Blog, any>(CREATE_BLOG);
   return (
     <Container>
-      <ArticleForm
+      <BlogForm
         onFinish={async input => {
-          await createArticle({
+          await createBlog({
             variables: {
               input,
             },
@@ -24,4 +24,4 @@ const CreateArticle = () => {
   );
 };
 
-export default CreateArticle;
+export default CreateBlog;

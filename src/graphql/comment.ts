@@ -34,7 +34,7 @@ export type UpdateCommentStateInput = ID & Pick<Comment, 'state'>;
 export type UpdateCommentInput = ID & MutationRequest<CommentUpdateRequest>;
 
 export type CreateAdminCommentInput = MutationRequest<
-  Pick<Comment, 'content' | 'articleId' | 'parentId' | 'agent'>
+  Pick<Comment, 'content' | 'blogId' | 'parentId' | 'agent'>
 >;
 
 export const QUERY_COMMENTS = gql`
@@ -47,7 +47,7 @@ export const QUERY_COMMENTS = gql`
         updateAt
         nickname
         email
-        loginType
+        provider
         avatar
         content
         liking
@@ -58,11 +58,11 @@ export const QUERY_COMMENTS = gql`
         state
         fix
         expand
-        articleTitle
-        articleDescription
+        blogTitle
+        blogDescription
         parentNickName
         parentId
-        articleId
+        blogId
       }
     }
   }
@@ -88,11 +88,11 @@ export const QUERY_COMMENT = gql`
       updateAt
       nickname
       email
-      loginType
+      provider
       avatar
       ip
-      articleTitle
-      articleDescription
+      blogTitle
+      blogDescription
       content
       liking
       agent
@@ -112,12 +112,12 @@ export const UPDATE_COMMENT = gql`
     updateComment(id: $id, input: $input) {
       nickname
       email
-      loginType
+      provider
       avatar
       id
       ip
-      articleTitle
-      articleDescription
+      blogTitle
+      blogDescription
       content
       liking
       agent

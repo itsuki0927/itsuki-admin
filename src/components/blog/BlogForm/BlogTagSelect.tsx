@@ -3,7 +3,7 @@ import { TagSelect } from '@/components/common';
 import type { TagItem, TagSelectProps } from '@/components/common/TagSelect';
 import { useAllTag } from '@/hooks/tag';
 
-const ArticleTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => {
+const BlogTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => {
   const { fetchTags, data, loading, refetch } = useAllTag();
 
   useEffect(() => {
@@ -22,4 +22,4 @@ const ArticleTagSelect = (props: Pick<TagSelectProps, 'onChange' | 'value'>) => 
   );
 };
 
-export default ArticleTagSelect;
+export default BlogTagSelect;

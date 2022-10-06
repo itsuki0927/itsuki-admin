@@ -3,7 +3,7 @@ import { Avatar, Badge, Popover } from 'antd';
 
 interface CommentAvatarProps {
   nickname?: string;
-  loginType?: string;
+  provider?: string;
   avatar?: string;
   size?: BadgeProps['size'];
 }
@@ -11,11 +11,11 @@ interface CommentAvatarProps {
 const CommentAvatar = ({
   nickname,
   avatar,
-  loginType,
+  provider,
   size = 'small',
 }: CommentAvatarProps) => {
-  const icon = loginType === 'github' ? 'G' : 'Q';
-  const color = loginType === 'github' ? '#000' : 'blue';
+  const icon = provider === 'github' ? 'G' : 'G';
+  const color = provider === 'github' ? '#000' : 'blue';
 
   return (
     <Popover placement='right' content={nickname}>

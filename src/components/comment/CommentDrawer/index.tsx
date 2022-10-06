@@ -19,7 +19,7 @@ import type { Comment, CommentUpdateRequest } from '@/entities/comment';
 import { formatDate } from '@/transforms/date';
 import { getSelectOptionsByState } from '@/transforms/option';
 import { parserBrowser, parserOS } from '@/transforms/ua';
-import { getBlogArticleUrl, getBlogGuestbookUrl } from '@/transforms/url';
+import { getBlogBlogUrl, getBlogGuestbookUrl } from '@/transforms/url';
 
 type CommentDrawerProps = {
   comment?: Comment;
@@ -72,7 +72,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             size='default'
             nickname={comment?.nickname}
             avatar={comment?.avatar}
-            loginType={comment?.loginType}
+            provider={comment?.provider}
           />
         </Form.Item>
         <ProFormText
@@ -102,7 +102,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             suffix: (
               <SendOutlined
                 onClick={() => {
-                  const url = comment?.loginType;
+                  const url = comment?.provider;
                   if (url) {
                     window.open(url);
                   }
@@ -136,20 +136,20 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
             },
           ]}
         />
-        <Form.Item name='articleId' label='宿主文章'>
+        <Form.Item name='blogId' label='宿主文章'>
           <Button
             type='link'
             target='_blank'
             icon={<LinkOutlined />}
             href={
-              comment?.articleId === COMMENT_GUESTBOOK_ID
+              comment?.blogId === COMMENT_GUESTBOOK_ID
                 ? getBlogGuestbookUrl()
-                : getBlogArticleUrl(comment?.articlePath)
+                : getBlogBlogUrl(comment?.blogPath)
             }
           >
-            {comment?.articleId === COMMENT_GUESTBOOK_ID
+            {comment?.blogId === COMMENT_GUESTBOOK_ID
               ? '留言板'
-              : `${comment?.articleTitle || '-'}`}
+              : `${comment?.blogTitle || '-'}`}
             <Divider type='vertical' />#{comment?.id}
           </Button>
         </Form.Item>

@@ -92,7 +92,7 @@ export const UniversalEditor: React.FC<UniversalEditorProps> = ({
   style,
   size,
   loading,
-  getUploadPrefix = () => 'article',
+  getUploadPrefix = () => 'blog',
   height = '80vh',
   ...props
 }) => {

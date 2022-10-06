@@ -8,7 +8,7 @@ export type QuerySiteSummaryResponse = {
 export const SITE_SUMMARY = gql`
   query summary {
     summary {
-      article
+      blog
       tag
       comment
     }

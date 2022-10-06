@@ -1,18 +1,18 @@
 import ProCard from '@ant-design/pro-card';
 import { ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form';
-import { articleBanners } from '@/constants/article/banner';
+import { blogBanners } from '@/constants/blog/banner';
 import { SELECT_ALL_VALUE } from '@/constants/common';
 import { publishStates } from '@/constants/publish';
 import { useAllTag } from '@/hooks/tag';
-import type { ArticleSearchRequest } from '@/entities/article';
+import type { BlogSearchRequest } from '@/entities/blog';
 import { getSelectOptionsByState } from '@/transforms/option';
 import compose from '@/utils/compose';
 
-type ArticleQueryProps = {
-  onFinish: (values: ArticleSearchRequest) => void;
+type BlogQueryProps = {
+  onFinish: (values: BlogSearchRequest) => void;
 };
 
-const initialValues: ArticleSearchRequest = {
+const initialValues: BlogSearchRequest = {
   name: '',
   publish: SELECT_ALL_VALUE,
   tagId: SELECT_ALL_VALUE,
@@ -21,13 +21,13 @@ const initialValues: ArticleSearchRequest = {
 
 const resolve = () => Promise.resolve(true);
 
-const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
+const BlogQuery = ({ onFinish }: BlogQueryProps) => {
   const { data: tags } = useAllTag();
   console.log('tags', tags);
 
   return (
     <ProCard style={{ marginBottom: 24 }}>
-      <QueryFilter<ArticleSearchRequest>
+      <QueryFilter<BlogSearchRequest>
         initialValues={initialValues}
         style={{ marginBottom: -24 }}
         defaultCollapsed={false}
@@ -51,7 +51,7 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
           label='轮播状态'
           options={[
             { label: '全部来源', value: SELECT_ALL_VALUE },
-            ...getSelectOptionsByState(articleBanners),
+            ...getSelectOptionsByState(blogBanners),
           ]}
         />
         <ProFormSelect
@@ -66,4 +66,4 @@ const ArticleQuery = ({ onFinish }: ArticleQueryProps) => {
   );
 };
 
-export default ArticleQuery;
+export default BlogQuery;

@@ -1,28 +1,28 @@
 import { useEffect } from 'react';
 import { Space } from 'antd';
 import { Container } from '@/components/common';
-import { ArticleSummary, SiteSummary } from '@/components/dashboard';
-import { useArticleSummary } from '@/hooks/article';
+import { BlogSummary, SiteSummary } from '@/components/dashboard';
+import { useBlogSummary } from '@/hooks/blog';
 import { useSummary } from '@/hooks/summary';
 
 const Dashboard = () => {
-  const [fetchArticleSummary, { data: articleSummary, loading: articleLoading }] =
-    useArticleSummary();
+  const [fetchBlogSummary, { data: blogSummary, loading: blogLoading }] =
+    useBlogSummary();
   const [fetchSummary, { data: siteSummary, loading: siteLoading }] = useSummary();
 
   useEffect(() => {
-    fetchArticleSummary();
-  }, [fetchArticleSummary]);
+    fetchBlogSummary();
+  }, [fetchBlogSummary]);
   useEffect(() => {
     fetchSummary();
   }, [fetchSummary]);
 
   return (
-    <Container loading={articleLoading || siteLoading}>
+    <Container loading={blogLoading || siteLoading}>
       <Space direction='vertical' size={24} style={{ width: '100%' }}>
         <SiteSummary summary={siteSummary?.summary} />
 
-        <ArticleSummary summary={articleSummary?.articleSummary} />
+        <BlogSummary summary={blogSummary?.blogSummary} />
       </Space>
     </Container>
   );

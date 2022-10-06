@@ -18,28 +18,28 @@ import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'ant
 import { useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AlertRenderType } from '@ant-design/pro-table/lib/components/Alert';
-import { ab, ArticleBanner } from '@/constants/article/banner';
+import { ab, BlogBanner } from '@/constants/blog/banner';
 import { omitSelectAllValue } from '@/constants/common';
 import { ps, PublishState } from '@/constants/publish';
 import {
-  useArticles,
-  useSyncArticleCommentCount,
-  useUpdateArticleBanner,
-  useUpdateArticleState,
-} from '@/hooks/article';
-import type { ArticleSearchRequest, Article } from '@/entities/article';
+  useBlogs,
+  useSyncBlogCommentCount,
+  useUpdateBlogBanner,
+  useUpdateBlogState,
+} from '@/hooks/blog';
+import type { BlogSearchRequest, Blog } from '@/entities/blog';
 import { formatDate } from '@/transforms/date';
-import { getBlogArticleUrl } from '@/transforms/url';
+import { getBlogBlogUrl } from '@/transforms/url';
 
-type ArticleTableProps = {
-  query?: ArticleSearchRequest;
+type BlogTableProps = {
+  query?: BlogSearchRequest;
 };
 
-const ArticleTable = ({ query }: ArticleTableProps) => {
-  const [fetchArticles, { updateQuery, refetch }] = useArticles();
-  const [updateState] = useUpdateArticleState();
-  const [updateBanner] = useUpdateArticleBanner();
-  const [syncArticleCommentCount] = useSyncArticleCommentCount();
+const BlogTable = ({ query }: BlogTableProps) => {
+  const [fetchBlogs, { updateQuery, refetch }] = useBlogs();
+  const [updateState] = useUpdateBlogState();
+  const [updateBanner] = useUpdateBlogBanner();
+  const [syncBlogCommentCount] = useSyncBlogCommentCount();
   const [loading, setLoading] = useState(false);
   const actionRef = useRef<ActionType>();
   const history = useNavigate();
@@ -57,10 +57,10 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             state,
           },
         }).then(() => {
-          updateQuery(({ articles }) => ({
-            articles: {
-              ...articles,
-              data: articles.data.map(item => {
+          updateQuery(({ blogs }) => ({
+            blogs: {
+              ...blogs,
+              data: blogs.data.map(item => {
                 if (ids.includes(item.id)) {
                   return { ...item, publish: state };
                 }
@@ -77,10 +77,10 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     });
   };
 
-  const handleBannerChange = (ids: number[], banner: ArticleBanner, cb?: () => void) => {
+  const handleBannerChange = (ids: number[], banner: BlogBanner, cb?: () => void) => {
     Modal.confirm({
       title: `确定要将选中文章 ${
-        banner === ArticleBanner.YES ? '加入轮播图' : '移除轮播图'
+        banner === BlogBanner.YES ? '加入轮播图' : '移除轮播图'
       } 吗?`,
       content: '此操作不能撤销!!!',
       centered: true,
@@ -92,10 +92,10 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             banner,
           },
         }).then(() => {
-          updateQuery(({ articles }) => ({
-            articles: {
-              ...articles,
-              data: articles.data.map(item => {
+          updateQuery(({ blogs }) => ({
+            blogs: {
+              ...blogs,
+              data: blogs.data.map(item => {
                 if (ids.includes(item.id)) {
                   return { ...item, banner };
                 }
@@ -112,7 +112,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     });
   };
 
-  const columns: ProColumns<Article>[] = [
+  const columns: ProColumns<Blog>[] = [
     { title: 'id', width: 40, dataIndex: 'id' },
     {
       title: '文章',
@@ -218,43 +218,43 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       title: '操作',
       valueType: 'option',
       width: 110,
-      render: (_, article) => (
+      render: (_, blog) => (
         <Space direction='vertical'>
-          <Link key='article-edit' to={`/article/edit/${article.path}`}>
+          <Link key='blog-edit' to={`/blog/edit/${blog.path}`}>
             <Button size='small' type='text' block icon={<EditOutlined />}>
               文章详情
             </Button>
           </Link>
-          {article.publish === PublishState.Draft && (
+          {blog.publish === PublishState.Draft && (
             <Button
               size='small'
               type='text'
               block
               icon={<CheckOutlined />}
-              onClick={() => handleStateChange([article.id], PublishState.Published)}
+              onClick={() => handleStateChange([blog.id], PublishState.Published)}
             >
               <Typography.Text type='success'>直接发布</Typography.Text>
             </Button>
           )}
-          {article.publish === PublishState.Published && (
+          {blog.publish === PublishState.Published && (
             <Button
               size='small'
               type='text'
               block
               danger
               icon={<DeleteOutlined />}
-              onClick={() => handleStateChange([article.id], PublishState.Recycle)}
+              onClick={() => handleStateChange([blog.id], PublishState.Recycle)}
             >
               移回收站
             </Button>
           )}
-          {article.publish === PublishState.Recycle && (
+          {blog.publish === PublishState.Recycle && (
             <Button
               size='small'
               type='text'
               block
               icon={<RollbackOutlined />}
-              onClick={() => handleStateChange([article.id], PublishState.Draft)}
+              onClick={() => handleStateChange([blog.id], PublishState.Draft)}
             >
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
@@ -263,35 +263,27 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
             size='small'
             type='text'
             block
-            icon={
-              article.banner === ArticleBanner.YES ? (
-                <SwapOutlined />
-              ) : (
-                <RetweetOutlined />
-              )
-            }
+            icon={blog.banner === BlogBanner.YES ? <SwapOutlined /> : <RetweetOutlined />}
             onClick={() => {
               const banner =
-                article.banner === ArticleBanner.YES
-                  ? ArticleBanner.NO
-                  : ArticleBanner.YES;
+                blog.banner === BlogBanner.YES ? BlogBanner.NO : BlogBanner.YES;
 
-              if (article.publish !== PublishState.Published) {
+              if (blog.publish !== PublishState.Published) {
                 message.warn('文章还未发布');
                 return;
               }
 
-              handleBannerChange([article.id], banner);
+              handleBannerChange([blog.id], banner);
             }}
           >
-            {article.banner === ArticleBanner.YES ? '移除轮播' : '加入轮播'}
+            {blog.banner === BlogBanner.YES ? '移除轮播' : '加入轮播'}
           </Button>
           <Button
             size='small'
             block
             type='link'
             target='_blank'
-            href={getBlogArticleUrl(article.path)}
+            href={getBlogBlogUrl(blog.path)}
             icon={<LinkOutlined />}
           >
             宿主页面
@@ -301,10 +293,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     },
   ];
 
-  const renderAlert: AlertRenderType<Article> = ({
-    selectedRowKeys,
-    onCleanSelected,
-  }) => (
+  const renderAlert: AlertRenderType<Blog> = ({ selectedRowKeys, onCleanSelected }) => (
     <Space size={24}>
       <span>
         已选 {selectedRowKeys.length} 项
@@ -315,7 +304,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
     </Space>
   );
 
-  const renderAlertOption: AlertRenderType<Article> = ({
+  const renderAlertOption: AlertRenderType<Blog> = ({
     selectedRowKeys,
     onCleanSelected,
   }) => (
@@ -375,7 +364,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
         type='text'
         onClick={async () => {
           setLoading(true);
-          await syncArticleCommentCount({
+          await syncBlogCommentCount({
             variables: {
               ids: selectedRowKeys as any[],
             },
@@ -394,7 +383,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
         onSelect={key => {
           handleBannerChange(
             selectedRowKeys as number[],
-            key === 'joinBanner' ? ArticleBanner.YES : ArticleBanner.NO,
+            key === 'joinBanner' ? BlogBanner.YES : BlogBanner.NO,
             onCleanSelected
           );
         }}
@@ -421,17 +410,17 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
       rowKey='id'
       request={async search => {
         setLoading(true);
-        const { data } = await fetchArticles({
+        const { data } = await fetchBlogs({
           variables: {
             search,
           },
         });
         setLoading(false);
-        if (!data?.articles) {
+        if (!data?.blogs) {
           message.error('找不到文章');
           return {};
         }
-        return data.articles;
+        return data.blogs;
       }}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
@@ -443,7 +432,7 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
           size='small'
           key='create'
           type='primary'
-          onClick={() => history('/article/create')}
+          onClick={() => history('/blog/create')}
           icon={<EditOutlined />}
         >
           撰写文章
@@ -453,4 +442,4 @@ const ArticleTable = ({ query }: ArticleTableProps) => {
   );
 };
 
-export default ArticleTable;
+export default BlogTable;

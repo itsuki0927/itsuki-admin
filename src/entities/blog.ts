@@ -1,9 +1,9 @@
-import { ArticleBanner } from '@/constants/article/banner';
+import { BlogBanner } from '@/constants/blog/banner';
 import { PublishState } from '@/constants/publish';
 import { BaseSearchRequest, IdentifiableEntity } from '@/helper/basicType';
 import { Tag } from './tag';
 
-export type Article = IdentifiableEntity<{
+export type Blog = IdentifiableEntity<{
   title: string;
   description: string;
   content: string;
@@ -12,18 +12,19 @@ export type Article = IdentifiableEntity<{
   state: number;
   keywords: string;
   publish: PublishState;
-  banner: ArticleBanner;
+  banner: BlogBanner;
   reading: number;
   liking: number;
   commenting: number;
   path: string;
+  cardStyle: string;
   tags: Tag[];
 }>;
 
 /**
  * 文章创建、更新封装类
  */
-export type ArticleActionRequest = {
+export type BlogActionRequest = {
   title: string;
   description: string;
   keywords: string;
@@ -37,17 +38,17 @@ export type ArticleActionRequest = {
 /**
  * 文章搜索请求类
  */
-export type ArticleSearchRequest = BaseSearchRequest<{
+export type BlogSearchRequest = BaseSearchRequest<{
   name?: string;
   publish?: PublishState;
-  banner?: ArticleBanner;
+  banner?: BlogBanner;
   tagId?: number;
 }>;
 
 /**
  * 文章详情响应类
  */
-export type ArticleDetailResponse = Article & {
+export type BlogDetailResponse = Blog & {
   tagIds: number[];
   keywords: string[];
 };
@@ -55,34 +56,34 @@ export type ArticleDetailResponse = Article & {
 /**
  * 文章Patch请求类
  */
-export type ArticlePatchRequest = {
+export type BlogPatchRequest = {
   ids: number[];
   state: PublishState;
 };
 
-export type ArticleBannerPatchRequest = {
+export type BlogBannerPatchRequest = {
   ids: number[];
-  banner: ArticleBanner;
+  banner: BlogBanner;
 };
 
 /**
  * 文章Patch请求类
  */
-export type ArticleMetaPatchRequest = {
+export type BlogMetaPatchRequest = {
   meta: string;
   value?: number;
 };
 
-type ArticleSummary = {
+type BlogSummary = {
   publish: number;
   value: number;
   title: string;
   state: string;
 };
 
-export type ArticleSummaryResponse = {
-  total: ArticleSummary;
-  draft: ArticleSummary;
-  recycle: ArticleSummary;
-  published: ArticleSummary;
+export type BlogSummaryResponse = {
+  total: BlogSummary;
+  draft: BlogSummary;
+  recycle: BlogSummary;
+  published: BlogSummary;
 };

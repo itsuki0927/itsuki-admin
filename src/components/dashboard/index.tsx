@@ -1,2 +1,2 @@
-export { default as ArticleSummary } from './ArticleSummary';
+export { default as BlogSummary } from './BlogSummary';
 export { default as SiteSummary } from './SiteSummary';

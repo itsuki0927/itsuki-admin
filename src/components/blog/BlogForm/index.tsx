@@ -8,21 +8,22 @@ import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form, Space } from 'antd';
 import { ImageUploader, UniversalEditor } from '@/components/common';
 import { UEditorLanguage } from '@/components/common/UniversalEditor';
-import { articleBanners } from '@/constants/article/banner';
+import { blogBanners } from '@/constants/blog/banner';
 import { publishStates } from '@/constants/publish';
-import type { ArticleActionRequest, ArticleDetailResponse } from '@/entities/article';
+import type { BlogActionRequest, BlogDetailResponse } from '@/entities/blog';
 import { getSelectOptionsByState } from '@/transforms/option';
-import ArticleTagSelect from './ArticleTagSelect';
+import BlogTagSelect from './BlogTagSelect';
+import { cardStyles } from '@/constants/cardStyle';
 
-type ArticleFormProps = {
-  onFinish: (values: ArticleActionRequest) => Promise<boolean>;
-  request?: () => Promise<ArticleDetailResponse>;
+type BlogFormProps = {
+  onFinish: (values: BlogActionRequest) => Promise<boolean>;
+  request?: () => Promise<BlogDetailResponse>;
   cacheID?: string;
 };
 
-const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
-  const [form] = Form.useForm<ArticleActionRequest>();
-  const getUploadPrefix = () => `/article/${form.getFieldValue('path')}`;
+const BlogForm = ({ onFinish, request, cacheID }: BlogFormProps) => {
+  const [form] = Form.useForm<BlogActionRequest>();
+  const getUploadPrefix = () => `/blog/${form.getFieldValue('path')}`;
   return (
     <ProForm
       form={form}
@@ -69,7 +70,7 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
             />
             <ProFormSelect
               rules={[{ required: true, message: '请选择是否为轮播图' }]}
-              options={getSelectOptionsByState(articleBanners)}
+              options={getSelectOptionsByState(blogBanners)}
               labelAlign='left'
               label='轮播状态'
               name='banner'
@@ -81,6 +82,12 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
               label='发布状态'
               name='publish'
             />
+            <ProFormSelect
+              options={getSelectOptionsByState(cardStyles)}
+              labelAlign='left'
+              label='卡片风格'
+              name='cardStyle'
+            />
           </ProCard>
 
           <ProCard colSpan={8} ghost>
@@ -91,7 +98,7 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
                   label='标签'
                   rules={[{ required: true, message: '至少选择一个标签' }]}
                 >
-                  <ArticleTagSelect />
+                  <BlogTagSelect />
                 </Form.Item>
               </ProCard>
               <ProCard>
@@ -125,4 +132,4 @@ const ArticleForm = ({ onFinish, request, cacheID }: ArticleFormProps) => {
   );
 };
 
-export default ArticleForm;
+export default BlogForm;

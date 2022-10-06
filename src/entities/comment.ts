@@ -4,7 +4,7 @@ import { BaseSearchRequest, IdentifiableEntity } from '@/helper/basicType';
 export type Comment = IdentifiableEntity<{
   nickname: string;
   email: string;
-  loginType: string;
+  provider: string;
   avatar: string;
   content: string;
   liking: number;
@@ -16,10 +16,10 @@ export type Comment = IdentifiableEntity<{
   fix: number;
   expand: string;
   parentId: number;
-  articleId: number;
-  articleTitle: string;
-  articleDescription: string;
-  articlePath: string;
+  blogId: number;
+  blogTitle: string;
+  blogDescription: string;
+  blogPath: string;
   parentNickName: string;
 }>;
 /**
@@ -28,8 +28,8 @@ export type Comment = IdentifiableEntity<{
 export type CommentSearchRequest = BaseSearchRequest<{
   keyword?: string;
   state?: number;
-  articleId?: number;
-  articlePath?: string;
+  blogId?: number;
+  blogPath?: string;
 }>;
 
 /**

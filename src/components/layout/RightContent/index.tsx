@@ -17,8 +17,8 @@ const options = [
   {
     label: '文章管理',
     options: [
-      renderItem('文章列表', '/article/list'),
-      renderItem('新撰文章', '/article/create'),
+      renderItem('文章列表', '/blog/list'),
+      renderItem('新撰文章', '/blog/create'),
     ],
   },
   {
