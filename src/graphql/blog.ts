@@ -95,7 +95,7 @@ export const QUERY_BLOG = gql`
 `;
 
 export const QUERY_BLOGS = gql`
-  query findBlogs($search: BlogSearchRequest) {
+  query findBlogs($search: SearchBlogInput) {
     blogs(search: $search) {
       data {
         id

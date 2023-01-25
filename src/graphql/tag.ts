@@ -31,7 +31,7 @@ export type CreateTagInput = MutationRequest<TagActionInput>;
 export type UpdateTagInput = CreateTagInput & ID;
 
 export const QUERY_TAG = gql`
-  query findTags($search: TagSearchRequest) {
+  query findTags($search: SearchTagInput) {
     tags(search: $search) {
       total
       data {

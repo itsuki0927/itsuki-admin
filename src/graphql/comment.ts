@@ -38,7 +38,7 @@ export type CreateAdminCommentInput = MutationRequest<
 >;
 
 export const QUERY_COMMENTS = gql`
-  query findComments($search: CommentSearchRequest!) {
+  query findComments($search: SearchCommentInput!) {
     comments(search: $search) {
       total
       data {
@@ -50,14 +50,11 @@ export const QUERY_COMMENTS = gql`
         provider
         avatar
         content
-        liking
         ip
         agent
         city
         province
         state
-        fix
-        expand
         blogTitle
         blogDescription
         parentNickName
@@ -94,13 +91,10 @@ export const QUERY_COMMENT = gql`
       blogTitle
       blogDescription
       content
-      liking
       agent
       city
       province
       state
-      fix
-      expand
       parentId
       parentNickName
     }

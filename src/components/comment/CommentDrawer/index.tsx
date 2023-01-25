@@ -41,7 +41,7 @@ const CommentDrawer = ({ comment, loading, onFinish, ...rest }: CommentDrawerPro
       layout='horizontal'
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 21 }}
-      width='40%'
+      width='50%'
       title='评论详情'
       onFinish={onFinish}
       {...rest}

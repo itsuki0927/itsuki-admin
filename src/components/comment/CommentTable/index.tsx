@@ -3,7 +3,6 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  HeartOutlined,
   LinkOutlined,
   MailOutlined,
   StopOutlined,
@@ -281,28 +280,22 @@ const CommentTable = forwardRef<CommentTableRef, CommentTableProps>(
         dataIndex: 'state',
         valueType: 'select',
         fieldProps: {
-          options: [
-            { label: '全部状态', value: SELECT_ALL_VALUE },
-            ...commentStates.map(state => {
-              return {
-                value: state.id,
-                label: (
-                  <Space>
-                    {state.icon}
-                    {state.name}
-                  </Space>
-                ),
-              };
-            }),
-          ],
+          options: commentStates.map(state => {
+            return {
+              value: state.id,
+              label: (
+                <Space>
+                  {state.icon}
+                  {state.name}
+                </Space>
+              ),
+            };
+          }),
         },
-        render: (_, { state, liking }) => {
+        render: (_, { state }) => {
           const s = cs(state);
           return (
             <Space direction='vertical'>
-              <Tag icon={<HeartOutlined />} color={liking > 0 ? 'magenta' : undefined}>
-                {liking} 个赞
-              </Tag>
               <Tag icon={s.icon} color={s.color}>
                 {s.name}
               </Tag>
