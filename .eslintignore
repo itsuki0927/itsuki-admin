@@ -4,6 +4,7 @@
 lint-staged.config.js
 next.config.js
 commitlint.config.js
+vite.config.ts
 
 #
 .gitignore
@@ -12,6 +13,3 @@ commitlint.config.js
 tsconfig.json
 tsconfig.node.json
 package.json
-
-# next
-/build

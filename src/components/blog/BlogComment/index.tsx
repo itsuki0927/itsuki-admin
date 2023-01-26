@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { EditOutlined, HeartOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   Button,
-  Comment,
+  // Comment,
   Divider,
   Drawer,
   Empty,
@@ -11,11 +12,11 @@ import {
   Typography,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { CommentAvatar } from '@/components/common';
-import { cs } from '@/constants/comment';
+// import { CommentAvatar } from '@/components/common';
+// import { cs } from '@/constants/comment';
 import type { CommentTree } from '@/entities/comment';
-import { formatDate } from '@/transforms/date';
-import { parserBrowser, parserOS } from '@/transforms/ua';
+// import { formatDate } from '@/transforms/date';
+// import { parserBrowser, parserOS } from '@/transforms/ua';
 
 interface BlogCommentProps {
   visible: boolean;
@@ -31,57 +32,57 @@ const CommentTreeList = ({ comments }: Pick<BlogCommentProps, 'comments'>) => {
     <>
       {comments?.map(comment => {
         return (
-          <Comment
+          <div
             key={comment.id}
-            datetime={formatDate(comment.createAt)}
-            actions={[
-              <Typography.Text key='time' type={comment.liking ? 'danger' : 'secondary'}>
-                <HeartOutlined />
-                &nbsp;
-                {comment.liking} 喜欢
-              </Typography.Text>,
-              <Divider key='divider1' type='vertical' />,
-              <span key='browser'>{parserBrowser(comment.agent!)}</span>,
-              <Divider key='divider2' type='vertical' />,
-              <span key='os'>{parserOS(comment.agent!)}</span>,
-              <Divider key='divider3' type='vertical' />,
-              <span key='ip'>{comment.ip || '-'}</span>,
-            ]}
-            author={
-              <div>
-                {comment.provider === 'github' ? (
-                  <a
-                    href={`https://github.com/${comment.nickname}`}
-                    title={comment.nickname}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    {comment.nickname}
-                  </a>
-                ) : (
-                  comment.nickname
-                )}
-                <Divider type='vertical' />
-                {comment.province || '-'} · {comment.city || '-'}
-                <Divider type='vertical' />
-                <Tag color={cs(comment.state).color} icon={cs(comment.state).icon}>
-                  {cs(comment.state).name}
-                </Tag>
-              </div>
-            }
-            avatar={
-              <CommentAvatar
-                nickname={comment.nickname}
-                avatar={comment.avatar}
-                provider={comment.provider}
-                size='default'
-              />
-            }
-            content={<Typography.Paragraph>{comment.content}</Typography.Paragraph>}
+            // datetime={formatDate(comment.createAt)}
+            // actions={[
+            //   <Typography.Text key='time' type={comment.liking ? 'danger' : 'secondary'}>
+            //     <HeartOutlined />
+            //     &nbsp;
+            //     {comment.liking} 喜欢
+            //   </Typography.Text>,
+            //   <Divider key='divider1' type='vertical' />,
+            //   <span key='browser'>{parserBrowser(comment.agent!)}</span>,
+            //   <Divider key='divider2' type='vertical' />,
+            //   <span key='os'>{parserOS(comment.agent!)}</span>,
+            //   <Divider key='divider3' type='vertical' />,
+            //   <span key='ip'>{comment.ip || '-'}</span>,
+            // ]}
+            // author={
+            //   <div>
+            //     {comment.provider === 'github' ? (
+            //       <a
+            //         href={`https://github.com/${comment.nickname}`}
+            //         title={comment.nickname}
+            //         target='_blank'
+            //         rel='noreferrer'
+            //       >
+            //         {comment.nickname}
+            //       </a>
+            //     ) : (
+            //       comment.nickname
+            //     )}
+            //     <Divider type='vertical' />
+            //     {comment.province || '-'} · {comment.city || '-'}
+            //     <Divider type='vertical' />
+            //     <Tag color={cs(comment.state).color} icon={cs(comment.state).icon}>
+            //       {cs(comment.state).name}
+            //     </Tag>
+            //   </div>
+            // }
+            // avatar={
+            //   <CommentAvatar
+            //     nickname={comment.nickname}
+            //     avatar={comment.avatar}
+            //     provider={comment.provider}
+            //     size='default'
+            //   />
+            // }
+            // content={<Typography.Paragraph>{comment.content}</Typography.Paragraph>}
           >
             <Divider style={{ margin: '12px 0' }} />
             <CommentTreeList comments={comment.children} />
-          </Comment>
+          </div>
         );
       })}
     </>

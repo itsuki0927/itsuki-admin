@@ -40,7 +40,7 @@ const ImageUploader = ({
       const isImg = ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type);
 
       if (!isImg) {
-        message.warn('请上传 png、jpeg、jpg 格式的图片');
+        message.warning('请上传 png、jpeg、jpg 格式的图片');
         reject();
         return;
       }
@@ -48,7 +48,7 @@ const ImageUploader = ({
       const isMaxLimit = file.size > UPLOAD_FILE_SIZE_LIMIT;
 
       if (isMaxLimit) {
-        message.warn('图片大小过大, 请进行压缩');
+        message.warning('图片大小过大, 请进行压缩');
         reject();
         return;
       }

@@ -1,6 +1,5 @@
 import { CheckCircleOutlined, ReloadOutlined, TagOutlined } from '@ant-design/icons';
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import styles from './index.module.less';
 
 export interface TagItem {
   value: number;
@@ -32,7 +31,7 @@ const TagSelect = ({
   }
 
   return (
-    <Space className={styles.tag}>
+    <Space>
       {!tags || !tags.length ? (
         <Typography.Text>暂无标签</Typography.Text>
       ) : (

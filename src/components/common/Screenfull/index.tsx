@@ -40,7 +40,7 @@ const ScreenFull = ({ onChange, value: propValue }: ScreenFullProps) => {
 
   const handleClick = () => {
     if (!screenfull.isEnabled) {
-      message.warn({
+      message.warning({
         content: 'you browser can not work',
         type: 'warning',
       });

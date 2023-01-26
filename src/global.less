@@ -1,4 +1,7 @@
-@import '~antd/es/style/themes/default.less';
+* {
+  padding: 0;
+  margin: 0;
+}
 
 html,
 body,
@@ -15,14 +18,15 @@ body.fullscreen {
   filter: invert(80%);
 }
 
-// override logo style
 .ant-pro-sider.ant-layout-sider-collapsed .ant-pro-sider-logo {
   padding: 8px;
 }
+
 .ant-pro-sider-light .ant-pro-sider-logo h1 {
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(0, 0, 0, 85%);
   font-weight: normal;
 }
+
 .ant-pro-sider-logo {
   padding: 8px 16px;
 }
@@ -44,7 +48,7 @@ canvas {
 }
 
 body {
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -52,28 +56,4 @@ body {
 ul,
 ol {
   list-style: none;
-}
-
-@media (max-width: @screen-xs) {
-  .ant-table {
-    width: 100%;
-    overflow-x: auto;
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
-        white-space: pre;
-        > span {
-          display: block;
-        }
-      }
-    }
-  }
-}
-
-// Compatible with IE11
-@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
-  body .ant-design-pro > .ant-layout {
-    min-height: 100vh;
-  }
 }

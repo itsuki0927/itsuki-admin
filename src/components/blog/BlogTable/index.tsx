@@ -269,7 +269,7 @@ const BlogTable = ({ query }: BlogTableProps) => {
                 blog.banner === BlogBanner.YES ? BlogBanner.NO : BlogBanner.YES;
 
               if (blog.publish !== PublishState.Published) {
-                message.warn('文章还未发布');
+                message.warning('文章还未发布');
                 return;
               }
 

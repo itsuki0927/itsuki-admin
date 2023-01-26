@@ -1,40 +1,36 @@
-import { useNavigate } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import { PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './styles.module.less';
-import RightContent from '../RightContent';
-import { convertRoutesToAntdMenu, constantRoutes } from '@/routes';
+import Avatar from '../AvatarDropdown';
 import Logo from '../Logo';
-import Hamburger from '../Hamburger';
-import { useUI } from '@/ui';
 
-const { Header, Sider, Content } = Layout;
-const menus = convertRoutesToAntdMenu(constantRoutes);
+const { Header, Content } = Layout;
 
 const BaseLayout = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate();
-  const { collapsed, toggleCollapse } = useUI();
-  console.log('collapsed', collapsed);
-
   return (
     <Layout className={styles.app}>
-      <Sider theme='light' width={250} collapsed={collapsed}>
-        <Logo />
-        <Menu
-          items={menus}
-          mode='inline'
-          onSelect={({ key }) => {
-            navigate(key);
-          }}
-        />
-      </Sider>
-      <Layout className='site-layout'>
-        <Header className={styles.header}>
-          <Hamburger collapsed={collapsed} onCollapse={toggleCollapse} />
-          <RightContent />
-        </Header>
-        <Content className='site-layout-background'>{children}</Content>
-      </Layout>
+      <Header className={styles.header}>
+        <div className={styles.leftContent}>
+          <Logo />
+          <nav className={styles.menu}>
+            <Link to='/blog/list'>
+              <li>Blog</li>
+            </Link>
+            <Link to='/comment'>
+              <li>Comment</li>
+            </Link>
+            <Link to='/tag'>
+              <li>Tag</li>
+            </Link>
+            <Link to='/settings'>
+              <li>Settings</li>
+            </Link>
+          </nav>
+        </div>
+        <Avatar menu />
+      </Header>
+      <Content className='site-layout-background'>{children}</Content>
     </Layout>
   );
 };
