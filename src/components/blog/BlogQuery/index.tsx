@@ -4,15 +4,15 @@ import { blogBanners } from '@/constants/blog/banner';
 import { SELECT_ALL_VALUE } from '@/constants/common';
 import { publishStates } from '@/constants/publish';
 import { useAllTag } from '@/hooks/tag';
-import type { BlogSearchRequest } from '@/entities/blog';
+import type { SearchBlogInput } from '@/entities/blog';
 import { getSelectOptionsByState } from '@/transforms/option';
 import compose from '@/utils/compose';
 
 type BlogQueryProps = {
-  onFinish: (values: BlogSearchRequest) => void;
+  onFinish: (values: SearchBlogInput) => void;
 };
 
-const initialValues: BlogSearchRequest = {
+const initialValues: SearchBlogInput = {
   name: '',
   publish: SELECT_ALL_VALUE,
   tagId: SELECT_ALL_VALUE,
@@ -27,7 +27,7 @@ const BlogQuery = ({ onFinish }: BlogQueryProps) => {
 
   return (
     <ProCard style={{ marginBottom: 24 }}>
-      <QueryFilter<BlogSearchRequest>
+      <QueryFilter<SearchBlogInput>
         initialValues={initialValues}
         style={{ marginBottom: -24 }}
         defaultCollapsed={false}

@@ -38,7 +38,7 @@ export type BlogActionRequest = {
 /**
  * 文章搜索请求类
  */
-export type BlogSearchRequest = BaseSearchRequest<{
+export type SearchBlogInput = BaseSearchRequest<{
   name?: string;
   publish?: PublishState;
   banner?: BlogBanner;

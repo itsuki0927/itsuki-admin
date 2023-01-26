@@ -27,12 +27,12 @@ import {
   useUpdateBlogBanner,
   useUpdateBlogState,
 } from '@/hooks/blog';
-import type { BlogSearchRequest, Blog } from '@/entities/blog';
+import type { SearchBlogInput, Blog } from '@/entities/blog';
 import { formatDate } from '@/transforms/date';
 import { getBlogBlogUrl } from '@/transforms/url';
 
 type BlogTableProps = {
-  query?: BlogSearchRequest;
+  query?: SearchBlogInput;
 };
 
 const BlogTable = ({ query }: BlogTableProps) => {

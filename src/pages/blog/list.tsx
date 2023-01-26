@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { BlogQuery, BlogTable } from '@/components/blog';
 import { Container } from '@/components/common';
-import type { BlogSearchRequest } from '@/entities/blog';
+import type { SearchBlogInput } from '@/entities/blog';
 
 const BlogList = () => {
-  const [query, setQuery] = useState<BlogSearchRequest>({});
+  const [query, setQuery] = useState<SearchBlogInput>({});
 
   return (
     <Container>

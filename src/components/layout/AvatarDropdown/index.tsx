@@ -1,4 +1,4 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
@@ -49,16 +49,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
       selectedKeys={[]}
       onClick={onMenuClick}
       items={[
-        { key: 'base', label: '基本设置', icon: <SettingOutlined /> },
-        {
-          key: 'account',
-          label: '个人设置',
-          icon: <UserOutlined />,
-        },
-        {
-          key: 'divider',
-          label: <Menu.Divider />,
-        },
         {
           key: 'logout',
           label: '退出登录',
@@ -76,7 +66,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
           src={currentAdmin.avatar}
           alt='avatar'
         />
-        <span className={`${styles.name} anticon`}>{currentAdmin.nickname}</span>
+        {currentAdmin.nickname}
       </span>
     </HeaderDropdown>
   );

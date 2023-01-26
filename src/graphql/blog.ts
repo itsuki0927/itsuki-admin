@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import type {
   BlogActionRequest,
   BlogDetailResponse,
-  BlogSearchRequest,
+  SearchBlogInput,
   BlogSummaryResponse,
   Blog,
 } from '@/entities/blog';
@@ -25,7 +25,7 @@ export type QueryBlogInput = {
   path: string;
 };
 
-export type QueryBlogSearch = SearchRequest<BlogSearchRequest>;
+export type QueryBlogSearch = SearchRequest<SearchBlogInput>;
 
 export type QueryBlogSummaryResponse = {
   blogSummary: BlogSummaryResponse;
