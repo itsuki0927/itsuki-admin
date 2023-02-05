@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { RouteOptions, constantRoutes } from '@/routes';
-import { useAdmin } from '@/context';
 import { getToken } from '@/utils/auth';
 import BaseLayout from '../BaseLayout';
 
@@ -16,8 +15,6 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
 };
 
 const App: React.FC = () => {
-  const location = useLocation();
-  const { fetchCurrentAdmin, currentAdmin } = useAdmin();
   const renderRoutes = useCallback((list: RouteOptions[]) => {
     return list
       .map(
@@ -55,12 +52,6 @@ const App: React.FC = () => {
       )
       .filter(Boolean);
   }, []);
-
-  useEffect(() => {
-    if (location.pathname !== '/login' && !currentAdmin) {
-      fetchCurrentAdmin?.();
-    }
-  }, [location, fetchCurrentAdmin, currentAdmin]);
 
   return <Routes>{renderRoutes(constantRoutes)}</Routes>;
 };

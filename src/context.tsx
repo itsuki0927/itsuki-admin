@@ -1,71 +1,80 @@
 import { message } from 'antd';
+import { User } from 'firebase/auth';
 import {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
   useMemo,
-  useState,
 } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Admin, AdminSaveRequest, LoginParams } from './entities/admin';
-import { AdminLoginResponse } from './graphql/admin';
-import { useFetchCurrentAdmin, useLogin, useUpdateAdmin } from './hooks/admin';
+import { LoginType } from './entities/admin';
+import useAuthState, { Member } from './hooks/firebase/useAuthState';
+import useSignInWithGithub from './hooks/firebase/useSignInWithGithub';
+import useSignInWithGoogle from './hooks/firebase/useSignInWithGoogle';
+import useSignOut from './hooks/firebase/useSignOut';
+import { auth } from './libs/firebase';
 import { removeToken, setToken } from './utils/auth';
 
 interface AdminContextType {
-  currentAdmin?: Admin;
-  fetchCurrentAdmin?: () => Promise<Admin | undefined>;
+  currentAdmin?: Member | undefined | null;
   logout?: () => void;
-  login?: (input: LoginParams) => Promise<AdminLoginResponse | undefined>;
-  updateAdmin?: (input: AdminSaveRequest) => Promise<void>;
+  login?: (type: LoginType) => Promise<Member | undefined>;
 }
+
 export const AdminContext = createContext<AdminContextType>({});
 
+export const formatUser = async (user: User | null): Promise<Member | null> => {
+  if (!user) return null;
+  const { providerId } = user.providerData?.[0] ?? '';
+  const provider = providerId.replace('.com', '');
+  const token = await user?.getIdToken();
+  return {
+    uid: user.uid,
+    email: user.email ?? '',
+    nickname: user.displayName || user.email || '',
+    avatar: user.photoURL || '',
+    provider,
+    token,
+    isLogin: !!user.email,
+  };
+};
+
 export const AdminProvider = ({ children }: PropsWithChildren) => {
-  const [currentAdmin, setCurrentAdmin] = useState<Admin | undefined>(undefined);
-  const fetch = useFetchCurrentAdmin();
+  // const [currentAdmin, setCurrentAdmin] = useState<Admin | undefined>(undefined);
+  const [currentAdmin] = useAuthState(auth);
+  const [signInWithGithub] = useSignInWithGithub(auth);
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [signOut] = useSignOut(auth);
   const location = useLocation();
   const navigate = useNavigate();
-  const requestLogin = useLogin();
   const [searchParams] = useSearchParams();
-  const updateAdminRequest = useUpdateAdmin();
-
-  const fetchCurrentAdmin = useCallback(async () => {
-    if (currentAdmin) {
-      return currentAdmin;
-    }
-    const { data } = await fetch();
-    setCurrentAdmin(data?.currentAdmin);
-    return data?.currentAdmin;
-  }, [currentAdmin, fetch]);
 
   const logout = useCallback(async () => {
     const { pathname } = location;
-    setCurrentAdmin?.(undefined);
     if (window.location.pathname !== '/user/login') {
-      navigate(`/login?redirect=${pathname}`, {
-        replace: true,
-      });
+      navigate(`/login?redirect=${pathname}`, { replace: true });
+      signOut();
       removeToken();
     }
-  }, [navigate, location]);
+  }, [navigate, location, signOut]);
 
   const login = useCallback(
-    async (input: LoginParams) => {
+    async (type: LoginType) => {
       try {
-        // 登录
-        const { data } = await requestLogin({
-          variables: {
-            input,
-          },
-        });
-        if (data?.login.state === 'OK') {
+        let data;
+        if (type === 'github') {
+          data = await signInWithGithub();
+        } else {
+          data = await signInWithGoogle();
+        }
+        const user = await formatUser(data?.user ?? null);
+        console.log('user:', user);
+        if (user?.isLogin) {
           message.success('登陆成功');
-          setToken(data.login.token);
-          await fetchCurrentAdmin?.();
+          setToken(user.token);
           navigate(searchParams.get('redirect') || '/');
-          return data;
+          return user;
         }
       } catch (error) {
         console.log('error:', error);
@@ -73,35 +82,16 @@ export const AdminProvider = ({ children }: PropsWithChildren) => {
         message.error('登陆失败, 请重试! ');
       }
     },
-    [fetchCurrentAdmin, navigate, requestLogin, searchParams]
-  );
-
-  const updateAdmin = useCallback(
-    async (input: AdminSaveRequest) => {
-      if (currentAdmin) {
-        await updateAdminRequest({
-          variables: {
-            input,
-          },
-        });
-        setCurrentAdmin({
-          ...currentAdmin,
-          ...input,
-        });
-      }
-    },
-    [updateAdminRequest, currentAdmin]
+    [navigate, searchParams, signInWithGithub, signInWithGoogle]
   );
 
   const value = useMemo<AdminContextType>(() => {
     return {
       currentAdmin,
-      fetchCurrentAdmin,
-      logout,
       login,
-      updateAdmin,
+      logout,
     };
-  }, [currentAdmin, fetchCurrentAdmin, login, logout, updateAdmin]);
+  }, [currentAdmin, login, logout]);
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
 };

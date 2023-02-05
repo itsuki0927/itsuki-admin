@@ -14,19 +14,4 @@ export type LoginResponse = {
   expiration: string;
 };
 
-export type LoginParams = {
-  username: string;
-  password: string;
-};
-
-export type AdminSaveRequest = {
-  avatar: string;
-  nickname: string;
-  description: string;
-};
-
-export type AdminUpdatePasswordRequest = {
-  password: string;
-  newPassword: string;
-  confirm: string;
-};
+export type LoginType = 'github' | 'google';

@@ -1,9 +1,9 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginFormPage, ProFormText } from '@ant-design/pro-form';
-import { Alert } from 'antd';
+import { GithubOutlined, GoogleCircleFilled } from '@ant-design/icons';
+import { LoginFormPage } from '@ant-design/pro-form';
+import { Alert, Button, Col, Row } from 'antd';
 import React, { useState } from 'react';
-import type { LoginParams } from '@/entities/admin';
 import { useAdmin } from '@/context';
+import { LoginType } from '@/entities/admin';
 
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
   <Alert
@@ -19,12 +19,12 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAdmin();
-  const [state, setState] = useState('');
+  const [state, setState] = useState(false);
 
-  const handleSubmit = async (input: LoginParams) => {
+  const handleSubmit = async (type: LoginType) => {
     setSubmitting(true);
-    const data = await login?.(input);
-    setState(data?.login?.state ?? 'NOT_OK');
+    const data = await login?.(type);
+    setState(data?.isLogin ?? false);
     setSubmitting(false);
   };
 
@@ -34,52 +34,29 @@ const Login: React.FC = () => {
       logo='https://static.itsuki.cn/logo.png'
       title='Itsuki Blog Admin'
       subTitle='Itsuki Blog 博客后台管理系统'
-      initialValues={{
-        autoLogin: true,
-      }}
-      submitter={{
-        searchConfig: {
-          submitText: '登录',
-        },
-        render: (_, dom) => dom.pop(),
-        submitButtonProps: {
-          loading: submitting,
-          size: 'large',
-          block: true,
-        },
-      }}
-      message={state === 'NOT_OK' && <LoginMessage content='账户或密码错误' />}
-      onFinish={handleSubmit}
-    >
-      <ProFormText
-        name='username'
-        fieldProps={{
-          size: 'large',
-          prefix: <UserOutlined />,
-        }}
-        placeholder='用户名'
-        rules={[
-          {
-            required: true,
-            message: '请输入用户名!',
-          },
-        ]}
-      />
-      <ProFormText.Password
-        name='password'
-        fieldProps={{
-          size: 'large',
-          prefix: <LockOutlined />,
-        }}
-        placeholder='密码'
-        rules={[
-          {
-            required: true,
-            message: '请输入密码！',
-          },
-        ]}
-      />
-    </LoginFormPage>
+      submitter={false}
+      actions={
+        <Row gutter={24}>
+          <Col span={12}>
+            <Button
+              style={{ width: '100%' }}
+              disabled={submitting}
+              icon={<GoogleCircleFilled />}
+              onClick={() => handleSubmit('google')}
+            />
+          </Col>
+          <Col span={12}>
+            <Button
+              style={{ width: '100%' }}
+              disabled={submitting}
+              icon={<GithubOutlined />}
+              onClick={() => handleSubmit('github')}
+            />
+          </Col>
+        </Row>
+      }
+      message={state && <LoginMessage content='账户或密码错误' />}
+    />
   );
 };
 

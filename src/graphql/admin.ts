@@ -1,22 +1,9 @@
 import { gql } from '@apollo/client';
-import type { MutationRequest } from '@/helper/basicType';
-import type {
-  Admin,
-  AdminSaveRequest,
-  AdminUpdatePasswordRequest,
-  LoginParams,
-  LoginResponse,
-} from '@/entities/admin';
+import type { Admin, LoginResponse } from '@/entities/admin';
 
 export type AdminLoginResponse = {
   login: LoginResponse;
 };
-
-export type AdminLoginInput = MutationRequest<LoginParams>;
-
-export type UpdateAdminInput = MutationRequest<AdminSaveRequest>;
-
-export type UpdateAdminPasswordInput = MutationRequest<AdminUpdatePasswordRequest>;
 
 export type QueryCurrentAdminResponse = {
   currentAdmin: Admin;
