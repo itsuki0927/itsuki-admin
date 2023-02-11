@@ -94,5 +94,4 @@ export const useBlog = () => {
 export const useSyncBlogCommentCount = () =>
   useMutation<number, { ids: number[] }>(SYNC_BLOG_COMMENT_COUNT);
 
-export const useBlogSummary = () =>
-  useLazyQuery<QueryBlogSummaryResponse, void>(BLOG_SUMMARY);
+export const useBlogSummary = () => useLazyQuery<QueryBlogSummaryResponse>(BLOG_SUMMARY);

@@ -97,6 +97,7 @@ export const QUERY_BLOG = gql`
 export const QUERY_BLOGS = gql`
   query findBlogs($search: SearchBlogInput) {
     blogs(search: $search) {
+      total
       data {
         id
         createAt
@@ -118,7 +119,6 @@ export const QUERY_BLOGS = gql`
           name
         }
       }
-      total
     }
   }
 `;

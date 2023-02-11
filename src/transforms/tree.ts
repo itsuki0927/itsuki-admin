@@ -1,4 +1,4 @@
-import type { DataNode } from 'rc-tree/lib/interface';
+// import type { DataNode } from 'rc-tree/lib/interface';
 import { NO_PARENT_VALUE } from '@/constants/common';
 import type { CommentTree, Comment } from '@/entities/comment';
 
@@ -32,6 +32,8 @@ export function convertToTreeData<T extends ConvertTreeData>(dataSources: T[]) {
   return buildConvertToTreeData(dataSources, NO_PARENT_VALUE);
 }
 
+// TODO: any
+type DataNode = any;
 /**
  * 将当前树转换为Antd支持的数据格式
  *
