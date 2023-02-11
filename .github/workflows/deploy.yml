@@ -25,6 +25,12 @@ jobs:
           node-version: 16.x
           cache: 'pnpm'
 
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPU
+
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
@@ -32,12 +38,6 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPU
 
       - name: Install dependencies
         run: pnpm install
