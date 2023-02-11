@@ -18,18 +18,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'yarn'
+          cache: 'pnpm'
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "::set-output name=dir::$(pnpm cache dir)"
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: pnpm install
 
       # 构建
       - name: Run build
-        run: yarn build
+        run: pnpm build
 
       - name: ls
         run: ls -a
