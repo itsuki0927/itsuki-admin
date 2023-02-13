@@ -23,9 +23,9 @@ const TagModal = ({ title, visible, onChange, tag, onFinish }: TagModalProps) =>
   return (
     <ModalForm<TagActionRequest>
       formRef={restFormRef}
-      visible={visible}
+      open={visible}
       title={title}
-      onVisibleChange={onChange}
+      onOpenChange={onChange}
       layout='horizontal'
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 18 }}

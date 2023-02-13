@@ -36,7 +36,7 @@ type BlogTableProps = {
 };
 
 const BlogTable = ({ query }: BlogTableProps) => {
-  const [fetchBlogs, { updateQuery, refetch }] = useBlogs();
+  const [fetchBlogs, { refetch }] = useBlogs();
   const [updateState] = useUpdateBlogState();
   const [updateBanner] = useUpdateBlogBanner();
   const [syncBlogCommentCount] = useSyncBlogCommentCount();
@@ -49,30 +49,19 @@ const BlogTable = ({ query }: BlogTableProps) => {
       title: `确定要将 状态变更为 [${ps(state).name}] 状态嘛?`,
       content: '此操作不能撤销!!!',
       centered: true,
-      onOk() {
+      async onOk() {
         setLoading(true);
-        updateState({
+        await updateState({
           variables: {
             ids,
             state,
           },
-        }).then(() => {
-          updateQuery(({ blogs }) => ({
-            blogs: {
-              ...blogs,
-              data: blogs.data.map(item => {
-                if (ids.includes(item.id)) {
-                  return { ...item, publish: state };
-                }
-                return item;
-              }),
-            },
-          }));
-          message.success('变更成功');
-          actionRef.current?.reload();
-          setLoading(false);
-          cb?.();
         });
+        await refetch();
+        message.success('变更成功');
+        actionRef.current?.reload();
+        setLoading(false);
+        cb?.();
       },
     });
   };
@@ -84,30 +73,19 @@ const BlogTable = ({ query }: BlogTableProps) => {
       } 吗?`,
       content: '此操作不能撤销!!!',
       centered: true,
-      onOk() {
+      async onOk() {
         setLoading(true);
-        updateBanner({
+        await updateBanner({
           variables: {
             ids,
             banner,
           },
-        }).then(() => {
-          updateQuery(({ blogs }) => ({
-            blogs: {
-              ...blogs,
-              data: blogs.data.map(item => {
-                if (ids.includes(item.id)) {
-                  return { ...item, banner };
-                }
-                return item;
-              }),
-            },
-          }));
-          message.success('变更成功');
-          actionRef.current?.reload();
-          setLoading(false);
-          cb?.();
         });
+        await refetch();
+        message.success('变更成功');
+        actionRef.current?.reload();
+        setLoading(false);
+        cb?.();
       },
     });
   };

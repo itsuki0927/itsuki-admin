@@ -1,8 +1,9 @@
+/* eslint-disable no-restricted-globals */
 import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { notification, Space, Typography } from 'antd';
 import { API_URL, API_VERSION } from './config';
-import { getToken } from './utils/auth';
+import { getToken, removeToken } from './utils/auth';
 
 export const baseURI = `${API_URL}/${API_VERSION}/graphql`;
 
@@ -32,6 +33,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
   if (networkError) {
     console.debug(`[Network error]: ${networkError}`);
+    location.href = '/admin/login';
+    removeToken();
     notification.error({
       message: '请求错误',
       description: '网络不通? 后端不通?, 好兄弟',

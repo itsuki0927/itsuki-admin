@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import {
   DeleteOutlined,
   EditOutlined,
@@ -25,7 +26,7 @@ const TagList = () => {
   const [visible, setVisible] = useState(false);
   const [temp, setTemp] = useState<Tag | undefined>();
   const [loading, setLoading] = useState(false);
-  const { fetchTags, updateQuery, refetch } = useAllTag();
+  const { fetchTags, refetch } = useAllTag();
   const createTag = useCreateTag();
   const deleteTag = useDeleteTag();
   const updateTag = useUpdateTag();
@@ -36,20 +37,13 @@ const TagList = () => {
     Modal.confirm({
       title: `确定删除标签 '${entity.name}'嘛?`,
       content: '删除后不可恢复',
-      onOk() {
+      async onOk() {
         setLoading(true);
-        deleteTag({ variables: { id: entity.id } }).then(() => {
-          updateQuery(prevData => ({
-            tags: {
-              ...prevData.tags,
-              data: prevData.tags.data.filter(item => item.id !== entity.id!),
-              total: prevData.tags.total - 1,
-            },
-          }));
-          message.success('删除成功');
-          actionRef.current?.reload();
-          setLoading(false);
-        });
+        await deleteTag({ variables: { id: entity.id } });
+        await refetch();
+        message.success('删除成功');
+        actionRef.current?.reload();
+        setLoading(false);
       },
     });
   };
@@ -82,17 +76,7 @@ const TagList = () => {
         input,
       },
     });
-    updateQuery(({ tags }) => ({
-      tags: {
-        ...tags,
-        data: tags.data.map(item => {
-          if (item.id === temp?.id) {
-            return { ...item, ...input };
-          }
-          return item;
-        }),
-      },
-    }));
+    await refetch();
     setVisible(false);
     actionRef.current?.reload();
     message.success('更新成功');
@@ -102,18 +86,12 @@ const TagList = () => {
 
   const confirmCreate = async (input: TagActionRequest) => {
     setLoading(true);
-    const { data: newData } = await createTag({
+    await createTag({
       variables: {
         input,
       },
     });
-    updateQuery(({ tags }) => ({
-      tags: {
-        ...tags,
-        data: tags.data.concat(newData?.createTag!),
-        total: tags.total + 1,
-      },
-    }));
+    await refetch();
     setVisible(false);
     actionRef.current?.reload();
     message.success('创建成功');
@@ -186,6 +164,7 @@ const TagList = () => {
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
         }}
+        // eslint-disable-next-line react/no-unstable-nested-components
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
           <Button
             danger

@@ -1,5 +1,6 @@
 import ProCard from '@ant-design/pro-card';
 import { ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form';
+import { useEffect } from 'react';
 import { blogBanners } from '@/constants/blog/banner';
 import { SELECT_ALL_VALUE } from '@/constants/common';
 import { publishStates } from '@/constants/publish';
@@ -22,8 +23,11 @@ const initialValues: SearchBlogInput = {
 const resolve = () => Promise.resolve(true);
 
 const BlogQuery = ({ onFinish }: BlogQueryProps) => {
-  const { data: tags } = useAllTag();
-  console.log('tags', tags);
+  const { data: tags, fetchTags } = useAllTag();
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
 
   return (
     <ProCard style={{ marginBottom: 24 }}>
