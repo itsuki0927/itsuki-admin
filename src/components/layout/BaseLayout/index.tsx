@@ -2,8 +2,8 @@ import { Layout } from 'antd';
 import { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.less';
-import Avatar from '../AvatarDropdown';
 import Logo from '../Logo';
+import AvatarDropdown from '../AvatarDropdown';
 
 const { Header, Content } = Layout;
 
@@ -28,7 +28,7 @@ const BaseLayout = ({ children }: PropsWithChildren) => {
             </Link>
           </nav>
         </div>
-        <Avatar menu />
+        <AvatarDropdown />
       </Header>
       <Content className='site-layout-background'>{children}</Content>
     </Layout>

@@ -1,5 +1,5 @@
-import { LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Menu } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ export type GlobalHeaderRightProps = {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const history = useNavigate();
-  const { currentAdmin, logout } = useAdmin();
+  const { logout } = useAdmin();
 
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
@@ -26,22 +26,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
     },
     [history, logout]
   );
-
-  const loading = (
-    <span className={`${styles.action} ${styles.account}`}>
-      <Spin
-        size='small'
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    </span>
-  );
-
-  if (!currentAdmin) {
-    return loading;
-  }
 
   const menuHeaderDropdown = (
     <Menu
@@ -61,12 +45,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar
+          style={{ backgroundColor: '#87d068' }}
+          icon={<UserOutlined />}
           size='small'
-          className={styles.avatar}
-          src={currentAdmin.avatar}
-          alt='avatar'
         />
-        {currentAdmin.nickname}
       </span>
     </HeaderDropdown>
   );

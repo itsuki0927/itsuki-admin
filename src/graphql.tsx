@@ -12,7 +12,7 @@ const httpLink = new HttpLink({
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
+  if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
       console.debug(
         `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
@@ -30,10 +30,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         duration: 3,
       });
     });
+  }
 
   if (networkError) {
+    console.log(location);
     console.debug(`[Network error]: ${networkError}`);
-    location.href = '/admin/login';
+    // location.href = '/login';
     removeToken();
     notification.error({
       message: '请求错误',
