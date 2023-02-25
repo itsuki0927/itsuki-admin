@@ -1,11 +1,12 @@
-import { Input, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Input, InputRef, Modal } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAdmin } from '@/context';
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAdmin();
   const [password, setPassword] = useState('');
+  const inputRef = useRef<InputRef>(null);
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -13,10 +14,14 @@ const Login: React.FC = () => {
     setSubmitting(false);
   };
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
-    <Modal open title='请输入密码' footer={false} closable={false} centered>
+    <Modal open footer={false} closable={false} centered>
       <Input.Password
-        style={{ marginTop: 24 }}
+        ref={inputRef}
         disabled={submitting}
         value={password}
         onChange={e => setPassword(e.target.value)}
