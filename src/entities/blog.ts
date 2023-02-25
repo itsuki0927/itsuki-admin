@@ -1,4 +1,3 @@
-import { BlogBanner } from '@/constants/blog/banner';
 import { PublishState } from '@/constants/publish';
 import { BaseSearchRequest, IdentifiableEntity } from '@/helper/basicType';
 import { Tag } from './tag';
@@ -12,7 +11,6 @@ export type Blog = IdentifiableEntity<{
   state: number;
   keywords: string;
   publish: PublishState;
-  banner: BlogBanner;
   reading: number;
   liking: number;
   commenting: number;
@@ -41,7 +39,6 @@ export type BlogActionRequest = {
 export type SearchBlogInput = BaseSearchRequest<{
   name?: string;
   publish?: PublishState;
-  banner?: BlogBanner;
   tagId?: number;
 }>;
 
@@ -59,11 +56,6 @@ export type BlogDetailResponse = Blog & {
 export type BlogPatchRequest = {
   ids: number[];
   state: PublishState;
-};
-
-export type BlogBannerPatchRequest = {
-  ids: number[];
-  banner: BlogBanner;
 };
 
 /**

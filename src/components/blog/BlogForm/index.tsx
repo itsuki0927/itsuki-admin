@@ -8,7 +8,6 @@ import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form, Space } from 'antd';
 import { ImageUploader, UniversalEditor } from '@/components/common';
 import { UEditorLanguage } from '@/components/common/UniversalEditor';
-import { blogBanners } from '@/constants/blog/banner';
 import { publishStates } from '@/constants/publish';
 import type { BlogActionRequest, BlogDetailResponse } from '@/entities/blog';
 import { getSelectOptionsByState } from '@/transforms/option';
@@ -24,6 +23,7 @@ type BlogFormProps = {
 const BlogForm = ({ onFinish, request, cacheID }: BlogFormProps) => {
   const [form] = Form.useForm<BlogActionRequest>();
   const getUploadPrefix = () => `/blog/${form.getFieldValue('path')}`;
+
   return (
     <ProForm
       form={form}
@@ -67,13 +67,6 @@ const BlogForm = ({ onFinish, request, cacheID }: BlogFormProps) => {
               name='keywords'
               label='关键字'
               mode='tags'
-            />
-            <ProFormSelect
-              rules={[{ required: true, message: '请选择是否为轮播图' }]}
-              options={getSelectOptionsByState(blogBanners)}
-              labelAlign='left'
-              label='轮播状态'
-              name='banner'
             />
             <ProFormSelect
               rules={[{ required: true, message: '请选择发布状态' }]}

@@ -13,26 +13,18 @@ import {
   QUERY_BLOG,
   QUERY_BLOGS,
   UPDATE_BLOG,
-  UPDATE_BLOG_BANNER,
   UPDATE_BLOG_STATE,
   SYNC_BLOG_COMMENT_COUNT,
   QueryBlogInput,
 } from '@/graphql/blog';
 import type { ID } from '@/helper/basicType';
-import type {
-  BlogBannerPatchRequest,
-  BlogDetailResponse,
-  BlogPatchRequest,
-} from '@/entities/blog';
+import type { BlogDetailResponse, BlogPatchRequest } from '@/entities/blog';
 
 export const useBlogs = () =>
   useLazyQuery<QueryBlogsResponse, QueryBlogSearch>(QUERY_BLOGS);
 
 export const useUpdateBlogState = () =>
   useMutation<number, BlogPatchRequest>(UPDATE_BLOG_STATE);
-
-export const useUpdateBlogBanner = () =>
-  useMutation<number, BlogBannerPatchRequest>(UPDATE_BLOG_BANNER);
 
 export const useUpdateBlog = () => useMutation<void, UpdateBlogInput>(UPDATE_BLOG);
 

@@ -6,28 +6,20 @@ import {
   EyeOutlined,
   HeartOutlined,
   LinkOutlined,
-  RetweetOutlined,
   RollbackOutlined,
-  SwapOutlined,
   SyncOutlined,
   TagOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable, { TableDropdown } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { AlertRenderType } from '@ant-design/pro-table/lib/components/Alert';
 import { Button, Card, message, Modal, Space, Table, Tag, Typography } from 'antd';
 import { useRef, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AlertRenderType } from '@ant-design/pro-table/lib/components/Alert';
-import { ab, BlogBanner } from '@/constants/blog/banner';
+import { Link, useNavigate } from 'react-router-dom';
 import { omitSelectAllValue } from '@/constants/common';
 import { ps, PublishState } from '@/constants/publish';
-import {
-  useBlogs,
-  useSyncBlogCommentCount,
-  useUpdateBlogBanner,
-  useUpdateBlogState,
-} from '@/hooks/blog';
-import type { SearchBlogInput, Blog } from '@/entities/blog';
+import type { Blog, SearchBlogInput } from '@/entities/blog';
+import { useBlogs, useSyncBlogCommentCount, useUpdateBlogState } from '@/hooks/blog';
 import { formatDate } from '@/transforms/date';
 import { getBlogBlogUrl } from '@/transforms/url';
 
@@ -38,7 +30,6 @@ type BlogTableProps = {
 const BlogTable = ({ query }: BlogTableProps) => {
   const [fetchBlogs, { refetch }] = useBlogs();
   const [updateState] = useUpdateBlogState();
-  const [updateBanner] = useUpdateBlogBanner();
   const [syncBlogCommentCount] = useSyncBlogCommentCount();
   const [loading, setLoading] = useState(false);
   const actionRef = useRef<ActionType>();
@@ -55,30 +46,6 @@ const BlogTable = ({ query }: BlogTableProps) => {
           variables: {
             ids,
             state,
-          },
-        });
-        await refetch();
-        message.success('变更成功');
-        actionRef.current?.reload();
-        setLoading(false);
-        cb?.();
-      },
-    });
-  };
-
-  const handleBannerChange = (ids: number[], banner: BlogBanner, cb?: () => void) => {
-    Modal.confirm({
-      title: `确定要将选中文章 ${
-        banner === BlogBanner.YES ? '加入轮播图' : '移除轮播图'
-      } 吗?`,
-      content: '此操作不能撤销!!!',
-      centered: true,
-      async onOk() {
-        setLoading(true);
-        await updateBanner({
-          variables: {
-            ids,
-            banner,
           },
         });
         await refetch();
@@ -176,10 +143,9 @@ const BlogTable = ({ query }: BlogTableProps) => {
     {
       title: '状态',
       width: 120,
-      render: (_, { publish: propPublish, banner: propBanner }) => {
+      render: (_, { publish: propPublish }) => {
         const publish = ps(propPublish!);
-        const banner = ab(propBanner!);
-        const list = [publish, banner];
+        const list = [publish];
 
         return (
           <Space direction='vertical'>
@@ -237,25 +203,6 @@ const BlogTable = ({ query }: BlogTableProps) => {
               <Typography.Text type='warning'>退至草稿</Typography.Text>
             </Button>
           )}
-          <Button
-            size='small'
-            type='text'
-            block
-            icon={blog.banner === BlogBanner.YES ? <SwapOutlined /> : <RetweetOutlined />}
-            onClick={() => {
-              const banner =
-                blog.banner === BlogBanner.YES ? BlogBanner.NO : BlogBanner.YES;
-
-              if (blog.publish !== PublishState.Published) {
-                message.warning('文章还未发布');
-                return;
-              }
-
-              handleBannerChange([blog.id], banner);
-            }}
-          >
-            {blog.banner === BlogBanner.YES ? '移除轮播' : '加入轮播'}
-          </Button>
           <Button
             size='small'
             block
@@ -357,23 +304,6 @@ const BlogTable = ({ query }: BlogTableProps) => {
         <SyncOutlined />
         同步评论
       </Button>
-      <TableDropdown
-        onSelect={key => {
-          handleBannerChange(
-            selectedRowKeys as number[],
-            key === 'joinBanner' ? BlogBanner.YES : BlogBanner.NO,
-            onCleanSelected
-          );
-        }}
-        key='other'
-        menus={[
-          { name: '加入轮播', key: 'joinBanner' },
-          {
-            name: '移除轮播',
-            key: 'removeBanner',
-          },
-        ]}
-      />
     </Space>
   );
 

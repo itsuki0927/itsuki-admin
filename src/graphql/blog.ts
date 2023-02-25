@@ -41,12 +41,6 @@ export const CREATE_BLOG = gql`
   }
 `;
 
-export const UPDATE_BLOG_BANNER = gql`
-  mutation updateBlogBanner($ids: [ID]!, $banner: Int!) {
-    updateBlogBanner(ids: $ids, banner: $banner)
-  }
-`;
-
 export const UPDATE_BLOG_STATE = gql`
   mutation patchBlogState($ids: [ID]!, $state: Int!) {
     updateBlogState(ids: $ids, state: $state)
@@ -80,7 +74,6 @@ export const QUERY_BLOG = gql`
       cover
       keywords
       publish
-      banner
       reading
       liking
       commenting
@@ -112,7 +105,6 @@ export const QUERY_BLOGS = gql`
         author
         liking
         reading
-        banner
         cardStyle
         tags {
           id
